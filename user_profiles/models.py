@@ -8,6 +8,7 @@ class User(AbstractUser):
     fname = models.CharField(max_length=100, null=True)
     lname = models.CharField(max_length=100, null=True)
     phone = models.CharField(validators=[MinLengthValidator(10)], max_length=10, null=True)
+    user_photo = models.ImageField(upload_to='static/user_profiles/Images', null=True)
     pass
 class Major(models.Model):
     major_id = models.CharField(validators=[MinLengthValidator(3)], max_length=3, primary_key=True)
