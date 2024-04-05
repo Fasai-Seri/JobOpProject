@@ -17,8 +17,8 @@ class JobPost(models.Model):
         ("inactive", "Inactive")
     )
     
-    poster_emp = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='job_posted_emp', null=True)
-    poster_prof = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='job_posted_prof', null=True)
+    poster_emp = models.ForeignKey(Employer, on_delete=models.CASCADE, related_name='job_posted_by_emp', null=True)
+    poster_prof = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='job_posted_by_prof', null=True)
     job_title = models.CharField(max_length=100)
     job_type = models.CharField(choices=job_type_choices, max_length=10, default='')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="job_posts_by_company", default='')
