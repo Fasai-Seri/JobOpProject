@@ -16,9 +16,9 @@ class JobPost(models.Model):
     job_desc = models.CharField(max_length=1000, blank=True)
     job_requirements = models.CharField(max_length=1000, blank=True)
     job_major = models.ManyToManyField(Major, related_name="job_posts_by_major", blank=True)
-    job_posted_date = models.DateField(max_length=500)
+    job_posted_date = models.DateField()
     job_close_date = models.DateField(blank=True)
-    job_location = models.CharField(max_length=)
+    job_location = models.CharField(max_length=500)
     job_status = models.BooleanField()
     favourite_user = models.ManyToManyField(User, related_name="fovourit_posts", blank=True)
     
