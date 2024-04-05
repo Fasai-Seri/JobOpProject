@@ -14,24 +14,24 @@ class Major(models.Model):
     major_desc = models.CharField(max_length=100, null=True)
     pass
 class Professor(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='prof_user_id')
-    major_id = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='prof_major_id')
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='prof_user_id', null=True)
+    major_id = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='prof_major_id', null=True)
     pass
 
 class Company(models.Model):
     comp_name = models.CharField(max_length=100, null=True)
     comp_desc = models.CharField(max_length=1000, null=True)
-    comp_logo = models.ImageField(upload_to='static/user_profiles/Images')
+    comp_logo = models.ImageField(upload_to='static/user_profiles/Images', default='static/user_profiles/Images/default.jpg', null=True)
     pass
 
 class Employer(models.Model):
-    prof_id = models.ForeignKey(Professor, on_delete=models.PROTECT, related_name='approve_prof_id')
-    comp_id = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='comp_id')
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='emp_user_id')
+    prof_id = models.ForeignKey(Professor, on_delete=models.PROTECT, related_name='approve_prof_id', null=True)
+    comp_id = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='comp_id', null=True)
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='emp_user_id', null=True)
     emp_position = models.CharField(max_length=100, null=True)
     pass
 class Student(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id')
-    major_id = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id')
-    student_resume = models.FileField(upload_to='static/user_profiles/Files')
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id', null=True)
+    major_id = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id', null=True)
+    student_resume = models.FileField(upload_to='static/user_profiles/Files', null=True)
     pass
