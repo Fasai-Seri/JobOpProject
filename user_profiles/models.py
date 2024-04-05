@@ -1,11 +1,16 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinLengthValidator
 from django.db import models
 
 # Create your models here.
-class Professor(AbstractUser):
-    prof_fname = models.CharField(max_length=100, null=True)
-    prof_lname = models.CharField(max_length=100, null=True)
-    prof_phone = models.CharField(min_length=10, max_length=10, null=True)
+
+class User(AbstractUser):
+    fname = models.CharField(max_length=100, null=True)
+    lname = models.CharField(max_length=100, null=True)
+    phone = models.CharField(validators=[MinLengthValidator(10)], max_length=10, null=True)
+    pass
+class Professor(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='prof_user_id')
     pass
 
 class Company(models.Model):
@@ -14,20 +19,16 @@ class Company(models.Model):
     pass
 
 class Major(models.Model):
-    major_id = models.CharField(min_length=3, max_length=3, primary_key=True)
+    major_id = models.CharField(validators=[MinLengthValidator(3)], max_length=3, primary_key=True)
     major_desc = models.CharField(max_length=100, null=True)
     pass
-class Employer(AbstractUser):
-    prof_id = models.ForeignKey(Professor)
-    comp_id = models.ForeignKey(Company)
-    emp_fname = models.CharField(max_length=100, null=True)
-    emp_lname = models.CharField(max_length=100, null=True)
-    emp_phone = models.CharField(min_length=10, max_length=10, null=True)
+class Employer(models.Model):
+    prof_id = models.ForeignKey(Professor, on_delete=models.PROTECT, related_name='approve_prof_id')
+    comp_id = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='comp_id')
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='emp_user_id')
     emp_position = models.CharField(max_length=100, null=True)
     pass
-class Student(AbstractUser):
-    student_fname = models.CharField(max_length=100, null=True)
-    student_lname = models.CharField(max_length=100, null=True)
-    student_phone = models.CharField(min_length=10, max_length=100, null=True)
-    student_resume = models.FileField(upload_to='')
+class Student(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id')
+    student_resume = models.FileField(upload_to='../static/user_profiles')
     pass
