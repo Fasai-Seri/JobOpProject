@@ -11,8 +11,10 @@ from django.http import JsonResponse
 from user_profiles.models import *
 
 # Create your views here.
-def index(request):
-    return render(request, 'user_profiles/profile.html')
+def index(request,user_id):
+    return render(request, 'user_profiles/profile.html', {
+        'user_id': user_id
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -61,6 +63,12 @@ def register(request):
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
+            if 'student.chula.ac.th' in email:
+                student = Student.objects.create(user_id=User.objects.get(email=email))
+                student.save()
+            elif 'cbs.chula.ac.th' in email:
+                professor = Professor.objects.create(user_id=User.objects.get(email=email))
+                professor.save()
         except IntegrityError:
             return render(request, "user_profiles/register.html", {
                 "message": "Email already exists."
@@ -89,3 +97,27 @@ def fill_info(request) :
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
+    
+def get_user(request, user_id):
+    user = User.objects.get(pk=user_id).serialize()
+    if Student.objects.filter(user_id__id = user_id).first():
+        student = Student.objects.get(user_id__id = user_id).serialize()
+        return JsonResponse([user, student], safe=False)
+    if Professor.objects.filter(user_id__id = user_id).first():
+        professor = Professor.objects.filter(user_id__id = user_id).first().serialize()
+        return JsonResponse([user, professor], safe=False)
+    elif Employer.objects.filter(user_id__id = user_id).first():
+        employer = Employer.objects.get(user_id__id = user_id).serialize()
+        return JsonResponse([user, employer], safe=False)
+    
+def get_major(request):
+    majors = Major.objects.all()
+    return JsonResponse([major.serialize() for major in majors], safe=False)
+
+def get_user_type(request, user_id):
+    if Student.objects.get(user_id__id = user_id):
+        return JsonResponse({'user_type': 'student'}, safe=False)
+    elif Professor.objects.get(user_id__id = user_id):
+        return JsonResponse({'user_type': 'professor'}, safe=False)
+    elif Employer.objects.get(user_id__id = user_id):
+        return JsonResponse({'user_type': 'employer'}, safe=False)

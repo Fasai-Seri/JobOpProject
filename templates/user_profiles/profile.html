@@ -2,7 +2,9 @@
 <div id="profile"></div>
 {% endblock %} {% block script %}
 <script
+  id="profile_script"
   type="text/babel"
   src="../static/user_profiles/Javascript/profile_panel.js"
+  data-user-id="{{ user_id }}"
 ></script>
 {% endblock %}
