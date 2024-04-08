@@ -18,7 +18,6 @@ const ProfilePanel = (props) => {
         });
       });
   }
-  console.log(user);
 
   function fetchMajors() {
     fetch(`get_major`)
@@ -27,6 +26,21 @@ const ProfilePanel = (props) => {
         console.log(majors);
         setMajors(majors);
       });
+  }
+
+  function MajorSelect() {
+    return (
+      <div class="form-group">
+        <label for="major">Major</label>
+        <select class="form-control" id="major" value={user.major_id}>
+          {majors.map((major) => (
+            <option value={major.id}>
+              {major.desc} ({major.id})
+            </option>
+          ))}
+        </select>
+      </div>
+    );
   }
 
   return (
@@ -77,35 +91,41 @@ const ProfilePanel = (props) => {
           />
         </div>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Email address</label>
+          <label for="email">Email address</label>
           <input
             type="email"
             class="form-control"
-            id="exampleFormControlInput1"
+            id="email"
             placeholder="name@example.com"
             value={user.email}
           />
         </div>
-        <div class="form-group">
-          <label for="major">Major</label>
-          <select class="form-control" id="major">
-            {majors.map((major) => (
-              <option>
-                {major.desc} ({major.id})
-              </option>
-            ))}
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlSelect2">Example multiple select</label>
-          <select multiple class="form-control" id="exampleFormControlSelect2">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-        </div>
+        {user.type == "student" ? (
+          <div>
+            <MajorSelect />
+            <div class="form-group">
+              <label for="resume">Example file input</label>
+              <input type="file" class="form-control-file" id="resume" />
+            </div>
+          </div>
+        ) : user.type == "professor" ? (
+          <MajorSelect />
+        ) : (
+          <div>
+            <div class="form-group">Company</div>
+            <div class="form-group">
+              <label for="email">Position</label>
+              <input
+                type="text"
+                class="form-control"
+                id="position"
+                placeholder="Position"
+                value={user.position}
+              />
+            </div>
+          </div>
+        )}
+
         <div class="form-group">
           <label for="exampleFormControlTextarea1">Example textarea</label>
           <textarea

@@ -40,7 +40,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
+@csrf_exempt
 def register(request):
     if request.method == "POST":
         username = request.POST["email"]
@@ -77,12 +77,14 @@ def register(request):
         return render(request, "user_profiles/fillinfo.html")
     else:
         return render(request, "user_profiles/register.html")
-    
+
+@csrf_exempt
 def fill_info(request) :
     if request.method == "POST":
         fname = request.POST["fname"]
         lname = request.POST["lname"]
         phone = request.POST['phone']
+        major = request.POST['major']
 
         if not fname or not lname or not phone :
             return render(request, "user_profiles/fillinfo.html", {
@@ -94,6 +96,11 @@ def fill_info(request) :
             lname = lname,
             phone = phone
         )
+
+        if Student.objects.filter(user_id__id = request.user.id).first():
+            Student.objects.filter(user_id__id = request.user.id).update(major_id = Major.objects.get(pk=major))
+        elif Professor.objects.filter(user_id__id = request.user.id).first():
+            Student.objects.filter(user_id__id = request.user.id).update(major_id = Major.objects.get(pk=major))
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
@@ -102,13 +109,16 @@ def get_user(request, user_id):
     user = User.objects.get(pk=user_id).serialize()
     if Student.objects.filter(user_id__id = user_id).first():
         student = Student.objects.get(user_id__id = user_id).serialize()
-        return JsonResponse([user, student], safe=False)
+        user.update(student)
+        return JsonResponse(user, safe=False)
     if Professor.objects.filter(user_id__id = user_id).first():
         professor = Professor.objects.filter(user_id__id = user_id).first().serialize()
-        return JsonResponse([user, professor], safe=False)
+        user.update(professor)
+        return JsonResponse(user, safe=False)
     elif Employer.objects.filter(user_id__id = user_id).first():
         employer = Employer.objects.get(user_id__id = user_id).serialize()
-        return JsonResponse([user, employer], safe=False)
+        user.update(employer)
+        return JsonResponse(user, safe=False)
     
 def get_major(request):
     majors = Major.objects.all()
