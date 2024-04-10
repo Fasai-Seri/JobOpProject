@@ -26,6 +26,9 @@ class Major(models.Model):
             'id': self.major_id,
             'desc': self.major_desc
         }
+        
+    def __str__(self):
+        return f"{self.major_desc}"
 class Professor(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.PROTECT, related_name='prof_user_id', null=True)
     major_id = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='prof_major_id', null=True)
@@ -35,11 +38,17 @@ class Professor(models.Model):
             'major_id': self.major_id.major_id,
             'type': 'professor'
         }
+        
+    def __str__(self):
+        return f"{self.user_id}"
 
 class Company(models.Model):
     comp_name = models.CharField(max_length=100, null=True)
     comp_desc = models.CharField(max_length=1000, null=True)
     comp_logo = models.ImageField(upload_to='static/user_profiles/Images', default='static/user_profiles/Images/default.jpg', null=True)
+    
+    def __str__(self):
+        return f"{self.comp_name}"
     pass
 
 class Employer(models.Model):

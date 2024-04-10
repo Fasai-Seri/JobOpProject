@@ -1,6 +1,10 @@
-{% extends "network/layout.html" %}
+{% extends "job_post/layout.html" %}
 {% load static %}
 
 {% block body %}
-
+<form action="{% url 'index' %}" method='GET'>
+<input type="text" placeholder="Search.." name='search_term'>
+</form>
+{{ all_job_posts }}
+{{ search_term }}
 {% endblock %}
