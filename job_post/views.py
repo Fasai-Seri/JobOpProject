@@ -18,5 +18,17 @@ def index(request):
         all_job_posts = JobPost.objects.all()    
     return render(request, 'job_post/index.html', {
         'all_job_posts': all_job_posts,
-        'search_term': request.GET.get('search_term')
+    })
+    
+def companies(request):
+    if request.GET.get('search_term'):
+        search_term = request.GET.get('search_term')
+        all_companies = Company.objects.filter(
+            Q(comp_name__icontains=search_term) |
+            Q(comp_desc__icontains=search_term) 
+            )
+    else:
+        all_companies = Company.objects.all()    
+    return render(request, 'job_post/companies.html', {
+        'all_companies': all_companies,
     })

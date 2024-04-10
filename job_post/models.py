@@ -9,7 +9,7 @@ class JobPost(models.Model):
     job_type_choices = (
         ("internship", "Intern"),
         ("part time", "Part Time"),
-        ("full time", "full Time")
+        ("full time", "Full Time")
     )
     
     job_status_choices = (
