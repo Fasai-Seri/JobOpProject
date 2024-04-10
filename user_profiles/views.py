@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from user_profiles.models import *
+from .forms import UserForm
+
 
 # Create your views here.
 def index(request,user_id):
@@ -64,10 +66,10 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.save()
             if 'student.chula.ac.th' in email:
-                student = Student.objects.create(user_id=User.objects.get(email=email))
+                student = Student.objects.create(user=User.objects.get(email=email))
                 student.save()
             elif 'cbs.chula.ac.th' in email:
-                professor = Professor.objects.create(user_id=User.objects.get(email=email))
+                professor = Professor.objects.create(user=User.objects.get(email=email))
                 professor.save()
         except IntegrityError:
             return render(request, "user_profiles/register.html", {
@@ -97,26 +99,26 @@ def fill_info(request) :
             phone = phone
         )
 
-        if Student.objects.filter(user_id__id = request.user.id).first():
-            Student.objects.filter(user_id__id = request.user.id).update(major_id = Major.objects.get(pk=major))
-        elif Professor.objects.filter(user_id__id = request.user.id).first():
-            Student.objects.filter(user_id__id = request.user.id).update(major_id = Major.objects.get(pk=major))
+        if Student.objects.filter(user__id = request.user.id).exists():
+            Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
+        elif Professor.objects.filter(user__id = request.user.id).exists():
+            Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
     
 def get_user(request, user_id):
     user = User.objects.get(pk=user_id).serialize()
-    if Student.objects.filter(user_id__id = user_id).first():
-        student = Student.objects.get(user_id__id = user_id).serialize()
+    if Student.objects.filter(user__id = user_id).exists():
+        student = Student.objects.get(user__id = user_id).serialize()
         user.update(student)
         return JsonResponse(user, safe=False)
-    if Professor.objects.filter(user_id__id = user_id).first():
-        professor = Professor.objects.filter(user_id__id = user_id).first().serialize()
+    if Professor.objects.filter(user__id = user_id).exists():
+        professor = Professor.objects.filter(user__id = user_id).first().serialize()
         user.update(professor)
         return JsonResponse(user, safe=False)
-    elif Employer.objects.filter(user_id__id = user_id).first():
-        employer = Employer.objects.get(user_id__id = user_id).serialize()
+    elif Employer.objects.filter(user__id = user_id).exists():
+        employer = Employer.objects.get(user__id = user_id).serialize()
         user.update(employer)
         return JsonResponse(user, safe=False)
     
@@ -124,10 +126,24 @@ def get_major(request):
     majors = Major.objects.all()
     return JsonResponse([major.serialize() for major in majors], safe=False)
 
-def get_user_type(request, user_id):
-    if Student.objects.get(user_id__id = user_id):
-        return JsonResponse({'user_type': 'student'}, safe=False)
-    elif Professor.objects.get(user_id__id = user_id):
-        return JsonResponse({'user_type': 'professor'}, safe=False)
-    elif Employer.objects.get(user_id__id = user_id):
-        return JsonResponse({'user_type': 'employer'}, safe=False)
+@csrf_exempt
+def update_user(request):
+    url = reverse(index, kwargs={'user_id': request.user.id})
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user = UserForm(data, instance=User.objects.get(pk=request.user.id))
+
+        if Student.objects.filter(user__id = request.user.id).exists():
+            Student.objects.filter(user__id = request.user.id).update(
+                major = data.get('major', '')
+            )
+        elif Professor.objects.filter(user__id = request.user.id).exists():
+            Professor.objects.filter(user__id = request.user.id).update(
+                major = data.get('major', '')
+            )
+
+        if user.is_valid():
+            user.save()
+        return HttpResponseRedirect(url)
+    else:
+        return HttpResponseRedirect(url) 
