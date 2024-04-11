@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.http import HttpResponse
+from django.forms import forms
+import datetime
 
 from .models import *
 # Create your views here.
+    
 def index(request):
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
@@ -91,6 +94,44 @@ def followed_companies(request):
     })
     
 def create_job_post(request):
+    if request.method == "POST":
+        job_title = request.POST.get('job_title')
+        job_type = request.POST.get('job_type')
+        company = Company.objects.get(pk=request.POST.get('company'))
+        job_desc_text = request.POST.get('job_desc_text')
+        job_desc_file = request.POST.get('job_desc_file')
+        job_requirement_text = request.POST.get('job_requirement_text')
+        job_requirement_file = request.POST.get('job_requirement_file')
+        job_major = Major.objects.filter(pk__in=request.POST.getlist('job_major'))
+        job_post_date = datetime.datetime.now()
+        job_close_date =  request.POST.get('job_close_date')
+        job_location =  request.POST.get('job_location')
+        job_status = 'active'
+        new_job_post = JobPost(job_title=job_title, 
+                               job_type=job_type, 
+                               company=company, 
+                               job_desc_text=job_desc_text, 
+                               job_desc_file=job_desc_file, 
+                               job_requirement_text=job_requirement_text, 
+                               job_requirement_file=job_requirement_file,
+                               job_post_date = job_post_date,
+                               job_close_date = job_close_date,
+                               job_location = job_location,
+                               job_status = job_status
+                               )
+        if Employer.objects.filter(user_id=request.user):
+            poster_emp = Employer.objects.filter(user_id=request.user).first()
+            new_job_post.poster_emp = poster_emp
+        elif Professor.objects.filter(user_id=request.user):
+            poster_prof = Professor.objects.filter(user_id=request.user).first()
+            new_job_post.poster_prof = poster_prof
+        new_job_post.save()
+        JobPost.objects.last().job_major.set(job_major)
+        
+        return HttpResponse(job_major)
+    
     return render(request, 'job_post/create_job_post.html', {
-        'job_type_choices': JobPost.job_type_choices
+        'job_type_choices': JobPost.job_type_choices,
+        'all_companies': Company.objects.all(),
+        'all_major': Major.objects.all()
     })

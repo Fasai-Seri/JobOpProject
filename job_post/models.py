@@ -8,7 +8,7 @@ from company.models import *
 class JobPost(models.Model):
     
     job_type_choices = (
-        ("internship", "Intern"),
+        ("internship", "Internship"),
         ("part time", "Part Time"),
         ("full time", "Full Time")
     )
@@ -28,7 +28,7 @@ class JobPost(models.Model):
     job_requirement_text = models.CharField(max_length=1000, null=True, blank=True)
     job_requirement_file = models.FileField(upload_to='static/job_post/files', null=True, blank=True)
     job_major = models.ManyToManyField(Major, related_name="job_posts_by_major")
-    job_posted_date = models.DateTimeField(default=now)
+    job_post_date = models.DateTimeField(default=now)
     job_close_date = models.DateTimeField(null=True, blank=True)
     job_location = models.CharField(max_length=500, null=True, blank=True)
     job_status = models.CharField(choices=job_status_choices, max_length=10, default='')
