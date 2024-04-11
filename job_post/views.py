@@ -10,8 +10,8 @@ def index(request):
         all_job_posts = JobPost.objects.filter(
             Q(job_title__icontains=search_term) |
             Q(job_type__icontains=search_term) |
-            Q(job_desc__icontains=search_term) |
-            Q(job_requirements__icontains=search_term) |
+            Q(job_desc_text__icontains=search_term) |
+            Q(job_requirement_text__icontains=search_term) |
             Q(job_location__icontains=search_term) |
             Q(job_status__icontains=search_term) 
             )
@@ -48,8 +48,8 @@ def favourite(request):
         all_job_posts = request.user.favourite_posts.filter(
             Q(job_title__icontains=search_term) |
             Q(job_type__icontains=search_term) |
-            Q(job_desc__icontains=search_term) |
-            Q(job_requirements__icontains=search_term) |
+            Q(job_desc_text__icontains=search_term) |
+            Q(job_requirement_text__icontains=search_term) |
             Q(job_location__icontains=search_term) |
             Q(job_status__icontains=search_term) 
             )
@@ -65,8 +65,8 @@ def following(request):
         all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all()).filter(
             Q(job_title__icontains=search_term) |
             Q(job_type__icontains=search_term) |
-            Q(job_desc__icontains=search_term) |
-            Q(job_requirements__icontains=search_term) |
+            Q(job_desc_text__icontains=search_term) |
+            Q(job_requirement_text__icontains=search_term) |
             Q(job_location__icontains=search_term) |
             Q(job_status__icontains=search_term) 
             )
@@ -88,4 +88,9 @@ def followed_companies(request):
         all_companies = request.user.followed_company.all()
     return render(request, 'job_post/followed_companies.html', {
         'all_companies': all_companies
+    })
+    
+def create_job_post(request):
+    return render(request, 'job_post/create_job_post.html', {
+        'job_type_choices': JobPost.job_type_choices
     })
