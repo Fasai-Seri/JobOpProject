@@ -58,3 +58,24 @@ def favourite(request):
     return render(request, 'job_post/favourite.html', {
         'all_job_posts': all_job_posts,
     })
+    
+def following(request):
+    if request.GET.get('search_term'):
+        search_term = request.GET.get('search_term')
+        all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all()).filter(
+            Q(job_title__icontains=search_term) |
+            Q(job_type__icontains=search_term) |
+            Q(job_desc__icontains=search_term) |
+            Q(job_requirements__icontains=search_term) |
+            Q(job_location__icontains=search_term) |
+            Q(job_status__icontains=search_term) 
+            )
+    else:
+        all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
+    return render(request, 'job_post/following.html', {
+        'all_job_posts': all_job_posts,
+        'followed_companies': request.user.followed_company.all()
+    })
+    
+def followed_companies(request):
+    return HttpResponse('followed_companies')
