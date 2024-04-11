@@ -4,7 +4,7 @@ from django.db import models
 class Company(models.Model):
     comp_name = models.CharField(max_length=100, null=True)
     comp_desc = models.CharField(max_length=1000, null=True)
-    comp_logo = models.ImageField(upload_to='static/company/Images', default='static/company/Images/default.jpg', null=True)
+    comp_logo = models.ImageField(upload_to='media/company/Images', default='media/company/Images/default.jpg', null=True)
     comp_long = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     comp_lat  = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     
