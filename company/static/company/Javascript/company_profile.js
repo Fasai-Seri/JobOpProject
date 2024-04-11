@@ -10,6 +10,8 @@ const CompanyProfile = () => {
     fetch_company();
   }, []);
 
+  console.log(company);
+
   function fetch_company() {
     fetch(`get_company/${comp_id}`)
       .then((response) => response.json())
@@ -45,12 +47,14 @@ const CompanyProfile = () => {
 
   function handleLogoUpload() {
     const logo = document.querySelector("#comp_logo").files[0];
-    const formData = new FormData();
-    formData.append("comp_logo", logo);
-    fetch(`update_comp_logo/${comp_id}`, {
-      method: "POST",
-      body: formData,
-    });
+    if (logo) {
+      const formData = new FormData();
+      formData.append("comp_logo", logo);
+      fetch(`update_comp_logo/${comp_id}`, {
+        method: "POST",
+        body: formData,
+      });
+    }
   }
 
   function handleEditCompClick() {
