@@ -152,9 +152,17 @@ def update_user(request):
 def update_user_photo(request):
     if request.method == 'POST':
         photo = request.FILES.get('user_photo')
-        print(photo)
-
         user=request.user
         user.user_photo = photo
         user.save()
-        return HttpResponse('Upload Succesful')
+        return HttpResponse('Upload Photo Succesful')
+    
+@csrf_exempt
+def update_student_resume(request):
+    if request.method == 'POST':
+        resume = request.FILES.get('student_resume')
+        print(resume)
+        student = Student.objects.get(user__id = request.user.id)
+        student.student_resume = resume
+        student.save()
+        return HttpResponse('Upload Resume Succesful')

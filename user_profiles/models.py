@@ -11,14 +11,21 @@ class User(AbstractUser):
     user_photo = models.ImageField(upload_to='static/user_profiles/Images', null=True, blank=True)
     
     def serialize(self):
-        return {
-            'email': self.email,
-            'fname': self.fname,
-            'lname':self.lname,
-            'phone':self.phone,
-            'user_photo': self.user_photo.url[1:],
-        }
-
+        if self.user_photo != '':
+            return {
+                'email': self.email,
+                'fname': self.fname,
+                'lname':self.lname,
+                'phone':self.phone,
+                'user_photo': self.user_photo.url[1:],
+            }
+        else:
+            return {
+                'email': self.email,
+                'fname': self.fname,
+                'lname':self.lname,
+                'phone':self.phone,
+            }
 
 class Major(models.Model):
     major_id = models.CharField(validators=[MinLengthValidator(3)], max_length=3, primary_key=True)
@@ -60,9 +67,16 @@ class Employer(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id', null=True)
     major = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id', null=True)
-    student_resume = models.FileField(upload_to='static/user_profiles/Files', null=True)
+    student_resume = models.FileField(upload_to='static/user_profiles/Files', null=True, blank=True)
     def serialize(self):
-        return {
-            'major': self.major.major_id,
-            'type': 'student'
-        }
+        if self.student_resume != '':
+            return {
+                'major': self.major.major_id,
+                'type': 'student',
+                'resume': self.student_resume.url[1:],
+            }
+        else:
+             return {
+                'major': self.major.major_id,
+                'type': 'student',
+            }

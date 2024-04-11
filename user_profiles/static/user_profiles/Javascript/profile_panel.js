@@ -3,6 +3,7 @@ const ProfilePanel = (props) => {
   const [majors, setMajors] = React.useState([]);
   const [isDisabled, setIsDisabled] = React.useState("true");
   const [previewPhoto, setPreviewPhoto] = React.useState("");
+  const [previewResume, setPreviewResume] = React.useState("");
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
   const csrftoken = data.csrfToken;
@@ -39,6 +40,7 @@ const ProfilePanel = (props) => {
     fetchUser();
     setIsDisabled("true");
     setPreviewPhoto("");
+    setPreviewResume("");
   }
 
   function handleProfileChange(e) {
@@ -54,6 +56,10 @@ const ProfilePanel = (props) => {
     const photo = document.querySelector("#profile_photo").files[0];
     setPreviewPhoto(URL.createObjectURL(photo));
   }
+  function handlePreviewResume() {
+    const resume = document.querySelector("#resume").files[0];
+    setPreviewResume(URL.createObjectURL(resume));
+  }
 
   function handleUploadProfile() {
     const photo = document.querySelector("#profile_photo").files[0];
@@ -61,6 +67,17 @@ const ProfilePanel = (props) => {
     formData.append("user_photo", photo);
     console.log(photo);
     fetch("update_user_photo", {
+      method: "POST",
+      body: formData,
+    });
+  }
+
+  function handleUploadResume() {
+    const resume = document.querySelector("#resume").files[0];
+    const formData = new FormData();
+    formData.append("student_resume", resume);
+    console.log(resume);
+    fetch("update_student_resume", {
       method: "POST",
       body: formData,
     });
@@ -78,7 +95,6 @@ const ProfilePanel = (props) => {
       }),
     });
   }
-  console.log(isDisabled);
 
   function MajorSelect() {
     return (
@@ -100,6 +116,98 @@ const ProfilePanel = (props) => {
         </select>
       </div>
     );
+  }
+
+  function ResumeSection() {
+    if (user.resume) {
+      if (isDisabled == "true") {
+        return (
+          <div>
+            <MajorSelect />
+            <p>Resume</p>
+            <embed src={user.resume} width="50%" height="1050px" />:
+          </div>
+        );
+      } else {
+        if (previewResume) {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+              <embed src={previewResume} width="50%" height="1050px" />
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+              <embed src={user.resume} width="50%" height="1050px" />
+            </div>
+          );
+        }
+      }
+    } else {
+      if (isDisabled == "true") {
+        return (
+          <div>
+            <MajorSelect />
+            <p>Resume</p>
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              value="No Resume"
+            />
+          </div>
+        );
+      } else {
+        if (previewResume) {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+              <embed src={previewResume} width="50%" height="1050px" />
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+            </div>
+          );
+        }
+      }
+    }
   }
 
   return (
@@ -208,21 +316,77 @@ const ProfilePanel = (props) => {
           />
         </div>
         {user.type == "student" ? (
-          <div>
-            <MajorSelect />
-            {isDisabled == "True" && (
-              <div class="form-group">
-                <label for="resume">Example file input</label>
+          user.resume ? (
+            isDisabled == "true" ? (
+              <div>
+                <MajorSelect />
+                <p>Resume</p>
+                <embed src={user.resume} width="50%" height="1050px" />:
+              </div>
+            ) : previewResume ? (
+              <div>
+                <MajorSelect />
+                <p>Resume</p>
                 <input
                   type="file"
                   class="form-control-file"
                   id="resume"
                   name="resume"
-                  onChange={handleProfileChange}
+                  onChange={handlePreviewResume}
                 />
+                <embed src={previewResume} width="50%" height="1050px" />
               </div>
-            )}
-          </div>
+            ) : (
+              <div>
+                <MajorSelect />
+                <p>Resume</p>
+                <input
+                  type="file"
+                  class="form-control-file"
+                  id="resume"
+                  name="resume"
+                  onChange={handlePreviewResume}
+                />
+                <embed src={user.resume} width="50%" height="1050px" />
+              </div>
+            )
+          ) : isDisabled == "true" ? (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="text"
+                class="form-control"
+                disabled
+                value="No Resume"
+              />
+            </div>
+          ) : previewResume ? (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+              <embed src={previewResume} width="50%" height="1050px" />
+            </div>
+          ) : (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+            </div>
+          )
         ) : user.type == "professor" ? (
           <MajorSelect />
         ) : (
@@ -256,7 +420,10 @@ const ProfilePanel = (props) => {
           <div>
             <input
               class="btn btn-primary"
-              onClick={handleUploadProfile}
+              onClick={() => {
+                handleUploadProfile();
+                handleUploadResume();
+              }}
               type="submit"
               value="Save"
             />

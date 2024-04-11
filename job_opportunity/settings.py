@@ -29,6 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
 # Application definition
 
