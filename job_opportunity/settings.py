@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "job_post",
     "user_profiles",
+    'company',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
