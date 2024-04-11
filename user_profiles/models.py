@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator
 from django.db import models
+from company.models import Company
 
 # Create your models here.
 
@@ -9,6 +10,7 @@ class User(AbstractUser):
     lname = models.CharField(max_length=100, null=True)
     phone = models.CharField(validators=[MinLengthValidator(10)], max_length=10, null=True)
     user_photo = models.ImageField(upload_to='static/user_profiles/Images', null=True)
+    followed_company = models.ManyToManyField(Company, related_name="following_user", blank=True)
     
     def serialize(self):
         return {
@@ -41,17 +43,6 @@ class Professor(models.Model):
         
     def __str__(self):
         return f"{self.user_id}"
-
-class Company(models.Model):
-    comp_name = models.CharField(max_length=100, null=True)
-    comp_desc = models.CharField(max_length=1000, null=True)
-    comp_logo = models.ImageField(upload_to='static/user_profiles/Images', default='static/user_profiles/Images/default.jpg', null=True)
-    following_user = models.ManyToManyField(User, related_name="followed_company", blank=True)
-    
-    def __str__(self):
-        return f"{self.comp_name}"
-    pass
-
 class Employer(models.Model):
     prof_id = models.ForeignKey(Professor, on_delete=models.PROTECT, related_name='approve_prof_id', null=True)
     comp_id = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='comp_id', null=True)
