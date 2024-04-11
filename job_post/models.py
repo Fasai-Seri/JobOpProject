@@ -29,7 +29,7 @@ class JobPost(models.Model):
     job_close_date = models.DateTimeField(null=True, blank=True)
     job_location = models.CharField(max_length=500, null=True, blank=True)
     job_status = models.CharField(choices=job_status_choices, max_length=10, default='')
-    favourite_user = models.ManyToManyField(User, related_name="fovourite_posts", null=True, blank=True)
+    favourite_user = models.ManyToManyField(User, related_name="favourite_posts", blank=True)
     
     def __str__(self):
         return f"{self.job_title} ({self.company})"
