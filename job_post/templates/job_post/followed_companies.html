@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block body %}
-<form action="{% url 'favourite' %}" method='GET'>
+<form action="{% url 'followed_companies' %}" method='GET'>
 <input type="search" placeholder="Search.." name='search_term'>
 </form>
-{{ all_job_posts }}
+{{ all_companies }}
 {% endblock %}
