@@ -8,7 +8,7 @@ class User(AbstractUser):
     fname = models.CharField(max_length=100, null=True)
     lname = models.CharField(max_length=100, null=True)
     phone = models.CharField(validators=[MinLengthValidator(10)], max_length=10, null=True)
-    user_photo = models.ImageField(upload_to='static/user_profiles/Images', null=True, blank=True)
+    user_photo = models.ImageField(upload_to='media/user_profiles/Images', null=True, blank=True)
     
     def serialize(self):
         if self.user_photo != '':
@@ -67,7 +67,7 @@ class Employer(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id', null=True)
     major = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id', null=True)
-    student_resume = models.FileField(upload_to='static/user_profiles/Files', null=True, blank=True)
+    student_resume = models.FileField(upload_to='media/user_profiles/Files', null=True, blank=True)
     def serialize(self):
         if self.student_resume != '':
             return {
