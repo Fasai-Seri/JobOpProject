@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q
+from django.http import HttpResponse
 
 from .models import *
 # Create your views here.
@@ -31,4 +32,12 @@ def companies(request):
         all_companies = Company.objects.all()    
     return render(request, 'job_post/companies.html', {
         'all_companies': all_companies,
+    })
+    
+def create_company(request):
+    if request.method == "POST":
+        return HttpResponse(request)
+    
+    return render(request, 'job_post/create_company.html', {
+        
     })

@@ -6,4 +6,6 @@
 <input type="text" placeholder="Search.." name='search_term'>
 </form>
 {{ all_companies }}
+<a href="{% url 'create_company' %}"><button>create</button></a>
+{% comment %} <button type='submit' formtarget="{% url 'create_company' %}">create</button> {% endcomment %}
 {% endblock %}
