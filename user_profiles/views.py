@@ -147,3 +147,14 @@ def update_user(request):
         return HttpResponseRedirect(url)
     else:
         return HttpResponseRedirect(url) 
+
+@csrf_exempt
+def update_user_photo(request):
+    if request.method == 'POST':
+        photo = request.FILES.get('user_photo')
+        print(photo)
+
+        user=request.user
+        user.user_photo = photo
+        user.save()
+        return HttpResponse('Upload Succesful')

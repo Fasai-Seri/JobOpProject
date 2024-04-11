@@ -2,6 +2,7 @@ const ProfilePanel = (props) => {
   const [user, setUser] = React.useState({});
   const [majors, setMajors] = React.useState([]);
   const [isDisabled, setIsDisabled] = React.useState("true");
+  const [previewPhoto, setPreviewPhoto] = React.useState("");
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
   const csrftoken = data.csrfToken;
@@ -37,6 +38,7 @@ const ProfilePanel = (props) => {
   function handleCancleClick() {
     fetchUser();
     setIsDisabled("true");
+    setPreviewPhoto("");
   }
 
   function handleProfileChange(e) {
@@ -46,6 +48,22 @@ const ProfilePanel = (props) => {
       [name]: value,
     }));
     console.log(name, value);
+  }
+
+  function handlePreviewProfile() {
+    const photo = document.querySelector("#profile_photo").files[0];
+    setPreviewPhoto(URL.createObjectURL(photo));
+  }
+
+  function handleUploadProfile() {
+    const photo = document.querySelector("#profile_photo").files[0];
+    const formData = new FormData();
+    formData.append("user_photo", photo);
+    console.log(photo);
+    fetch("update_user_photo", {
+      method: "POST",
+      body: formData,
+    });
   }
 
   function handleProfileSubmit(e) {
@@ -86,8 +104,20 @@ const ProfilePanel = (props) => {
 
   return (
     <div>
-      {user.user_photo ? (
-        <img src={user.user_photo} width="200" height="200" />
+      {previewPhoto ? (
+        <img
+          class="rounded-circle"
+          src={previewPhoto}
+          width="200"
+          height="200"
+        />
+      ) : user.user_photo ? (
+        <img
+          class="rounded-circle"
+          src={user.user_photo}
+          width="200"
+          height="200"
+        />
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -104,6 +134,19 @@ const ProfilePanel = (props) => {
           />
         </svg>
       )}
+      {isDisabled == "false" && (
+        <div>
+          <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+          <input
+            type="file"
+            class="form-control-file"
+            id="profile_photo"
+            name="user_photo"
+            enctype="multipart/form-data"
+            onChange={handlePreviewProfile}
+          />
+        </div>
+      )}
       {isDisabled == "true" && (
         <button class="btn btn-primary" onClick={handleEditClick}>
           Edit
@@ -111,18 +154,7 @@ const ProfilePanel = (props) => {
       )}
       <form id="profile_form" method="post" onSubmit={handleProfileSubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
-        {isDisabled == "True" && (
-          <div class="form-group">
-            <input
-              type="file"
-              class="form-control-file"
-              id="profile_photo"
-              name="user_photo"
-              enctype="multipart/form-data"
-              onChange={handleProfileChange}
-            />
-          </div>
-        )}
+
         <div class="form-group">
           <label for="fname">First name</label>
           <input
@@ -222,7 +254,12 @@ const ProfilePanel = (props) => {
         </div>
         {isDisabled == "false" && (
           <div>
-            <input class="btn btn-primary" type="submit" value="Save" />
+            <input
+              class="btn btn-primary"
+              onClick={handleUploadProfile}
+              type="submit"
+              value="Save"
+            />
             <button class="btn btn-primary" onClick={handleCancleClick}>
               Cancle
             </button>

@@ -16,6 +16,7 @@ urlpatterns = [
     path('get_user/<int:user_id>', views.get_user, name='get_user'),
     path('get_major', views.get_major, name='get_major'),
     path('update_user', views.update_user, name='update_user'),
+    path('update_user_photo', views.update_user_photo, name='update_user_photo'),
 ]
 
 if settings.DEBUG:

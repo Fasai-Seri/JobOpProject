@@ -16,7 +16,10 @@ class User(AbstractUser):
             'fname': self.fname,
             'lname':self.lname,
             'phone':self.phone,
+            'user_photo': self.user_photo.url[1:],
         }
+
+
 class Major(models.Model):
     major_id = models.CharField(validators=[MinLengthValidator(3)], max_length=3, primary_key=True)
     major_desc = models.CharField(max_length=100, null=True)
