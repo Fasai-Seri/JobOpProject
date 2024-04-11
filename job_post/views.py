@@ -78,4 +78,14 @@ def following(request):
     })
     
 def followed_companies(request):
-    return HttpResponse('followed_companies')
+    if request.GET.get('search_term'):
+        search_term = request.GET.get('search_term')
+        all_companies = request.user.followed_company.all().filter(
+            Q(comp_name__icontains=search_term) |
+            Q(comp_desc__icontains=search_term) 
+            )
+    else:
+        all_companies = request.user.followed_company.all()
+    return render(request, 'job_post/followed_companies.html', {
+        'all_companies': all_companies
+    })
