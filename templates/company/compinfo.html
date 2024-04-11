@@ -1,0 +1,10 @@
+{% extends "layout.html" %} {% block body %}
+<div id="company"></div>
+{% endblock %} {% block script %}
+<script
+  id="company_script"
+  type="text/babel"
+  src="../static/company/Javascript/company_profile.js"
+  data-user-id="{{ user_id }}"
+></script>
+{% endblock %}
