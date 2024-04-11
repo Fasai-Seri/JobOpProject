@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 
 from user_profiles.models import *
+from company.models import *
 # Create your models here.
 
 class JobPost(models.Model):
