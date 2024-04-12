@@ -23,6 +23,7 @@ const ProfilePanel = (props) => {
         console.log(user);
       });
   }
+  console.log(user);
 
   function fetchMajors() {
     fetch(`get_major`)
@@ -63,24 +64,28 @@ const ProfilePanel = (props) => {
 
   function handleUploadProfile() {
     const photo = document.querySelector("#profile_photo").files[0];
-    const formData = new FormData();
-    formData.append("user_photo", photo);
-    console.log(photo);
-    fetch("update_user_photo", {
-      method: "POST",
-      body: formData,
-    });
+    if (photo) {
+      const formData = new FormData();
+      formData.append("user_photo", photo);
+      console.log(photo);
+      fetch("update_user_photo", {
+        method: "POST",
+        body: formData,
+      });
+    }
   }
 
   function handleUploadResume() {
     const resume = document.querySelector("#resume").files[0];
-    const formData = new FormData();
-    formData.append("student_resume", resume);
-    console.log(resume);
-    fetch("update_student_resume", {
-      method: "POST",
-      body: formData,
-    });
+    if (resume) {
+      const formData = new FormData();
+      formData.append("student_resume", resume);
+      console.log(resume);
+      fetch("update_student_resume", {
+        method: "POST",
+        body: formData,
+      });
+    }
   }
 
   function handleProfileSubmit(e) {
