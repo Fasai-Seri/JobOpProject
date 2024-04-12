@@ -65,6 +65,16 @@
         Location:
         <textarea class="form-control" name="job_location">{{ edited_job_post.job_location }}</textarea>
     </div>
+    Status:
+        <select name="job_status" class="form-control">
+            {% for choice in job_status_choices %}
+            {% if choice.0 == edited_job_post.job_status %}
+            <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+            {% else %}
+            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endif %}
+            {% endfor %}   
+        </select>
     <input type="submit" class="btn btn-primary" value="Save"/>
 </form>
 {% endblock %}

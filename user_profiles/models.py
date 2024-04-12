@@ -30,7 +30,7 @@ class User(AbstractUser):
                 
             }
     def __str__(self):
-        return f"{self.fname} {self.lname}"
+        return f"{self.username}"
 class Major(models.Model):
     major_id = models.CharField(validators=[MinLengthValidator(3)], max_length=3, primary_key=True)
     major_desc = models.CharField(max_length=100, null=True)
