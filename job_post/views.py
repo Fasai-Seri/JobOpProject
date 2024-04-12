@@ -142,6 +142,29 @@ def display_job_post(request, job_post_id):
         'selected_job_post': JobPost.objects.get(pk=job_post_id)
     })
     
+def edit_job_post(request, job_post_id):
+    if request.method == "POST":
+        edited_job_post = JobPost.objects.get(pk=job_post_id)
+        edited_job_post.job_title = request.POST.get('job_title')
+        edited_job_post.job_type = request.POST.get('job_type')
+        edited_job_post.company = Company.objects.get(pk=request.POST.get('company'))
+        edited_job_post.job_desc_text = request.POST.get('job_desc_text')
+        edited_job_post.job_desc_file = request.POST.get('job_desc_file')
+        edited_job_post.job_requirement_text = request.POST.get('job_requirement_text')
+        edited_job_post.job_requirement_file = request.POST.get('job_requirement_file')
+        edited_job_post.job_close_date =  request.POST.get('job_close_date')
+        edited_job_post.job_location =  request.POST.get('job_location')
+        edited_job_post.job_major.set(Major.objects.filter(pk__in=request.POST.getlist('job_major'))) 
+        edited_job_post.save()
+        return HttpResponseRedirect(reverse('display_job_post', args=(job_post_id,)))
+        
+    return render(request, 'job_post/edit_job_post.html', {
+        'edited_job_post': JobPost.objects.get(pk=job_post_id),
+        'job_type_choices': JobPost.job_type_choices,
+        'all_companies': Company.objects.all(),
+        'all_major': Major.objects.all(),
+    })
+    
 def update_job_desc_file(request):
     pass
     # if request.method == 'POST':
