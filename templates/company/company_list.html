@@ -1,0 +1,11 @@
+{% extends "layout.html" %} {% block body %}
+<div id="company_list"></div>
+{% endblock %} {% block script %}
+<script
+  id="company_list_script"
+  type="text/babel"
+  src="../static/company/Javascript/company_list.js"
+  data-csrf-token="{{ csrf_token }}"
+  data-companies="{{ all_companies }}"
+></script>
+{% endblock %}
