@@ -17,7 +17,9 @@ def index(request):
             Q(job_desc_text__icontains=search_term) |
             Q(job_requirement_text__icontains=search_term) |
             Q(job_location__icontains=search_term) |
-            Q(job_status__icontains=search_term) 
+            Q(job_status__icontains=search_term) |
+            Q(company__comp_name__icontains=search_term) |
+            Q(company__comp_desc__icontains=search_term) 
             )
     else:
         all_job_posts = JobPost.objects.all()    
@@ -55,7 +57,9 @@ def favourite(request):
             Q(job_desc_text__icontains=search_term) |
             Q(job_requirement_text__icontains=search_term) |
             Q(job_location__icontains=search_term) |
-            Q(job_status__icontains=search_term) 
+            Q(job_status__icontains=search_term) |
+            Q(company__comp_name__icontains=search_term) |
+            Q(company__comp_desc__icontains=search_term) 
             )
     else:
         all_job_posts = request.user.favourite_posts.all()    
@@ -72,7 +76,9 @@ def following(request):
             Q(job_desc_text__icontains=search_term) |
             Q(job_requirement_text__icontains=search_term) |
             Q(job_location__icontains=search_term) |
-            Q(job_status__icontains=search_term) 
+            Q(job_status__icontains=search_term) |
+            Q(company__comp_name__icontains=search_term) |
+            Q(company__comp_desc__icontains=search_term) 
             )
     else:
         all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
