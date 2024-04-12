@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.forms import forms
 import datetime
 
@@ -128,10 +129,27 @@ def create_job_post(request):
         new_job_post.save()
         JobPost.objects.last().job_major.set(job_major)
         
-        return HttpResponse(job_major)
+        return HttpResponseRedirect(reverse('job_post_index'))
     
     return render(request, 'job_post/create_job_post.html', {
         'job_type_choices': JobPost.job_type_choices,
         'all_companies': Company.objects.all(),
         'all_major': Major.objects.all()
     })
+    
+def display_job_post(request, job_post_id):
+    return render(request, 'job_post/display_job_post.html', {
+        'selected_job_post': JobPost.objects.get(pk=job_post_id)
+    })
+    
+def update_job_desc_file(request):
+    pass
+    # if request.method == 'POST':
+    #     job_desc_file = request.FILES.get('job_desc_file')
+    #     updated_job_post = JobPost.objects
+    #     updated_job_post.job_desc_file = file
+    #     updated_job_post.save()
+    #     return HttpResponse('Upload Photo Succesful')
+
+def update_job_requirement_file(request):
+    pass

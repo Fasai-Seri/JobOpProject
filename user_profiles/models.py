@@ -29,6 +29,8 @@ class User(AbstractUser):
                 'phone':self.phone,
                 
             }
+    def __str__(self):
+        return f"{self.fname} {self.lname}"
 class Major(models.Model):
     major_id = models.CharField(validators=[MinLengthValidator(3)], max_length=3, primary_key=True)
     major_desc = models.CharField(max_length=100, null=True)
@@ -52,7 +54,8 @@ class Professor(models.Model):
         }
         
     def __str__(self):
-        return f"{self.user_id}"
+        return f"{self.user}"
+    
 class Employer(models.Model):
     prof = models.ForeignKey(Professor, on_delete=models.PROTECT, related_name='approve_prof_id', null=True)
     comp = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='comp_id', null=True)
