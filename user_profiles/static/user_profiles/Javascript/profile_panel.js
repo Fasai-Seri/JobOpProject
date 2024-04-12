@@ -88,7 +88,7 @@ const ProfilePanel = (props) => {
     }
   }
 
-  function handleProfileSubmit(e) {
+  function handleProfileSubmit() {
     fetch(`update_user`, {
       method: "POST",
       body: JSON.stringify({

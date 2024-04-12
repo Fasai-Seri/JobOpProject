@@ -1,5 +1,6 @@
 import json
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import auth
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -24,11 +25,11 @@ def login_view(request):
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+        user = auth.authenticate(request, username=username, password=password)
 
         # Check if authentication successful
         if user is not None:
-            login(request, user)
+            auth.login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "user_profiles/login.html", {
