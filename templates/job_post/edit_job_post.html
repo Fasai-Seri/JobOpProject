@@ -23,7 +23,7 @@
     </div>
     <div>
         Company:
-        <select name="company" class="form-control">
+        <select name="company" class="form-control dropdown_with_search">
             {% for company in all_companies %}
             {% if company == edited_job_post.company %}
             <option value="{{ company.pk }}" selected>{{ company.comp_name }}</option>
@@ -77,4 +77,12 @@
         </select>
     <input type="submit" class="btn btn-primary" value="Save"/>
 </form>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        $('.dropdown_with_search').select2();
+    });
+</script>
 {% endblock %}

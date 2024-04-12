@@ -21,6 +21,7 @@
     <div>
         Company:
         <select name="company" class="form-control dropdown_with_search">
+            <option value="">---</option>
             {% for company in all_companies %}
             <option value="{{ company.pk }}">{{ company.comp_name }}</option>
             {% endfor %}
