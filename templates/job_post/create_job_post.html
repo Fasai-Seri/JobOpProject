@@ -20,7 +20,7 @@
     </div>
     <div>
         Company:
-        <select name="company" class="form-control">
+        <select name="company" class="form-control dropdown_with_search">
             {% for company in all_companies %}
             <option value="{{ company.pk }}">{{ company.comp_name }}</option>
             {% endfor %}
@@ -54,4 +54,12 @@
     </div>
     <input type="submit" class="btn btn-primary" value="Create"/>
 </form>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        $('.dropdown_with_search').select2();
+    });
+</script>
 {% endblock %}
