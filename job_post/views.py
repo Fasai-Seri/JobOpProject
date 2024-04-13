@@ -27,27 +27,6 @@ def index(request):
         'all_job_posts': all_job_posts,
     })
     
-def companies(request):
-    if request.GET.get('search_term'):
-        search_term = request.GET.get('search_term')
-        all_companies = Company.objects.filter(
-            Q(comp_name__icontains=search_term) |
-            Q(comp_desc__icontains=search_term) 
-            )
-    else:
-        all_companies = Company.objects.all()    
-    return render(request, 'job_post/companies.html', {
-        'all_companies': all_companies,
-    })
-    
-def create_company(request):
-    if request.method == "POST":
-        return HttpResponse(request)
-    
-    return render(request, 'job_post/create_company.html', {
-        
-    })
-    
 def favourite(request):
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
@@ -106,9 +85,7 @@ def create_job_post(request):
         job_type = request.POST.get('job_type')
         company = Company.objects.get(pk=request.POST.get('company'))
         job_desc_text = request.POST.get('job_desc_text')
-        job_desc_file = request.POST.get('job_desc_file')
         job_requirement_text = request.POST.get('job_requirement_text')
-        job_requirement_file = request.POST.get('job_requirement_file')
         job_major = Major.objects.filter(pk__in=request.POST.getlist('job_major'))
         job_post_date = datetime.datetime.now()
         job_close_date =  request.POST.get('job_close_date')
@@ -118,9 +95,7 @@ def create_job_post(request):
                                job_type=job_type, 
                                company=company, 
                                job_desc_text=job_desc_text, 
-                               job_desc_file=job_desc_file, 
                                job_requirement_text=job_requirement_text, 
-                               job_requirement_file=job_requirement_file,
                                job_post_date = job_post_date,
                                job_close_date = job_close_date,
                                job_location = job_location,
@@ -133,7 +108,12 @@ def create_job_post(request):
             poster_prof = Professor.objects.filter(user_id=request.user).first()
             new_job_post.poster_prof = poster_prof
         new_job_post.save()
-        JobPost.objects.last().job_major.set(job_major)
+        
+        saved_job_post = JobPost.objects.last()
+        saved_job_post.job_major.set(job_major)
+        saved_job_post.job_desc_file = request.FILES.get('job_desc_file')
+        saved_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
+        saved_job_post.save()
         
         return HttpResponseRedirect(reverse('job_post_index'))
     
@@ -146,19 +126,21 @@ def create_job_post(request):
 def display_job_post(request, job_post_id):
     return render(request, 'job_post/display_job_post.html', {
         'selected_job_post': JobPost.objects.get(pk=job_post_id),
-        'all_applicants': JobPost.objects.get(pk=job_post_id).applicants.all()
+        'all_applicants': JobPost.objects.get(pk=job_post_id).applicants.all(),
+        'test': JobPost.objects.get(pk=job_post_id).job_desc_file
     })
     
 def edit_job_post(request, job_post_id):
+
     if request.method == "POST":
         edited_job_post = JobPost.objects.get(pk=job_post_id)
         edited_job_post.job_title = request.POST.get('job_title')
         edited_job_post.job_type = request.POST.get('job_type')
         edited_job_post.company = Company.objects.get(pk=request.POST.get('company'))
         edited_job_post.job_desc_text = request.POST.get('job_desc_text')
-        edited_job_post.job_desc_file = request.POST.get('job_desc_file')
+        edited_job_post.job_desc_file = request.FILES.get('job_desc_file')
         edited_job_post.job_requirement_text = request.POST.get('job_requirement_text')
-        edited_job_post.job_requirement_file = request.POST.get('job_requirement_file')
+        edited_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
         edited_job_post.job_close_date =  request.POST.get('job_close_date')
         edited_job_post.job_location =  request.POST.get('job_location')
         edited_job_post.job_status =  request.POST.get('job_status')

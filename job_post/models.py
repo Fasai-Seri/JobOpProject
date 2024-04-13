@@ -1,11 +1,20 @@
 from django.db import models
 from django.utils.timezone import now
+from .storage import OverwriteStorage
+import os
 
 from user_profiles.models import *
 from company.models import *
 # Create your models here.
 
 class JobPost(models.Model):
+    
+    def path_and_rename(path):
+        def wrapper(instance, filename):
+            ext = filename.split('.')[-1]
+            filename = f'{instance.id}_{instance}.{ext}'
+            return os.path.join(path, filename)
+        return wrapper
     
     job_type_choices = (
         ("internship", "Internship"),
@@ -24,9 +33,9 @@ class JobPost(models.Model):
     job_type = models.CharField(choices=job_type_choices, max_length=10, default='')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="job_posts_by_company", default='')
     job_desc_text = models.CharField(max_length=1000, null=True, blank=True)
-    job_desc_file = models.FileField(upload_to='static/job_post/files', null=True, blank=True)
+    job_desc_file = models.FileField(upload_to=path_and_rename('job_post/job_desc_file'), storage=OverwriteStorage(), null=True, blank=True)
     job_requirement_text = models.CharField(max_length=1000, null=True, blank=True)
-    job_requirement_file = models.FileField(upload_to='static/job_post/files', null=True, blank=True)
+    job_requirement_file = models.FileField(upload_to=path_and_rename('job_post/job_requirement_file'), storage=OverwriteStorage(), null=True, blank=True)
     job_major = models.ManyToManyField(Major, related_name="job_posts_by_major")
     job_post_date = models.DateTimeField(default=now)
     job_close_date = models.DateTimeField(null=True, blank=True)
