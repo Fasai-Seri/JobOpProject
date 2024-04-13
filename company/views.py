@@ -54,7 +54,10 @@ def update_company(request, comp_id):
         data = json.loads(request.body)
         Company.objects.filter(pk=comp_id).update(
             comp_name = data.get('comp_name', ''),
+            comp_name_th = data.get('comp_name_th', ''),
             comp_desc = data.get('comp_desc', ''),
+            comp_address = data.get('comp_address', ''),
+            comp_contact_info = data.get('comp_contact_info', ''),
         )
         print(data)
 
@@ -78,17 +81,17 @@ def update_comp_logo(request, comp_id):
 def create_company_page(request):
     if request.method == 'POST':
         logo = request.FILES.get('comp_logo')
+        comp_name = request.POST.get('comp_name')
+        comp_name_th = request.POST.get('comp_name_th')
+        comp_desc = request.POST.get('comp_desc')
+        comp_address = request.POST.get('comp_address')
+        comp_contact_info = request.POST.get('comp_contact_info')
+
         if logo :
-            comp_name = request.POST.get('comp_name')
-            comp_desc = request.POST.get('comp_desc')
             logo.name = comp_name.replace(' ', '_') + '.png'
-            print(comp_name, comp_desc, request.FILES.get('comp_logo'))
-            company = Company.objects.create(comp_name = comp_name, comp_desc = comp_desc, comp_logo = logo)
-            url = reverse('company:comp_info', kwargs={'comp_id': company.id})
+            company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_logo = logo, comp_address=comp_address,comp_contact_info=comp_contact_info)
         else:
-            comp_name = request.POST.get('comp_name')
-            comp_desc = request.POST.get('comp_desc')
-            company = Company.objects.create(comp_name = comp_name, comp_desc = comp_desc)
+            company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_contact_info=comp_contact_info)
             url = reverse('company:comp_info', kwargs={'comp_id': company.id})
         return HttpResponseRedirect(url)
     else:

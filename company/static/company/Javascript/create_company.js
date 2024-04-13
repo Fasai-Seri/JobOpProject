@@ -40,8 +40,27 @@ const CreateCompany = () => {
           Company Name: <input class="form-control" name="comp_name" required />
         </div>
         <div class="form-group">
+          Company Thai Name: <input class="form-control" name="comp_name_th" />
+        </div>
+        <div class="form-group">
           Company Description:{" "}
           <textarea class="form-control" name="comp_desc"></textarea>
+        </div>
+        <div class="form-group">
+          Company Address:{" "}
+          <textarea
+            class="form-control"
+            name="comp_address"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group">
+          Company Contact Info:{" "}
+          <textarea
+            class="form-control"
+            name="comp_contact_info"
+            required
+          ></textarea>
         </div>
         <input type="submit" class="btn btn-primary" value="Create" />
       </form>

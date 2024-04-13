@@ -39,7 +39,10 @@ const CompanyProfile = () => {
       method: "POST",
       body: JSON.stringify({
         comp_name: company.comp_name,
+        comp_name_th: company.comp_name_th,
         comp_desc: company.comp_desc,
+        comp_address: company.comp_address,
+        comp_contact_info: company.comp_contact_info,
       }),
     });
     console.log(company);
@@ -64,6 +67,11 @@ const CompanyProfile = () => {
     fetch_company();
     setIsDiabled("true");
     setPreviewLogo("");
+  }
+
+  function textAreaAdjust(e) {
+    e.target.style.height = "1px";
+    e.target.style.height = e.target.scrollHeight + "px";
   }
 
   return (
@@ -114,11 +122,25 @@ const CompanyProfile = () => {
             placeholder="Company Name"
             value={company.comp_name}
             onChange={handleCompanyChange}
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="comp_name">Company Thai Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="comp_name_th"
+            name="comp_name_th"
+            disabled={isDisabled == "true" ? true : false}
+            placeholder="Company Thai Name"
+            value={company.comp_name_th}
+            onChange={handleCompanyChange}
           />
         </div>
         <div class="form-group">
           <label for="comp_name">Company Desciption</label>
-          <input
+          <textarea
             type="text"
             class="form-control"
             id="comp_desc"
@@ -127,7 +149,38 @@ const CompanyProfile = () => {
             placeholder="Company Desciption"
             value={company.comp_desc}
             onChange={handleCompanyChange}
-          />
+            onKeyUp={textAreaAdjust}
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="comp_name">Company Address</label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="comp_address"
+            name="comp_address"
+            disabled={isDisabled == "true" ? true : false}
+            placeholder="Company Address"
+            value={company.comp_address}
+            onChange={handleCompanyChange}
+            onKeyUp={textAreaAdjust}
+            required
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="comp_name">Company Contact Info</label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="comp_contact_info"
+            name="comp_contact_info"
+            disabled={isDisabled == "true" ? true : false}
+            placeholder="Company Contact Info"
+            value={company.comp_contact_info}
+            onChange={handleCompanyChange}
+            onKeyUp={textAreaAdjust}
+            required
+          ></textarea>
         </div>
         {isDisabled == "false" && (
           <div>
