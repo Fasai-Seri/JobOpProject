@@ -47,7 +47,7 @@ def get_all_company(request):
 
 @csrf_exempt
 def update_company(request, comp_id):
-    url = reverse(comp_info, kwargs={'comp_id': comp_id})
+    url = reverse('company:comp_info', kwargs={'comp_id': comp_id})
     if request.method == 'POST':
         data = json.loads(request.body)
         Company.objects.filter(pk=comp_id).update(
@@ -70,17 +70,16 @@ def update_comp_logo(request, comp_id):
         return HttpResponse('Upload Logo Successful')
 
 def create_company_page(request):
-        return render(request, 'company/create_company.html')
-
-@csrf_exempt 
-def create_company(request):
-      if request.method == 'POST':
+    if request.method == 'POST':
         comp_name = request.POST.get('comp_name')
         comp_desc = request.POST.get('comp_desc')
         logo = request.FILES.get('comp_logo')
+        logo.name = comp_name.replace(' ', '_') + '.png'
         print(comp_name, comp_desc, request.FILES.get('comp_logo'))
         company = Company.objects.create(comp_name = comp_name, comp_desc = comp_desc, comp_logo = logo)
-        url = reverse(comp_info, kwargs={'comp_id': company.id})
+        url = reverse('company:comp_info', kwargs={'comp_id': company.id})
         return HttpResponseRedirect(url)
+    else:
+        return render(request, 'company/create_company.html')
 
     

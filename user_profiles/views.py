@@ -17,7 +17,8 @@ from company.views import get_all_company
 # Create your views here.
 def index(request,user_id):
     return render(request, 'user_profiles/profile.html', {
-        'user_id': user_id
+        'user_id': user_id,
+        'current_user_id': request.user.id,
     })
 
 def login_view(request):

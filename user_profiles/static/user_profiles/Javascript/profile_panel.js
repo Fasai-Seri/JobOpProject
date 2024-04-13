@@ -7,6 +7,7 @@ const ProfilePanel = (props) => {
   const [companies, setCompanies] = React.useState([]);
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
+  const current_user_id = parseInt(data.currentUserId, 10);
   const csrftoken = data.csrfToken;
 
   React.useEffect(() => {
@@ -201,7 +202,7 @@ const ProfilePanel = (props) => {
           />
         </div>
       )}
-      {isDisabled == "true" && (
+      {isDisabled == "true" && user.user_id == current_user_id && (
         <button class="btn btn-primary" onClick={handleEditClick}>
           Edit
         </button>

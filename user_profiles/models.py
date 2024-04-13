@@ -15,6 +15,7 @@ class User(AbstractUser):
     def serialize(self):
         if self.user_photo:
             return {
+                'user_id':self.id,
                 'email': self.email,
                 'fname': self.fname,
                 'lname':self.lname,
@@ -23,6 +24,7 @@ class User(AbstractUser):
             }
         else:
             return {
+                'user_id':self.id,
                 'email': self.email,
                 'fname': self.fname,
                 'lname':self.lname,
