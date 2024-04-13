@@ -3,7 +3,7 @@
 
 {% block body %}
 {{ selected_job_post }}
-<a href="{% url 'edit_job_post' selected_job_post.pk %}">
+<a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}">
     <button>Edit</button>
 </a>
 {{ all_applicants }}

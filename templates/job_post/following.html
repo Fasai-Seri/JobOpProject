@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-<form action="{% url 'favourite' %}" method='GET'>
+<form action="{% url 'job_post:following' %}" method='GET'>
 <input type="search" placeholder="Search.." name='search_term'>
 </form>
 
@@ -10,6 +10,6 @@
 
 {{ followed_companies }}
 
-<a href="{% url 'followed_companies' %}"><button>more</button></a>
+<a href="{% url 'job_post:followed_companies' %}"><button>more</button></a>
 
 {% endblock %}

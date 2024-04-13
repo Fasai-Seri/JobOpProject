@@ -48,10 +48,10 @@
             <a class="nav-link" href="{% url 'job_post:index' %}">All Posts</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'following' %}">Following</a>
+            <a class="nav-link" href="{% url 'job_post:following' %}">Following</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'favourite' %}">Favorite</a>
+            <a class="nav-link" href="{% url 'job_post:favourite' %}">Favorite</a>
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">

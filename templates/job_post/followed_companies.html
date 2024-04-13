@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-<form action="{% url 'followed_companies' %}" method='GET'>
+<form action="{% url 'job_post:followed_companies' %}" method='GET'>
 <input type="search" placeholder="Search.." name='search_term'>
 </form>
 {{ all_companies }}

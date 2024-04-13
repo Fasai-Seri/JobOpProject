@@ -1,5 +1,5 @@
-{% extends "job_post/layout.html" %} {% load static %} {% block body %}
-<form action="{% url 'job_post:index' %}" method="GET">
+{% extends "layout.html" %} {% load static %} {% block body %}
+<form action="{% url 'job_post:favourite' %}" method="GET">
   <input type="search" placeholder="Search.." name="search_term" />
 </form>
 {{ all_job_posts }} {% endblock %}

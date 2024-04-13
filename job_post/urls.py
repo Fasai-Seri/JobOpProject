@@ -5,7 +5,7 @@ from . import views
 app_name='job_post'
 
 urlpatterns = [
-    path("", views.index, name="job_post_index"),
+    path("", views.index, name="index"),
     path("favourite", views.favourite, name="favourite"),
     path("following", views.following, name="following"),
     path("followed_companies", views.followed_companies, name="followed_companies"),

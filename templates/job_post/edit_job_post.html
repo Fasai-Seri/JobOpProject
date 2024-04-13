@@ -4,7 +4,7 @@
 {% block body %}
 
 <div>Edit Job Post</div>
-<form action="{% url 'edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'job_post:edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
         *Job Title: <input class="form-control" name="job_title" value="{{ edited_job_post.job_title }}">
