@@ -8,20 +8,21 @@
 <form action="{% url 'create_job_post' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
-        Job Title: <input class="form-control" name="job_title">
+        *Job Title: <input class="form-control" name="job_title">
     </div>
     <div class="form-group">
-        Job Type: 
+        *Job Type: 
         <select name="job_type" class="form-control">
+            <option value=""></option>
             {% for choice in job_type_choices %}
             <option value="{{ choice.0 }}">{{ choice.1 }}</option>
             {% endfor %}   
         </select>
     </div>
     <div>
-        Company:
+        *Company:
         <select name="company" class="form-control dropdown_with_search">
-            <option value="">---</option>
+            <option value=""></option>
             {% for company in all_companies %}
             <option value="{{ company.pk }}">{{ company.comp_name }}</option>
             {% endfor %}
@@ -38,7 +39,7 @@
         <input type="file" name="job_requirement_file">
     </div>
     <div>
-        Major:
+        Related Major:
         {% for major in all_major %}
         <label>
             <input type="checkbox" name="job_major" value="{{ major.pk }}">{{ major.major_id }}

@@ -19,13 +19,6 @@ class PathRename(object):
         return os.path.join(self.path, filename)
         
 class JobPost(models.Model):
-        
-    # def path_and_rename(path):
-    #     def wrapper(instance, filename):
-    #         ext = filename.split('.')[-1]
-    #         filename = f'{instance.id}_{instance}.{ext}'
-    #         return os.path.join(path, filename)
-    #     return wrapper
     
     job_type_choices = (
         ("internship", "Internship"),
@@ -47,11 +40,11 @@ class JobPost(models.Model):
     job_desc_file = models.FileField(upload_to=PathRename('job_post/job_desc_file'), storage=OverwriteStorage(), null=True, blank=True)
     job_requirement_text = models.CharField(max_length=1000, null=True, blank=True)
     job_requirement_file = models.FileField(upload_to=PathRename('job_post/job_requirement_file'), storage=OverwriteStorage(), null=True, blank=True)
-    job_major = models.ManyToManyField(Major, related_name="job_posts_by_major")
+    job_major = models.ManyToManyField(Major, related_name="job_posts_by_major", blank=True)
     job_post_date = models.DateTimeField(default=now)
     job_close_date = models.DateTimeField(null=True, blank=True)
     job_location = models.CharField(max_length=500, null=True, blank=True)
-    job_status = models.CharField(choices=job_status_choices, max_length=10, default='')
+    job_status = models.CharField(choices=job_status_choices, max_length=10, default='active')
     favourite_user = models.ManyToManyField(User, related_name="favourite_posts", blank=True)
     applicants = models.ManyToManyField(Student, related_name="applied_job_posts", blank=True)
     

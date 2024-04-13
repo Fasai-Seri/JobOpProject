@@ -7,10 +7,10 @@
 <form action="{% url 'edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
-        Job Title: <input class="form-control" name="job_title" value="{{ edited_job_post.job_title }}">
+        *Job Title: <input class="form-control" name="job_title" value="{{ edited_job_post.job_title }}">
     </div>
     <div class="form-group">
-        Job Type: 
+        *Job Type: 
         <select name="job_type" class="form-control">
             {% for choice in job_type_choices %}
             {% if choice.0 == edited_job_post.job_type %}
@@ -22,7 +22,7 @@
         </select>
     </div>
     <div>
-        Company:
+        *Company:
         <select name="company" class="form-control dropdown_with_search">
             {% for company in all_companies %}
             {% if company == edited_job_post.company %}
@@ -44,7 +44,7 @@
         <input type="file" name="job_requirement_file">
     </div>
     <div>
-        Major:
+        Related Major:
         {% for major in all_major %}              
         {% if major in edited_job_post.job_major.all %}
         <label>
