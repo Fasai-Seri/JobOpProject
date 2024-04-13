@@ -25,6 +25,9 @@ def index(request):
         all_job_posts = JobPost.objects.all()    
     return render(request, 'job_post/index.html', {
         'all_job_posts': all_job_posts,
+        'job_type_choices': JobPost.job_type_choices,
+        'all_major': Major.objects.all(),
+        'job_status_choices': JobPost.job_status_choices
     })
     
 def favourite(request):
@@ -91,13 +94,13 @@ def create_job_post(request):
         job_close_date =  request.POST.get('job_close_date')
         job_location =  request.POST.get('job_location')
         job_status = 'active'
+            
         new_job_post = JobPost(job_title=job_title, 
                                job_type=job_type, 
                                company=company, 
                                job_desc_text=job_desc_text, 
                                job_requirement_text=job_requirement_text, 
                                job_post_date = job_post_date,
-                               job_close_date = job_close_date,
                                job_location = job_location,
                                job_status = job_status
                                )
@@ -107,6 +110,10 @@ def create_job_post(request):
         elif Professor.objects.filter(user_id=request.user):
             poster_prof = Professor.objects.filter(user_id=request.user).first()
             new_job_post.poster_prof = poster_prof
+            
+        if job_close_date != '':
+            new_job_post.job_close_date = job_close_date
+            
         new_job_post.save()
         
         saved_job_post = JobPost.objects.last()
@@ -115,7 +122,7 @@ def create_job_post(request):
         saved_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
         saved_job_post.save()
         
-        return HttpResponseRedirect(reverse('job_post:job_post_index'))
+        return HttpResponseRedirect(reverse('job_post:index'))
     
     return render(request, 'job_post/create_job_post.html', {
         'job_type_choices': JobPost.job_type_choices,
@@ -156,14 +163,3 @@ def edit_job_post(request, job_post_id):
         'job_status_choices': JobPost.job_status_choices
     })
     
-def update_job_desc_file(request):
-    pass
-    # if request.method == 'POST':
-    #     job_desc_file = request.FILES.get('job_desc_file')
-    #     updated_job_post = JobPost.objects
-    #     updated_job_post.job_desc_file = file
-    #     updated_job_post.save()
-    #     return HttpResponse('Upload Photo Succesful')
-
-def update_job_requirement_file(request):
-    pass
