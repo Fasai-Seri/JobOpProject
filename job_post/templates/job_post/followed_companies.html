@@ -1,9 +1,0 @@
-{% extends "job_post/layout.html" %}
-{% load static %}
-
-{% block body %}
-<form action="{% url 'followed_companies' %}" method='GET'>
-<input type="search" placeholder="Search.." name='search_term'>
-</form>
-{{ all_companies }}
-{% endblock %}
