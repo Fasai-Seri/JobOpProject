@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+{{ selected_job_post }}
+<a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}">
+    <button>Edit</button>
+</a>
+{{ all_applicants }}
+{{ test }}
+{% endblock %}

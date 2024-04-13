@@ -1,10 +1,23 @@
 from django.db import models
 from django.utils.timezone import now
+from .storage import OverwriteStorage
+from django.utils.deconstruct import deconstructible
+
+import os
 
 from user_profiles.models import *
 from company.models import *
 # Create your models here.
 
+@deconstructible
+class PathRename(object):
+    def __init__(self, sub_path):
+        self.path = sub_path
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        filename = f'{instance.id}_{instance}.{ext}'
+        return os.path.join(self.path, filename)
+        
 class JobPost(models.Model):
     
     job_type_choices = (
@@ -24,15 +37,16 @@ class JobPost(models.Model):
     job_type = models.CharField(choices=job_type_choices, max_length=10, default='')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="job_posts_by_company", default='')
     job_desc_text = models.CharField(max_length=1000, null=True, blank=True)
-    job_desc_file = models.FileField(upload_to='static/job_post/files', null=True, blank=True)
+    job_desc_file = models.FileField(upload_to=PathRename('job_post/job_desc_file'), storage=OverwriteStorage(), null=True, blank=True)
     job_requirement_text = models.CharField(max_length=1000, null=True, blank=True)
-    job_requirement_file = models.FileField(upload_to='static/job_post/files', null=True, blank=True)
-    job_major = models.ManyToManyField(Major, related_name="job_posts_by_major")
+    job_requirement_file = models.FileField(upload_to=PathRename('job_post/job_requirement_file'), storage=OverwriteStorage(), null=True, blank=True)
+    job_major = models.ManyToManyField(Major, related_name="job_posts_by_major", blank=True)
     job_post_date = models.DateTimeField(default=now)
     job_close_date = models.DateTimeField(null=True, blank=True)
     job_location = models.CharField(max_length=500, null=True, blank=True)
-    job_status = models.CharField(choices=job_status_choices, max_length=10, default='')
+    job_status = models.CharField(choices=job_status_choices, max_length=10, default='active')
     favourite_user = models.ManyToManyField(User, related_name="favourite_posts", blank=True)
+    applicants = models.ManyToManyField(Student, related_name="applied_job_posts", blank=True)
     
     def __str__(self):
         return f"{self.job_title} ({self.company})"
