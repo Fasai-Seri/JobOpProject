@@ -30,7 +30,14 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             auth.login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            print('login')
+            if request.user.fname == None:
+                print('fname blank')
+                return HttpResponseRedirect(reverse(index, kwargs={'user_id': request.user.id}))
+            else :
+                print('fname not blank')
+                return HttpResponseRedirect(reverse("job_post:index"))
+            
         else:
             return render(request, "user_profiles/login.html", {
                 "message": "Invalid username and/or password."
@@ -167,3 +174,28 @@ def update_student_resume(request):
         student.student_resume = resume
         student.save()
         return HttpResponse('Upload Resume Succesful')
+
+@csrf_exempt 
+def create_employer(request):
+    if request.method == "POST":
+        username = request.POST["email"]
+        email = request.POST["email"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "user_profiles/create_employer.html", {
+                "message": "Passwords must match."
+            })
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+            employer = Employer.objects.create(user=User.objects.get(email=email))
+            employer.save()
+            return render(request, "user_profiles/create_employer.html", {
+                "message": f"Created Account {email}"
+            })
+        except IntegrityError:
+            return render(request, "user_profiles/create_employer.html", {
+                "message": "Email already exists."
+            })
+    return render(request, 'user_profiles/create_employer.html')

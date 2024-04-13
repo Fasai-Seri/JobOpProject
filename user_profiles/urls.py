@@ -11,6 +11,7 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     path("fillinfo", views.fill_info, name="fillinfo"),
+    path("create_employer", views.create_employer, name="create_employer"),
 
     #APIs
     path('get_user/<int:user_id>', views.get_user, name='get_user'),
