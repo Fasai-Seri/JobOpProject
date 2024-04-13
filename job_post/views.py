@@ -115,7 +115,7 @@ def create_job_post(request):
         saved_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
         saved_job_post.save()
         
-        return HttpResponseRedirect(reverse('job_post_index'))
+        return HttpResponseRedirect(reverse('job_post:job_post_index'))
     
     return render(request, 'job_post/create_job_post.html', {
         'job_type_choices': JobPost.job_type_choices,
@@ -146,7 +146,7 @@ def edit_job_post(request, job_post_id):
         edited_job_post.job_status =  request.POST.get('job_status')
         edited_job_post.job_major.set(Major.objects.filter(pk__in=request.POST.getlist('job_major'))) 
         edited_job_post.save()
-        return HttpResponseRedirect(reverse('display_job_post', args=(job_post_id,)))
+        return HttpResponseRedirect(reverse('job_post:display_job_post', args=(job_post_id,)))
         
     return render(request, 'job_post/edit_job_post.html', {
         'edited_job_post': JobPost.objects.get(pk=job_post_id),
