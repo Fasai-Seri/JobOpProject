@@ -337,56 +337,49 @@ const ProfilePanel = (props) => {
         ) : user.type == "professor" ? (
           <MajorSelect />
         ) : (
-          <div>
-            <div class="form-group">Company</div>
-            <select
-              class="js-example-basic-single js-states form-control"
-              id="comp"
-              name="comp"
-              disabled={isDisabled == "true" ? true : false}
-              value={user.comp}
-            >
-              <option></option>
-              {companies.map((comp) => {
-                if (user.comp == comp.comp_id) {
-                  return (
-                    <option value={comp.comp_id} selected="selected">
-                      {comp.comp_name}
-                    </option>
-                  );
-                } else {
-                  return (
-                    <option value={comp.comp_id} selected="">
-                      {comp.comp_name}
-                    </option>
-                  );
-                }
-              })}
-            </select>
-            <div class="form-group">
-              <label for="email">Position</label>
-              <input
-                type="text"
-                class="form-control"
-                id="emp_position"
-                name="emp_position"
-                placeholder="Position"
-                value={user.emp_position}
+          user.type == "employer" && (
+            <div>
+              <div class="form-group">Company</div>
+              <select
+                class="js-example-basic-single js-states form-control"
+                id="comp"
+                name="comp"
                 disabled={isDisabled == "true" ? true : false}
-                onChange={handleProfileChange}
-              />
+                value={user.comp}
+              >
+                <option></option>
+                {companies.map((comp) => {
+                  if (user.comp == comp.comp_id) {
+                    return (
+                      <option value={comp.comp_id} selected="selected">
+                        {comp.comp_name}
+                      </option>
+                    );
+                  } else {
+                    return (
+                      <option value={comp.comp_id} selected="">
+                        {comp.comp_name}
+                      </option>
+                    );
+                  }
+                })}
+              </select>
+              <div class="form-group">
+                <label for="email">Position</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="emp_position"
+                  name="emp_position"
+                  placeholder="Position"
+                  value={user.emp_position}
+                  disabled={isDisabled == "true" ? true : false}
+                  onChange={handleProfileChange}
+                />
+              </div>
             </div>
-          </div>
+          )
         )}
-
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Example textarea</label>
-          <textarea
-            class="form-control"
-            id="exampleFormControlTextarea1"
-            rows="3"
-          ></textarea>
-        </div>
         {isDisabled == "false" && (
           <div>
             <input

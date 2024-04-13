@@ -45,7 +45,10 @@ def login_view(request):
                 "message": "Invalid username and/or password."
             })
     else:
-        return render(request, "user_profiles/login.html")
+        if request.user:
+            return HttpResponse(status=422)
+        else:
+            return render(request, "user_profiles/login.html")
 
 @login_required
 def logout_view(request):
