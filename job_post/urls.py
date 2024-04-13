@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name='job_post'
+
 urlpatterns = [
     path("", views.index, name="job_post_index"),
     path("favourite", views.favourite, name="favourite"),

@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from user_profiles.models import *
 from user_profiles.forms import UserForm
+from company.views import get_all_company
 
 
 # Create your views here.
@@ -30,7 +31,14 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             auth.login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            print('login')
+            if request.user.fname == None:
+                print('fname blank')
+                return HttpResponseRedirect(reverse(index, kwargs={'user_id': request.user.id}))
+            else :
+                print('fname not blank')
+                return HttpResponseRedirect(reverse("job_post:index"))
+            
         else:
             return render(request, "user_profiles/login.html", {
                 "message": "Invalid username and/or password."
@@ -41,7 +49,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("job_post:index"))
 
 @csrf_exempt
 def register(request):
@@ -143,6 +151,13 @@ def update_user(request):
                 major = data.get('major', '')
             )
 
+        elif Employer.objects.filter(user__id = request.user.id).exists():
+            print(data.get('comp', ''))
+            Employer.objects.filter(user__id = request.user.id).update(
+                comp= data.get('comp', ''),
+                emp_position= data.get('emp_position', '')
+            )
+
         if user.is_valid():
             user.save()
         return HttpResponseRedirect(url)
@@ -167,3 +182,31 @@ def update_student_resume(request):
         student.student_resume = resume
         student.save()
         return HttpResponse('Upload Resume Succesful')
+
+@csrf_exempt 
+def create_employer(request):
+    if request.method == "POST":
+        username = request.POST["email"]
+        email = request.POST["email"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "user_profiles/create_employer.html", {
+                "message": "Passwords must match."
+            })
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+            employer = Employer.objects.create(user=User.objects.get(email=email), prof=Professor.objects.get(user=request.user))
+            employer.save()
+            return render(request, "user_profiles/create_employer.html", {
+                "message": f"Created Account {email}"
+            })
+        except IntegrityError:
+            return render(request, "user_profiles/create_employer.html", {
+                "message": "Email already exists."
+            })
+    return render(request, 'user_profiles/create_employer.html')
+
+def get_company(request):
+    return get_all_company(request)

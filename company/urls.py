@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 
 from . import views
 
+app_name='company'
 urlpatterns = [
     path("", views.index, name="index"),
     path("<int:comp_id>", views.comp_info, name="comp_info"),

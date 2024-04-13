@@ -41,6 +41,10 @@ def get_company(request, comp_id):
     company = Company.objects.get(pk = comp_id).serialize()
     return JsonResponse(company, safe=False)
 
+def get_all_company(request):
+    all_companies = Company.objects.all()    
+    return JsonResponse([comp.serialize() for comp in all_companies], safe=False)
+
 @csrf_exempt
 def update_company(request, comp_id):
     url = reverse(comp_info, kwargs={'comp_id': comp_id})
