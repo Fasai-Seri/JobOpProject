@@ -37,7 +37,7 @@ const CreateCompany = () => {
           />
         </div>
         <div class="form-group">
-          Company Name: <input class="form-control" name="comp_name" />
+          Company Name: <input class="form-control" name="comp_name" required />
         </div>
         <div class="form-group">
           Company Description:{" "}

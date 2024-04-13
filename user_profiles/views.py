@@ -45,7 +45,7 @@ def login_view(request):
                 "message": "Invalid username and/or password."
             })
     else:
-        if request.user:
+        if request.user.id:
             return HttpResponse(status=422)
         else:
             return render(request, "user_profiles/login.html")
@@ -143,7 +143,7 @@ def get_major(request):
 @csrf_exempt
 @login_required
 def update_user(request):
-    url = reverse("job_post:index", kwargs={'user_id': request.user.id})
+    url = reverse("user_profiles:index", kwargs={'user_id': request.user.id})
     if request.method == 'POST':
         data = json.loads(request.body)
         user = UserForm(data, instance=User.objects.get(pk=request.user.id))

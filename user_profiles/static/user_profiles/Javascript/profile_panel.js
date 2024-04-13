@@ -221,6 +221,8 @@ const ProfilePanel = (props) => {
             disabled={isDisabled == "true" ? true : false}
             value={user.fname}
             onChange={handleProfileChange}
+            required
+            minlength="3"
           />
         </div>
         <div class="form-group">
@@ -234,6 +236,8 @@ const ProfilePanel = (props) => {
             disabled={isDisabled == "true" ? true : false}
             value={user.lname}
             onChange={handleProfileChange}
+            required
+            minlength="3"
           />
         </div>
         <div class="form-group">
@@ -247,6 +251,9 @@ const ProfilePanel = (props) => {
             disabled={isDisabled == "true" ? true : false}
             value={user.phone}
             onChange={handleProfileChange}
+            required
+            minlength="10"
+            maxlength="10"
           />
         </div>
         <div class="form-group">
@@ -260,6 +267,7 @@ const ProfilePanel = (props) => {
             disabled
             value={user.email}
             onChange={handleProfileChange}
+            required
           />
         </div>
         {user.type == "student" ? (
@@ -345,7 +353,7 @@ const ProfilePanel = (props) => {
                 id="comp"
                 name="comp"
                 disabled={isDisabled == "true" ? true : false}
-                value={user.comp}
+                required
               >
                 <option></option>
                 {companies.map((comp) => {

@@ -77,13 +77,19 @@ def update_comp_logo(request, comp_id):
 @permission_required('user_profiles.is_employer', raise_exception=True)
 def create_company_page(request):
     if request.method == 'POST':
-        comp_name = request.POST.get('comp_name')
-        comp_desc = request.POST.get('comp_desc')
         logo = request.FILES.get('comp_logo')
-        logo.name = comp_name.replace(' ', '_') + '.png'
-        print(comp_name, comp_desc, request.FILES.get('comp_logo'))
-        company = Company.objects.create(comp_name = comp_name, comp_desc = comp_desc, comp_logo = logo)
-        url = reverse('company:comp_info', kwargs={'comp_id': company.id})
+        if logo :
+            comp_name = request.POST.get('comp_name')
+            comp_desc = request.POST.get('comp_desc')
+            logo.name = comp_name.replace(' ', '_') + '.png'
+            print(comp_name, comp_desc, request.FILES.get('comp_logo'))
+            company = Company.objects.create(comp_name = comp_name, comp_desc = comp_desc, comp_logo = logo)
+            url = reverse('company:comp_info', kwargs={'comp_id': company.id})
+        else:
+            comp_name = request.POST.get('comp_name')
+            comp_desc = request.POST.get('comp_desc')
+            company = Company.objects.create(comp_name = comp_name, comp_desc = comp_desc)
+            url = reverse('company:comp_info', kwargs={'comp_id': company.id})
         return HttpResponseRedirect(url)
     else:
         return render(request, 'company/create_company.html')

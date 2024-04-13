@@ -1,14 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator
+from django.core.validators import RegexValidator
 from django.db import models
 from company.models import Company
 
 # Create your models here.
 
 class User(AbstractUser):
-    fname = models.CharField(max_length=100, null=True)
-    lname = models.CharField(max_length=100, null=True)
-    phone = models.CharField(validators=[MinLengthValidator(10)], max_length=10, null=True)
+    fname = models.CharField(max_length=100, null=True, validators=[RegexValidator(regex=r'[\w]{3,}',message="First name must be more than 3 characters",code="invalid_firstname")])
+    lname = models.CharField(max_length=100, null=True, validators=[RegexValidator(regex=r'[\w]{3,}',message="Last name must be more than 3 characters",code="invalid_lastname")])
+    phone = models.CharField(validators=[MinLengthValidator(10, message='Invalid Phone Number')], max_length=10, null=True)
     user_photo = models.ImageField(upload_to='user_profiles/Images', null=True, blank=True)
     followed_company = models.ManyToManyField(Company, related_name="following_user", blank=True)
     
