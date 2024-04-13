@@ -1,5 +1,4 @@
 const CreateCompany = () => {
-  const [comp, setComp] = React.useState({});
   const [previewLogo, setPreviewLogo] = React.useState("");
   const data = document.getElementById("create_company_script").dataset;
   const csrftoken = data.csrfToken;

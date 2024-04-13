@@ -11,23 +11,25 @@ class CustomAuthentication(ModelBackend):
             
             if user.check_password(password):
                 CustomAuthentication.if_first_time_set_up()
+                print('checked')
 
                 user.groups.clear()
                 if Professor.objects.filter(user=user).exists():
+                    print('p')
                     if not user.groups.filter(name="Professor").exists():
                         user.groups.add(Group.objects.get(name="Professor"))
                 if Student.objects.filter(user=user).exists():
+                    print('s')
                     if not user.groups.filter(name="Student").exists():
                         user.groups.add(Group.objects.get(name="Student"))
                 if Employer.objects.filter(user=user).exists():
+                    print('e')
                     if not user.groups.filter(name="Employer").exists():
                         user.groups.add(Group.objects.get(name="Employer"))
                 return user
             return None
         except User.DoesNotExist:
             return None
-
-
 
     @staticmethod
     def if_first_time_set_up():

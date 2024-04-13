@@ -3,11 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import auth
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from user_profiles.models import *
 from user_profiles.forms import UserForm
@@ -32,10 +31,11 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             auth.login(request, user)
+            print(request.user.has_perm('user_profiles.is_professor'))
             print('login')
             if request.user.fname == None:
                 print('fname blank')
-                return HttpResponseRedirect(reverse(index, kwargs={'user_id': request.user.id}))
+                return HttpResponseRedirect(reverse("job_post:index", kwargs={'user_id': request.user.id}))
             else :
                 print('fname not blank')
                 return HttpResponseRedirect(reverse("job_post:index"))
@@ -47,7 +47,7 @@ def login_view(request):
     else:
         return render(request, "user_profiles/login.html")
 
-
+@login_required
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("job_post:index"))
@@ -91,6 +91,7 @@ def register(request):
         return render(request, "user_profiles/register.html")
 
 @csrf_exempt
+@login_required
 def fill_info(request) :
     if request.method == "POST":
         fname = request.POST["fname"]
@@ -113,7 +114,7 @@ def fill_info(request) :
             Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         elif Professor.objects.filter(user__id = request.user.id).exists():
             Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("job_post:index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
     
@@ -137,8 +138,9 @@ def get_major(request):
     return JsonResponse([major.serialize() for major in majors], safe=False)
 
 @csrf_exempt
+@login_required
 def update_user(request):
-    url = reverse(index, kwargs={'user_id': request.user.id})
+    url = reverse("job_post:index", kwargs={'user_id': request.user.id})
     if request.method == 'POST':
         data = json.loads(request.body)
         user = UserForm(data, instance=User.objects.get(pk=request.user.id))
@@ -166,6 +168,7 @@ def update_user(request):
         return HttpResponseRedirect(url) 
 
 @csrf_exempt
+@login_required
 def update_user_photo(request):
     if request.method == 'POST':
         photo = request.FILES.get('user_photo')
@@ -175,6 +178,8 @@ def update_user_photo(request):
         return HttpResponse('Upload Photo Succesful')
     
 @csrf_exempt
+@login_required
+@permission_required('user_profiles.is_student', raise_exception=True)
 def update_student_resume(request):
     if request.method == 'POST':
         resume = request.FILES.get('student_resume')
@@ -184,7 +189,9 @@ def update_student_resume(request):
         student.save()
         return HttpResponse('Upload Resume Succesful')
 
-@csrf_exempt 
+@csrf_exempt
+@login_required
+@permission_required('user_profiles.is_professor', raise_exception=True)
 def create_employer(request):
     if request.method == "POST":
         username = request.POST["email"]

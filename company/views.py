@@ -46,6 +46,8 @@ def get_all_company(request):
     return JsonResponse([comp.serialize() for comp in all_companies], safe=False)
 
 @csrf_exempt
+@login_required
+@permission_required('user_profiles.is_employer', raise_exception=True)
 def update_company(request, comp_id):
     url = reverse('company:comp_info', kwargs={'comp_id': comp_id})
     if request.method == 'POST':
@@ -61,6 +63,8 @@ def update_company(request, comp_id):
         return HttpResponseRedirect(url)
 
 @csrf_exempt
+@login_required
+@permission_required('user_profiles.is_employer', raise_exception=True)
 def update_comp_logo(request, comp_id):
     if request.method == 'POST':
         logo = request.FILES.get('comp_logo')
@@ -69,6 +73,8 @@ def update_comp_logo(request, comp_id):
         company.save()
         return HttpResponse('Upload Logo Successful')
 
+@login_required
+@permission_required('user_profiles.is_employer', raise_exception=True)
 def create_company_page(request):
     if request.method == 'POST':
         comp_name = request.POST.get('comp_name')
