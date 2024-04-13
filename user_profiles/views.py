@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from user_profiles.models import *
 from user_profiles.forms import UserForm
+from company.views import get_all_company
 
 
 # Create your views here.
@@ -48,7 +49,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("job_post:index"))
 
 @csrf_exempt
 def register(request):
@@ -150,6 +151,13 @@ def update_user(request):
                 major = data.get('major', '')
             )
 
+        elif Employer.objects.filter(user__id = request.user.id).exists():
+            print(data.get('comp', ''))
+            Employer.objects.filter(user__id = request.user.id).update(
+                comp= data.get('comp', ''),
+                emp_position= data.get('emp_position', '')
+            )
+
         if user.is_valid():
             user.save()
         return HttpResponseRedirect(url)
@@ -189,7 +197,7 @@ def create_employer(request):
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
-            employer = Employer.objects.create(user=User.objects.get(email=email))
+            employer = Employer.objects.create(user=User.objects.get(email=email), prof=Professor.objects.get(user=request.user))
             employer.save()
             return render(request, "user_profiles/create_employer.html", {
                 "message": f"Created Account {email}"
@@ -199,3 +207,6 @@ def create_employer(request):
                 "message": "Email already exists."
             })
     return render(request, 'user_profiles/create_employer.html')
+
+def get_company(request):
+    return get_all_company(request)

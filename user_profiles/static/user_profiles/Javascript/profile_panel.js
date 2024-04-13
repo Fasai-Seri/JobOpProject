@@ -4,6 +4,7 @@ const ProfilePanel = (props) => {
   const [isDisabled, setIsDisabled] = React.useState("true");
   const [previewPhoto, setPreviewPhoto] = React.useState("");
   const [previewResume, setPreviewResume] = React.useState("");
+  const [companies, setCompanies] = React.useState([]);
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
   const csrftoken = data.csrfToken;
@@ -11,9 +12,8 @@ const ProfilePanel = (props) => {
   React.useEffect(() => {
     fetchUser();
     fetchMajors();
+    fetchCompanies();
   }, []);
-
-  React.useEffect(() => {}, [isDisabled]);
 
   function fetchUser() {
     fetch(`get_user/${user_id}`)
@@ -31,6 +31,15 @@ const ProfilePanel = (props) => {
       .then((majors) => {
         console.log(majors);
         setMajors(majors);
+      });
+  }
+
+  function fetchCompanies() {
+    fetch("get_company")
+      .then((response) => response.json())
+      .then((companies) => {
+        console.log(companies);
+        setCompanies(companies);
       });
   }
 
@@ -76,29 +85,45 @@ const ProfilePanel = (props) => {
   }
 
   function handleUploadResume() {
-    const resume = document.querySelector("#resume").files[0];
-    if (resume) {
-      const formData = new FormData();
-      formData.append("student_resume", resume);
-      console.log(resume);
-      fetch("update_student_resume", {
-        method: "POST",
-        body: formData,
-      });
+    if (user.type == "student") {
+      const resume = document.querySelector("#resume").files[0];
+      if (resume) {
+        const formData = new FormData();
+        formData.append("student_resume", resume);
+        console.log(resume);
+        fetch("update_student_resume", {
+          method: "POST",
+          body: formData,
+        });
+      }
     }
   }
 
   function handleProfileSubmit() {
-    fetch(`update_user`, {
-      method: "POST",
-      body: JSON.stringify({
-        fname: user.fname,
-        lname: user.lname,
-        phone: user.phone,
-        major: user.major,
-        user_photo: user.user_photo,
-      }),
-    });
+    if (user.type == "employer") {
+      fetch(`update_user`, {
+        method: "POST",
+        body: JSON.stringify({
+          fname: user.fname,
+          lname: user.lname,
+          phone: user.phone,
+          user_photo: user.user_photo,
+          comp: user.comp,
+          emp_position: user.emp_position,
+        }),
+      });
+    } else {
+      fetch(`update_user`, {
+        method: "POST",
+        body: JSON.stringify({
+          fname: user.fname,
+          lname: user.lname,
+          phone: user.phone,
+          major: user.major,
+          user_photo: user.user_photo,
+        }),
+      });
+    }
   }
 
   function MajorSelect() {
@@ -122,6 +147,14 @@ const ProfilePanel = (props) => {
       </div>
     );
   }
+
+  $(document).ready(function () {
+    $(".js-example-basic-single").select2();
+  });
+
+  $("#comp").on("change", function (e) {
+    handleProfileChange(e);
+  });
 
   return (
     <div>
@@ -305,16 +338,40 @@ const ProfilePanel = (props) => {
         ) : (
           <div>
             <div class="form-group">Company</div>
+            <select
+              class="js-example-basic-single js-states form-control"
+              id="comp"
+              name="comp"
+              disabled={isDisabled == "true" ? true : false}
+              value={user.comp}
+            >
+              <option></option>
+              {companies.map((comp) => {
+                if (user.comp == comp.comp_id) {
+                  return (
+                    <option value={comp.comp_id} selected="selected">
+                      {comp.comp_name}
+                    </option>
+                  );
+                } else {
+                  return (
+                    <option value={comp.comp_id} selected="">
+                      {comp.comp_name}
+                    </option>
+                  );
+                }
+              })}
+            </select>
             <div class="form-group">
               <label for="email">Position</label>
               <input
                 type="text"
                 class="form-control"
-                id="position"
-                name="position"
+                id="emp_position"
+                name="emp_position"
                 placeholder="Position"
+                value={user.emp_position}
                 disabled={isDisabled == "true" ? true : false}
-                value={user.position}
                 onChange={handleProfileChange}
               />
             </div>

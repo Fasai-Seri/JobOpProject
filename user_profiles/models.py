@@ -59,12 +59,20 @@ class Employer(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='emp_user_id', null=True)
     emp_position = models.CharField(max_length=100, null=True, blank=True)
     def serialize(self):
-        return {
-            'prof': self.prof,
-            'comp': self.comp,
-            'emp_position': self.emp_position,
-            'type': 'employer'
-        }
+        if self.comp:
+            return {
+                'prof': self.prof.user.id,
+                'comp': self.comp.id,
+                'emp_position': self.emp_position,
+                'type': 'employer'
+            }
+        else:
+            return {
+                'prof': self.prof.user.id,
+                'comp': '',
+                'emp_position': self.emp_position,
+                'type': 'employer'
+            }
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id', null=True)
     major = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id', null=True)

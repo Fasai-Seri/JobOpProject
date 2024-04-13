@@ -14,6 +14,7 @@ class Company(models.Model):
     def serialize(self) :
         if self.comp_logo:
             return {
+                'comp_id': self.id,
                 'comp_name': self.comp_name,
                 'comp_desc': self.comp_desc,
                 'comp_logo': self.comp_logo.url[1:],

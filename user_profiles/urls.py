@@ -19,6 +19,7 @@ urlpatterns = [
     path('update_user', views.update_user, name='update_user'),
     path('update_user_photo', views.update_user_photo, name='update_user_photo'),
     path('update_student_resume', views.update_student_resume, name='update_student_resume'),
+    path('get_company', views.get_company, name='get_company'),
 ]
 
 if settings.DEBUG:
