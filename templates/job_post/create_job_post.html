@@ -5,6 +5,8 @@
 
 <div>Create Job Post</div>
 
+{{ warning }}
+
 <form action="{% url 'job_post:create_job_post' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">

@@ -4,6 +4,9 @@
 {% block body %}
 
 <div>Edit Job Post</div>
+
+{{ warning }}
+
 <form action="{% url 'job_post:edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
