@@ -35,7 +35,7 @@ def login_view(request):
             print('login')
             if request.user.fname == None:
                 print('fname blank')
-                return HttpResponseRedirect(reverse("job_post:index", kwargs={'user_id': request.user.id}))
+                return HttpResponseRedirect(reverse("user_profiles:index", kwargs={'user_id': request.user.id}))
             else :
                 print('fname not blank')
                 return HttpResponseRedirect(reverse("job_post:index"))

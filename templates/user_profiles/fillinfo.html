@@ -30,7 +30,7 @@
     <div>{{ message }}</div>
     {% endif %}
 
-    <form action="{% url 'fillinfo' %}" method="post">
+    <form action="{% url 'user_profiles:fillinfo' %}" method="post">
       {% csrf_token %}
       <div class="form-group">
         <input

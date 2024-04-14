@@ -138,7 +138,9 @@ const ProfilePanel = (props) => {
           name="major"
           disabled={isDisabled == "true" ? true : false}
           onChange={handleProfileChange}
+          required
         >
+          <option></option>
           {majors.map((major) => (
             <option value={major.id}>
               {major.desc} ({major.id})

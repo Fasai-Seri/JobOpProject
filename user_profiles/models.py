@@ -51,11 +51,16 @@ class Professor(models.Model):
     major = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='prof_major_id', null=True)
     
     def serialize(self):
-        return {
-            'major': self.major.major_id,
-            'type': 'professor'
-        }
-        
+        if self.major:
+            return {
+                'major': self.major.major_id,
+                'type': 'professor'
+            }
+        else:
+             return {
+                'type': 'professor'
+            }
+
     def __str__(self):
         return f"{self.user}"
     
@@ -92,8 +97,13 @@ class Student(models.Model):
                 
             }
         else:
-             return {
-                'major': self.major.major_id,
-                'type': 'student',
-                
-            }
+             if self.major:
+                return {
+                    'major': self.major.major_id,
+                    'type': 'student',
+                    
+                }
+             else:
+                   return {
+                    'type': 'student',
+                }

@@ -22,8 +22,16 @@ def index(request) :
     else:
         all_companies = Company.objects.all()    
     json_string = json.dumps([comp.serialize() for comp in all_companies])
-    return render(request, 'company/company_list.html', {
+
+    if Employer.objects.filter(user__id = request.user.id).exists():
+        return render(request, 'company/company_list.html', {
         'all_companies': json_string,
+        'isUserEmployer': True,
+    })
+    else:
+         return  render(request, 'company/company_list.html', {
+        'all_companies': json_string,
+        'isUserEmployer': False,
     })
 
 def comp_info(request, comp_id):
