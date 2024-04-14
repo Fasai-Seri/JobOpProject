@@ -12,9 +12,9 @@ urlpatterns = [
 
     #APIs
     path('get_company/<int:comp_id>', views.get_company, name='get_company'),
+    path('get_company_job_posts/<int:comp_id>', views.get_company_job_posts, name='get_company_job_posts'),
     path('update_company/<int:comp_id>', views.update_company, name='update_company'),
     path('update_comp_logo/<int:comp_id>', views.update_comp_logo, name='update_comp_logo'),
-    path('create_company', views.create_company, name='create_company'),
 
 ]
 

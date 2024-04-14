@@ -6,7 +6,7 @@
   <div>{{ message }}</div>
   {% endif %}
 
-  <form action="{% url 'create_employer' %}" method="post">
+  <form action="{% url 'user_profiles:create_employer' %}" method="post">
     {% csrf_token %}
     <div class="form-group">
       <input

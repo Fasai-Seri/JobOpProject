@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 
 from . import views
 
+app_name='user_profiles'
+
 urlpatterns = [
     path("", views.login_view, name="login"),
     path("<int:user_id>", views.index, name="index"),

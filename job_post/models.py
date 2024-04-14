@@ -48,6 +48,31 @@ class JobPost(models.Model):
     favourite_user = models.ManyToManyField(User, related_name="favourite_posts", blank=True)
     applicants = models.ManyToManyField(Student, related_name="applied_job_posts", blank=True)
     
+    def serialize(self):
+        if self.company.comp_name_th:
+
+            return {
+                'job_id': self.id,
+                'job_title': self.job_title,
+                'job_type': self.job_type,
+                'company': self.company.comp_name + '(' + self.company.comp_name_th + ')',
+                'company_logo': self.company.comp_logo.url,
+                'job_location': self.job_location,
+                'job_post_date': self.job_post_date,
+                'job_close_date': self.job_close_date,
+            }
+        else:
+            return {
+                'job_id': self.id,
+                'job_title': self.job_title,
+                'job_type': self.job_type,
+                'company': self.company.comp_name,
+                'company_logo': self.company.comp_logo.url,
+                'job_location': self.job_location,
+                'job_post_date': self.job_post_date,
+                'job_close_date': self.job_close_date,
+            }
+
     def __str__(self):
         return f"{self.job_title} ({self.company})"
     

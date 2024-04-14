@@ -6,6 +6,7 @@
   type="text/babel"
   src="../static/company/Javascript/company_profile.js"
   data-comp-id="{{ comp_id }}"
+  data-post-href="{% url 'job_post:display_job_post' %}"
   data-csrf-token="{{ csrf_token }}"
 ></script>
 {% endblock %}

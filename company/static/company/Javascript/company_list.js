@@ -3,6 +3,9 @@ const CompanyList = () => {
   const data = document.querySelector("#company_list_script").dataset;
   const companies = JSON.parse(data.companies);
   const csrftoken = data.csrfToken;
+  const isEmployer = data.isEmployer;
+  const create_comp_link = data.createComp;
+  console.log(create_comp_link);
 
   function SearchBar() {
     return (
@@ -37,6 +40,11 @@ const CompanyList = () => {
   return (
     <div>
       <SearchBar />
+      {isEmployer == "True" && (
+        <a class="btn btn-primary" href={create_comp_link}>
+          Create Company
+        </a>
+      )}
       {companies.map((comp) => {
         return <Company comp={comp} />;
       })}
