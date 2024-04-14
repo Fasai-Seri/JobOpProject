@@ -1,4 +1,7 @@
 {% extends "layout.html" %} {% load static %} {% block body %}
+
+<h1>Favourite</h1> 
+
 <form action="{% url 'job_post:favourite' %}" method="GET">
   <input type="search" placeholder="Search.." name="search_term" />
 </form>

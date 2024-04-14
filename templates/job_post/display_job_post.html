@@ -2,10 +2,19 @@
 {% load static %}
 
 {% block body %}
+
+<h1>Display Job Post</h1>
+
+{{ warning }}
+
 {{ selected_job_post }}
 <a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}">
     <button>Edit</button>
 </a>
 {{ all_applicants }}
-{{ test }}
+
+{% if is_job_post_owner %}
+<p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" download>Download Applicants List (PDF)</a></p>
+{% endif %}
+
 {% endblock %}
