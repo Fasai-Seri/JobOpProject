@@ -244,7 +244,7 @@ def applied_job_posts(request):
         'warning': "Your account doesn't have permission to access this page."
     })
 
-
+@login_required
 def generate_pdf(request, job_post_id):
     
     if is_job_post_owner(request.user, job_post_id):
@@ -299,5 +299,3 @@ def generate_pdf_file(job_post_id):
 
     merger.write(f'media/job_post/applicants_list/{job_post_id}applicants_list_with_resume.pdf')
     merger.close()
-     
-    return buffer
