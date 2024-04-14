@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from company.models import *
 from user_profiles.models import *
+from job_post.models import *
 from django.db.models import Q
 
 # Create your views here.
@@ -29,7 +30,7 @@ def comp_info(request, comp_id):
      if Employer.objects.filter(user__id = request.user.id).exists():
         return render(request, 'company/compinfo.html', {
                 'comp_id': comp_id,
-                'isUserEmployer': True
+                'isUserEmployer': True,
             })
      else:
          return render(request, 'company/compinfo.html', {
@@ -40,6 +41,10 @@ def comp_info(request, comp_id):
 def get_company(request, comp_id):
     company = Company.objects.get(pk = comp_id).serialize()
     return JsonResponse(company, safe=False)
+
+def get_company_job_posts(request, comp_id):
+    jobposts = JobPost.objects.filter(company__id = comp_id)
+    return JsonResponse([jobpost.serialize() for jobpost in jobposts], safe=False)
 
 def get_all_company(request):
     all_companies = Company.objects.all()    
@@ -96,5 +101,6 @@ def create_company_page(request):
         return HttpResponseRedirect(url)
     else:
         return render(request, 'company/create_company.html')
+
 
     
