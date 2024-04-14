@@ -4,6 +4,8 @@
 {{ warning }}
 
 {% else %}
+
+<h1>Applied Job Posts</h1>
 <form action="{% url 'job_post:applied_job_posts' %}" method="GET">
   <input type="search" placeholder="Search.." name="search_term" />
 </form>

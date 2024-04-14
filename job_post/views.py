@@ -3,9 +3,11 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
-from reportlab.pdfgen import canvas
 from django.urls import reverse
+
+from pypdf import PdfMerger
 from datetime import date
+from reportlab.pdfgen import canvas
 from io import BytesIO
 import datetime
 
@@ -50,6 +52,10 @@ def convert_username_to_year(username):
         current_year += 1
     entering_year = int(username[:2]) + 2500
     return current_year - entering_year
+
+def write_bytesio_to_file(filename, bytesio):
+        with open(filename, "wb") as outfile:
+            outfile.write(bytesio.getbuffer())
 
 @login_required    
 def index(request):
@@ -153,7 +159,7 @@ def create_job_post(request):
         })
         
     return render(request, 'job_post/create_job_post.html', {
-            'warning': "Your account doesn't have permission to access this page"
+            'warning': "Your account doesn't have permission to access this page."
     })
     
 
@@ -194,7 +200,7 @@ def edit_job_post(request, job_post_id):
         })
         
     return render(request, 'job_post/edit_job_post.html', {
-            'warning': "Your account doesn't have permission to access this page"
+            'warning': "Your account doesn't have permission to access this page."
     })
 
 @login_required
@@ -216,7 +222,7 @@ def posted_job_posts(request):
         })
         
     return render(request, 'job_post/posted_job_posts.html', {
-        'warning': "Your account doesn't have permission to access this page"
+        'warning': "Your account doesn't have permission to access this page."
     })
 
 @login_required   
@@ -235,25 +241,31 @@ def applied_job_posts(request):
         })
         
     return render(request, 'job_post/applied_job_posts.html', {
-        'warning': "Your account doesn't have permission to access this page"
+        'warning': "Your account doesn't have permission to access this page."
     })
 
 
 def generate_pdf(request, job_post_id):
-    response = FileResponse(generate_pdf_file(job_post_id), 
-                            as_attachment=True, 
-                            filename='applicants.pdf')
-    return response 
-
+    
+    if is_job_post_owner(request.user, job_post_id):
+        generate_pdf_file(job_post_id)
+        response = FileResponse(open(f'media/job_post/applicants_list/{job_post_id}applicants_list_with_resume.pdf', "rb"), 
+                                as_attachment=True, 
+                                filename=f'{job_post_id}_applicants_list.pdf')
+        return response 
+    
+    return render(request, 'job_post/warning.html', {
+        'warning': "Your account doesn't have permission to download the file."
+    })
+            
 def generate_pdf_file(job_post_id):
     
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
  
-    # Create a PDF document
     selected_job_post = JobPost.objects.get(pk=job_post_id)
     p.setFont('Helvetica-Bold',12)
-    p.drawString(100, 750, f"Applicants of {selected_job_post}")
+    p.drawString(100, 750, f"Applicants List of {selected_job_post}")
     
     p.setFont('Helvetica', 10)
     all_applicants = selected_job_post.applicants.all()
@@ -268,12 +280,24 @@ def generate_pdf_file(job_post_id):
         p.drawString(100, y - 20, f"{'':5}Email: {applicant.user.username}")
         p.drawString(100, y - 40, f"{'':5}Phone: {applicant.user.phone}")
         p.drawString(100, y - 60, f"{'':5}Major: {applicant.major}")
-        # p.drawString(100, y - 80, f"{'':5}Resume: {applicant.student_resume}")
         y -= 90
         i += 1
- 
-    p.showPage()
+    
     p.save()
- 
-    buffer.seek(0)
+    buffer.seek(0) 
+    write_bytesio_to_file(f'media/job_post/applicants_list/{job_post_id}applicants_list.pdf', buffer)
+    
+    resume_list = []
+    for applicant in all_applicants:
+        if applicant.student_resume:
+            resume_list.append(applicant.student_resume)
+    
+    merger = PdfMerger()
+    merger.append(f'media/job_post/applicants_list/{job_post_id}applicants_list.pdf')
+    for resume in resume_list:
+        merger.append(resume)
+
+    merger.write(f'media/job_post/applicants_list/{job_post_id}applicants_list_with_resume.pdf')
+    merger.close()
+     
     return buffer
