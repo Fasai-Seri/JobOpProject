@@ -7,9 +7,11 @@ const CompanyProfile = () => {
   const comp_id = parseInt(data.compId, 10);
   const csrftoken = data.csrfToken;
   const post_href = data.postHref.slice(0, -1);
+
   React.useEffect(() => {
     fetch_company();
     fetch_company_posts();
+    myMap();
   }, []);
 
   function fetch_company() {
@@ -95,6 +97,15 @@ const CompanyProfile = () => {
         </p>
       </div>
     );
+  }
+
+  function myMap() {
+    let address = { lat: 18.31758773097801, lng: 99.39817121590579 };
+    let map = new window.google.maps.Map(document.getElementById("map"), {
+      zoom: 4,
+      center: address,
+    });
+    let marker = new window.google.maps.Marker({ position: address, map: map });
   }
 
   function textAreaAdjust(e) {
@@ -224,6 +235,9 @@ const CompanyProfile = () => {
           </div>
         )}
       </form>
+      <div style={{ height: "100%", width: "100%" }}>
+        <div id="map"></div>
+      </div>
       {posts.map((post) => {
         return <PostSection post={post} />;
       })}

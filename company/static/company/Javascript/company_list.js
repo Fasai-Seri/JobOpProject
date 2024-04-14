@@ -1,11 +1,11 @@
 const CompanyList = () => {
-  const [compList, setCompList] = React.useState([]);
   const data = document.querySelector("#company_list_script").dataset;
   const companies = JSON.parse(data.companies);
   const csrftoken = data.csrfToken;
   const isEmployer = data.isEmployer;
   const create_comp_link = data.createComp;
-  console.log(create_comp_link);
+  const comp_href = data.compHref.slice(0, -1);
+  console.log(comp_href);
 
   function SearchBar() {
     return (
@@ -31,7 +31,11 @@ const CompanyList = () => {
           width="200px"
           height="200px"
         />
-        <p>{props.comp.comp_name}</p>
+        <p>
+          <a href={comp_href + "/" + props.comp.comp_id}>
+            {props.comp.comp_name}
+          </a>
+        </p>
         <p>{props.comp.comp_desc}</p>
       </div>
     );

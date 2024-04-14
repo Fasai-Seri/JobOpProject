@@ -14,6 +14,7 @@ from company.views import get_all_company
 
 
 # Create your views here.
+@login_required(login_url='/user_profiles/')
 def index(request,user_id):
     return render(request, 'user_profiles/profile.html', {
         'user_id': user_id,
@@ -50,10 +51,10 @@ def login_view(request):
         else:
             return render(request, "user_profiles/login.html")
 
-@login_required
+@login_required(login_url='/user_profiles/')
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("job_post:index"))
+    return HttpResponseRedirect(reverse("user_profiles:login"))
 
 @csrf_exempt
 def register(request):
@@ -94,7 +95,7 @@ def register(request):
         return render(request, "user_profiles/register.html")
 
 @csrf_exempt
-@login_required
+@login_required(login_url='/user_profiles/')
 def fill_info(request) :
     if request.method == "POST":
         fname = request.POST["fname"]
@@ -120,7 +121,8 @@ def fill_info(request) :
         return HttpResponseRedirect(reverse("job_post:index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
-    
+
+@login_required(login_url='/user_profiles/')
 def get_user(request, user_id):
     user = User.objects.get(pk=user_id).serialize()
     if Student.objects.filter(user__id = user_id).exists():
@@ -136,12 +138,13 @@ def get_user(request, user_id):
         user.update(employer)
         return JsonResponse(user, safe=False)
     
+@login_required(login_url='/user_profiles/')
 def get_major(request):
     majors = Major.objects.all()
     return JsonResponse([major.serialize() for major in majors], safe=False)
 
 @csrf_exempt
-@login_required
+@login_required(login_url='/user_profiles/')
 def update_user(request):
     url = reverse("user_profiles:index", kwargs={'user_id': request.user.id})
     if request.method == 'POST':
@@ -171,7 +174,7 @@ def update_user(request):
         return HttpResponseRedirect(url) 
 
 @csrf_exempt
-@login_required
+@login_required(login_url='/user_profiles/')
 def update_user_photo(request):
     if request.method == 'POST':
         photo = request.FILES.get('user_photo')
@@ -181,7 +184,7 @@ def update_user_photo(request):
         return HttpResponse('Upload Photo Succesful')
     
 @csrf_exempt
-@login_required
+@login_required(login_url='/user_profiles/')
 @permission_required('user_profiles.is_student', raise_exception=True)
 def update_student_resume(request):
     if request.method == 'POST':
@@ -193,7 +196,7 @@ def update_student_resume(request):
         return HttpResponse('Upload Resume Succesful')
 
 @csrf_exempt
-@login_required
+@login_required(login_url='/user_profiles/')
 @permission_required('user_profiles.is_professor', raise_exception=True)
 def create_employer(request):
     if request.method == "POST":
@@ -219,5 +222,6 @@ def create_employer(request):
             })
     return render(request, 'user_profiles/create_employer.html')
 
+@login_required(login_url='/user_profiles/')
 def get_company(request):
     return get_all_company(request)

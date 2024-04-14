@@ -19,6 +19,12 @@ from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.views.static import serve
 from job_opportunity import settings
+from django.http import HttpResponse
+
+def response_notfound_handler(request, exception=None):
+    return HttpResponse("<h1>Page Not Found</h1>", status=404)
+def response_permdenied_handler(request, exception=None):
+    return HttpResponse("<h1>Permission Denied</h1>", status=403)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -27,3 +33,6 @@ urlpatterns = [
     path("company/", include("company.urls")),
     re_path(r'^media/(?P<path>.*)$', serve, kwargs={'document_root': settings.MEDIA_ROOT})
 ]
+
+handler404=response_notfound_handler
+handler403=response_permdenied_handler
