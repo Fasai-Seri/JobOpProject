@@ -69,6 +69,9 @@
               >Favorite</a
             >
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'company:index' %}">Company</a>
+          </li>
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">
             <a
