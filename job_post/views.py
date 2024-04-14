@@ -188,7 +188,7 @@ def edit_job_post(request, job_post_id):
     })
 
 @login_required
-def posted_job_post(request):
+def posted_job_posts(request):
    
     if is_permitted_poster(request.user):
         
@@ -201,11 +201,29 @@ def posted_job_post(request):
             search_term = request.GET.get('search_term')
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
-        return render(request, 'job_post/posted_job_post.html', {
+        return render(request, 'job_post/posted_job_posts.html', {
             'all_job_posts': all_job_posts
         })
         
-    return render(request, 'job_post/posted_job_post.html', {
+    return render(request, 'job_post/posted_job_posts.html', {
         'warning': "Your account doesn't have permission to access this page"
     })
+
+@login_required   
+def applied_job_posts(request):
     
+    if is_student(request.user):
+        
+        all_job_posts = request.user.student_user_id.get().applied_job_posts.all()
+            
+        if request.GET.get('search_term'):
+            search_term = request.GET.get('search_term')
+            all_job_posts = job_post_with_search_term(all_job_posts, search_term)
+            
+        return render(request, 'job_post/applied_job_posts.html', {
+            'all_job_posts': all_job_posts
+        })
+        
+    return render(request, 'job_post/applied_job_posts.html', {
+        'warning': "Your account doesn't have permission to access this page"
+    })
