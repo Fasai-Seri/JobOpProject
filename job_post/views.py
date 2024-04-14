@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 from django.urls import reverse
+from datetime import date
+from io import BytesIO
 import datetime
 
 from .models import *
@@ -39,6 +43,13 @@ def job_post_with_search_term(all_job_posts, search_term):
         Q(company__comp_desc__icontains=search_term) 
     )
     return filtered_job_posts
+
+def convert_username_to_year(username):
+    current_year = date.today().year + 543
+    if date.today().month > 6:
+        current_year += 1
+    entering_year = int(username[:2]) + 2500
+    return current_year - entering_year
 
 @login_required    
 def index(request):
@@ -151,7 +162,6 @@ def display_job_post(request, job_post_id):
     return render(request, 'job_post/display_job_post.html', {
         'selected_job_post': JobPost.objects.get(pk=job_post_id),
         'all_applicants': JobPost.objects.get(pk=job_post_id).applicants.all(),
-        'test': JobPost.objects.get(pk=job_post_id).job_desc_file,
         'is_job_post_owner': is_job_post_owner(request.user, job_post_id),
         'is_student': is_student(request.user)
     })
@@ -227,3 +237,43 @@ def applied_job_posts(request):
     return render(request, 'job_post/applied_job_posts.html', {
         'warning': "Your account doesn't have permission to access this page"
     })
+
+
+def generate_pdf(request, job_post_id):
+    response = FileResponse(generate_pdf_file(job_post_id), 
+                            as_attachment=True, 
+                            filename='applicants.pdf')
+    return response 
+
+def generate_pdf_file(job_post_id):
+    
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+ 
+    # Create a PDF document
+    selected_job_post = JobPost.objects.get(pk=job_post_id)
+    p.setFont('Helvetica-Bold',12)
+    p.drawString(100, 750, f"Applicants of {selected_job_post}")
+    
+    p.setFont('Helvetica', 10)
+    all_applicants = selected_job_post.applicants.all()
+    y = 700
+    i = 1
+    for applicant in all_applicants:
+        if i % 7 == 1 and i != 1:
+            p.showPage()
+            y = 750
+            p.setFont('Helvetica', 10)
+        p.drawString(100, y, f"{str(i)+'.':<4}Name: {applicant.user.fname} {applicant.user.lname} (Year {convert_username_to_year(applicant.user.username)})")
+        p.drawString(100, y - 20, f"{'':5}Email: {applicant.user.username}")
+        p.drawString(100, y - 40, f"{'':5}Phone: {applicant.user.phone}")
+        p.drawString(100, y - 60, f"{'':5}Major: {applicant.major}")
+        # p.drawString(100, y - 80, f"{'':5}Resume: {applicant.student_resume}")
+        y -= 90
+        i += 1
+ 
+    p.showPage()
+    p.save()
+ 
+    buffer.seek(0)
+    return buffer

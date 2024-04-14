@@ -7,5 +7,7 @@
     <button>Edit</button>
 </a>
 {{ all_applicants }}
-{{ test }}
+
+<p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" download>Download Applicants List (PDF)</a></p>
+
 {% endblock %}
