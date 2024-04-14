@@ -3,7 +3,6 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse
-from django.forms import forms
 import datetime
 
 from .models import *
@@ -27,23 +26,27 @@ def is_job_post_owner(user, job_post_id):
         return selected_job_post.poster_emp.user == user
     else:
         return selected_job_post.poster_prof.user == user
-    
+
+def job_post_with_search_term(all_job_posts, search_term):
+    filtered_job_posts = all_job_posts.filter(
+        Q(job_title__icontains=search_term) |
+        Q(job_type__icontains=search_term) |
+        Q(job_desc_text__icontains=search_term) |
+        Q(job_requirement_text__icontains=search_term) |
+        Q(job_location__icontains=search_term) |
+        Q(job_status__icontains=search_term) |
+        Q(company__comp_name__icontains=search_term) |
+        Q(company__comp_desc__icontains=search_term) 
+    )
+    return filtered_job_posts
+
 @login_required    
 def index(request):
+    all_job_posts = JobPost.objects.all() 
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
-        all_job_posts = JobPost.objects.filter(
-            Q(job_title__icontains=search_term) |
-            Q(job_type__icontains=search_term) |
-            Q(job_desc_text__icontains=search_term) |
-            Q(job_requirement_text__icontains=search_term) |
-            Q(job_location__icontains=search_term) |
-            Q(job_status__icontains=search_term) |
-            Q(company__comp_name__icontains=search_term) |
-            Q(company__comp_desc__icontains=search_term) 
-            )
-    else:
-        all_job_posts = JobPost.objects.all()    
+        all_job_posts = job_post_with_search_term(all_job_posts, search_term)
+           
     return render(request, 'job_post/index.html', {
         'all_job_posts': all_job_posts,
         'job_type_choices': JobPost.job_type_choices,
@@ -53,40 +56,22 @@ def index(request):
 
 @login_required      
 def favourite(request):
+    all_job_posts = request.user.favourite_posts.all() 
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
-        all_job_posts = request.user.favourite_posts.filter(
-            Q(job_title__icontains=search_term) |
-            Q(job_type__icontains=search_term) |
-            Q(job_desc_text__icontains=search_term) |
-            Q(job_requirement_text__icontains=search_term) |
-            Q(job_location__icontains=search_term) |
-            Q(job_status__icontains=search_term) |
-            Q(company__comp_name__icontains=search_term) |
-            Q(company__comp_desc__icontains=search_term) 
-            )
-    else:
-        all_job_posts = request.user.favourite_posts.all()    
+        all_job_posts = job_post_with_search_term(all_job_posts, search_term)
+        
     return render(request, 'job_post/favourite.html', {
         'all_job_posts': all_job_posts,
     })
 
 @login_required      
 def following(request):
+    all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
-        all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all()).filter(
-            Q(job_title__icontains=search_term) |
-            Q(job_type__icontains=search_term) |
-            Q(job_desc_text__icontains=search_term) |
-            Q(job_requirement_text__icontains=search_term) |
-            Q(job_location__icontains=search_term) |
-            Q(job_status__icontains=search_term) |
-            Q(company__comp_name__icontains=search_term) |
-            Q(company__comp_desc__icontains=search_term) 
-            )
-    else:
-        all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
+        all_job_posts = job_post_with_search_term(all_job_posts, search_term)
+        
     return render(request, 'job_post/following.html', {
         'all_job_posts': all_job_posts,
         'followed_companies': request.user.followed_company.all()
@@ -200,5 +185,27 @@ def edit_job_post(request, job_post_id):
         
     return render(request, 'job_post/edit_job_post.html', {
             'warning': "Your account doesn't have permission to access this page"
+    })
+
+@login_required
+def posted_job_post(request):
+   
+    if is_permitted_poster(request.user):
+        
+        if is_employer(request.user):
+            all_job_posts = request.user.emp_user_id.get().job_posted_by_emp.all()
+        else:
+            all_job_posts = request.user.prof_user_id.get().job_posted_by_prof.all()
+            
+        if request.GET.get('search_term'):
+            search_term = request.GET.get('search_term')
+            all_job_posts = job_post_with_search_term(all_job_posts, search_term)
+            
+        return render(request, 'job_post/posted_job_post.html', {
+            'all_job_posts': all_job_posts
+        })
+        
+    return render(request, 'job_post/posted_job_post.html', {
+        'warning': "Your account doesn't have permission to access this page"
     })
     

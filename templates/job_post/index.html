@@ -28,6 +28,7 @@
 {% for job_post in all_job_posts %}
 <div class="job_post_div">
     <p class="job_title">{{ job_post.job_title }}</p>
+    <p class="company">{{ job_post.company }}</p>
     <p class="job_type">{{ job_post.get_job_type_display }}</p>
     {% for major in job_post.job_major.all %}
     <span class="job_major">{{ major.pk }}</span>

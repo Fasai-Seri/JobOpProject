@@ -1,0 +1,6 @@
+{% extends "layout.html" %} {% load static %} {% block body %}
+<form action="{% url 'job_post:posted_job_post' %}" method="GET">
+  <input type="search" placeholder="Search.." name="search_term" />
+</form>
+{{ all_job_posts }} 
+{% endblock %}
