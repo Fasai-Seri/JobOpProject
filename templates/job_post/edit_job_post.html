@@ -5,8 +5,10 @@
 
 <div>Edit Job Post</div>
 
+{% if warning %}
 {{ warning }}
 
+{% else %}
 <form action="{% url 'job_post:edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
@@ -80,6 +82,7 @@
         </select>
     <input type="submit" class="btn btn-primary" value="Save"/>
 </form>
+{% endif %}
 {% endblock %}
 
 {% block script %}

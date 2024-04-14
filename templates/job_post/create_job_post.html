@@ -5,8 +5,10 @@
 
 <div>Create Job Post</div>
 
+{% if warning %}
 {{ warning }}
 
+{% else %}
 <form action="{% url 'job_post:create_job_post' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
@@ -58,6 +60,7 @@
     </div>
     <input type="submit" class="btn btn-primary" value="Create"/>
 </form>
+{% endif %}
 {% endblock %}
 
 {% block script %}

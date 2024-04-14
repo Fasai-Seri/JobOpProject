@@ -23,9 +23,10 @@ def is_permitted_poster(user):
 
 def is_job_post_owner(user, job_post_id):
     selected_job_post = JobPost.objects.get(pk=job_post_id)
-    return selected_job_post.poster_emp.user == user or selected_job_post.poster_prof.user == user
-
-test = {user:is_student(user) for user in User.objects.all()}
+    if selected_job_post.poster_emp is not None:
+        return selected_job_post.poster_emp.user == user
+    else:
+        return selected_job_post.poster_prof.user == user
     
 @login_required    
 def index(request):
