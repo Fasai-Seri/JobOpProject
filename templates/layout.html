@@ -105,8 +105,9 @@
                 href="{% url 'user_profiles:index' user.id %}"
                 >User Profile</a
               >
-              <a class="dropdown-item" href="#">Applied Job</a>
-              <a class="dropdown-item" href="#">Followed Company</a>
+              <a class="dropdown-item" href="{% url 'job_post:applied_job_posts' %}" id="applied_job_posts_link">Applied Job</a>
+              <a class="dropdown-item" href="{% url 'job_post:posted_job_posts' %}" id="posted_job_posts_link">Posted Job</a>
+              <a class="dropdown-item" href="{% url 'job_post:followed_companies' %}">Followed Company</a>
               {% if perms.user_profiles.is_professor %}
               <a
                 class="dropdown-item"
@@ -148,5 +149,15 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if(document.getElementById('navbarDropdown').innerHTML.includes('student.chula.ac.th')) {
+          document.querySelector('#posted_job_posts_link').style.display = 'none'
+        }
+        else {
+          document.querySelector('#applied_job_posts_link').style.display = 'none'          
+        }
+      })
+    </script>
   </body>
 </html>
