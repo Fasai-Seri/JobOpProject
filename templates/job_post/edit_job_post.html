@@ -28,6 +28,12 @@
     </div>
     <div>
         *Company:
+        {% if is_employer %}
+        <select name="company" class="form-control dropdown_with_search" disabled>
+            <option value="{{ edited_job_post.company.pk }}" selected>{{ edited_job_post.company.comp_name }}</option>
+        </select>
+        <input type="hidden" name="company" value="{{ edited_job_post.company.pk }}">
+        {% else %}
         <select name="company" class="form-control dropdown_with_search">
             {% for company in all_companies %}
             {% if company == edited_job_post.company %}
@@ -37,6 +43,7 @@
             {% endif %}
             {% endfor %}
         </select>
+        {% endif %}
     </div>
     <div>
         Job Description:
