@@ -75,19 +75,25 @@ def index(request):
 
 @login_required      
 def favourite(request):
+    
     all_job_posts = request.user.favourite_posts.all() 
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/favourite.html', {
         'all_job_posts': all_job_posts,
+        'search_term': search_term
     })
 
 @login_required      
 def following(request):
+    
     all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
     search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
