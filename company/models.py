@@ -7,8 +7,8 @@ class Company(models.Model):
     comp_desc = models.CharField(max_length=1000, null=True)
     comp_logo = models.ImageField(upload_to='company/Images', default='company/Images/default.jpg', null=True)
     comp_address = models.CharField(max_length=1000, null=True)
-    comp_long = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    comp_lat  = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    comp_long = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    comp_lat  = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     comp_contact_info = models.CharField(max_length=1000, null=True)
     
     def __str__(self):
@@ -23,6 +23,8 @@ class Company(models.Model):
                 'comp_desc': self.comp_desc,
                 'comp_logo': self.comp_logo.url[1:],
                 'comp_address': self.comp_address,
+                'comp_long': str(self.comp_long),
+                'comp_lat': str(self.comp_lat),
                 'comp_contact_info': self.comp_contact_info,
             }
         else:
@@ -32,5 +34,7 @@ class Company(models.Model):
                 'comp_name_th': self.comp_name_th,
                 'comp_desc': self.comp_desc,
                 'comp_address': self.comp_address,
+                'comp_long': str(self.comp_long),
+                'comp_lat': str(self.comp_lat),
                 'comp_contact_info': self.comp_contact_info,
             }

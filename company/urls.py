@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -7,7 +7,7 @@ from . import views
 app_name='company'
 urlpatterns = [
     path("", views.index, name="index"),
-    path("<int:comp_id>", views.comp_info, name="comp_info"),
+    re_path("(?P<comp_id>[0-9]+)?$", views.comp_info, name="comp_info"),
     path("create_company_page", views.create_company_page, name="create_company_page"),
 
     #APIs
