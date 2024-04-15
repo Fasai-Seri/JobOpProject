@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.http import FileResponse
 from django.urls import reverse
 
@@ -10,6 +11,7 @@ from datetime import date
 from reportlab.pdfgen import canvas
 from io import BytesIO
 import datetime
+import json
 
 from .models import *
 # Create your views here.
@@ -310,3 +312,34 @@ def generate_pdf_file(job_post_id):
 
     merger.write(f'media/job_post/applicants_list/{job_post_id}applicants_list_with_resume.pdf')
     merger.close()
+
+@csrf_exempt
+@login_required
+def update_job_post(request, job_post_id):
+
+    try:
+        selected_job_post = JobPost.objects.get(pk=job_post_id)
+    except JobPost.DoesNotExist:
+        return JsonResponse({"error": "Job post not found."}, status=404)
+
+    if request.method == "GET":
+        return JsonResponse(selected_job_post.serialize())
+
+    elif request.method == "PUT":
+        if is_job_post_owner(request.user, job_post_id):
+            data = json.loads(request.body)
+            if data.get("delete") is not None:
+                selected_job_post.delete()
+            # if data.get("archived") is not None:
+            #     selected_job_post.archived = data["archived"]
+            # selected_job_post.save()
+                pass
+            return HttpResponse(status=204)
+        return JsonResponse({
+            "error": "You don't have permission to edit the job post"
+        }, status=403)
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
+        
