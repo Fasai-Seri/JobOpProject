@@ -74,6 +74,8 @@ def update_company(request, comp_id):
             comp_name_th = data.get('comp_name_th', ''),
             comp_desc = data.get('comp_desc', ''),
             comp_address = data.get('comp_address', ''),
+            comp_long = data.get('comp_long', ''),
+            comp_lat = data.get('comp_lat', ''),
             comp_contact_info = data.get('comp_contact_info', ''),
         )
         print(data)
