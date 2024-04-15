@@ -26,8 +26,14 @@
         {% endfor %}
 </form>
 <form action="{% url 'job_post:index' %}" method='GET'>
-<input type="search" placeholder="Search.." name='search_term'>
+<input type="search" placeholder="Search.." name='search_term' value="{{ search_term }}">
 </form>
+
+{% if not all_job_posts %}
+No Result Found
+
+{% else %}
+
 {% for job_post in all_job_posts %}
 <div class="job_post_div">
     <p class="job_title">{{ job_post.job_title }}</p>
@@ -39,6 +45,9 @@
     <p class="job_status">{{ job_post.get_job_status_display }}</p>
 </div>
 {% endfor %}
+
+{% endif %}
+
 {% endblock %}
 
 

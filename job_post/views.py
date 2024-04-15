@@ -61,7 +61,10 @@ def write_bytesio_to_file(filename, bytesio):
 
 @login_required    
 def index(request):
+    
     all_job_posts = JobPost.objects.all() 
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
@@ -71,6 +74,7 @@ def index(request):
         'job_type_choices': JobPost.job_type_choices,
         'all_major': Major.objects.all(),
         'job_status_choices': JobPost.job_status_choices,
+        'search_term': search_term
     })
 
 @login_required      
