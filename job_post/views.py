@@ -111,6 +111,10 @@ def followed_companies(request):
 @login_required  
 def create_job_post(request):
     if is_permitted_poster(request.user):
+        if is_employer(request.user) and not Employer.objects.get(user=request.user).comp:
+            return render(request, 'job_post/create_job_post.html', {
+            'warning': "Set your company before creating new post."
+            })
         if request.method == "POST":
             job_title = request.POST.get('job_title')
             job_type = request.POST.get('job_type')
@@ -156,7 +160,8 @@ def create_job_post(request):
             'job_type_choices': JobPost.job_type_choices,
             'all_companies': Company.objects.all(),
             'all_major': Major.objects.all(),
-            'is_employer': is_employer(request.user)
+            'is_employer': is_employer(request.user),
+            # 'fill_company': Employer.objects.get(user=request.user).comp is not None
         })
         
     return render(request, 'job_post/create_job_post.html', {
