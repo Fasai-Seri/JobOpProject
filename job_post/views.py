@@ -87,13 +87,15 @@ def favourite(request):
 @login_required      
 def following(request):
     all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
+    search_term = ''
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/following.html', {
         'all_job_posts': all_job_posts,
-        'followed_companies': request.user.followed_company.all()
+        'followed_companies': request.user.followed_company.all(),
+        'search_term': search_term
     })
 
 @login_required      
@@ -117,7 +119,7 @@ def create_job_post(request):
             employer = Employer.objects.get(user=request.user)
             if not employer.comp or not employer.user.fname or not employer.user.lname or not employer.user.phone:
                 return render(request, 'job_post/create_job_post.html', {
-                'warning': "Set your personal information before creating new post."
+                'warning': "Set your personal information before creating new job post."
                 })
         if request.method == "POST":
             job_title = request.POST.get('job_title')
