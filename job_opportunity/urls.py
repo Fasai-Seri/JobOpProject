@@ -25,5 +25,5 @@ urlpatterns = [
     path("", include("job_post.urls")),
     path("user_profiles/", include("user_profiles.urls")),
     path("company/", include("company.urls")),
-    re_path(r'^media/(?P<path>.*)$', serve, kwargs={'document_root': settings.MEDIA_ROOT})
+    re_path(r'^media/(?P<path>.*)$', serve, kwargs={'document_root': settings.MEDIA_ROOT}),
 ]

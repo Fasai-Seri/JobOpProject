@@ -343,3 +343,4 @@ def update_job_post(request, job_post_id):
             "error": "GET or PUT request required."
         }, status=400)
         
+        

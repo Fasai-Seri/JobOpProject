@@ -37,22 +37,24 @@
 
 {% block script %}
 <script>
-    document.querySelector('.show_delete_dialog').onclick = () => {
-        document.querySelector('dialog').showModal()
-        document.querySelector('#dialog-footer--cancel-btn').onclick = () => {
-            document.querySelector('dialog').close()
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.show_delete_dialog').onclick = () => {
+            document.querySelector('dialog').showModal()
+            document.querySelector('#dialog-footer--cancel-btn').onclick = () => {
+                document.querySelector('dialog').close()
+            }
+            document.querySelector('#dialog-footer--confirm-btn').onclick = () => {
+                <!-- console.log(`/update_job_post/{{ selected_job_post.pk }}`) -->
+                fetch(`/update_job_post/{{ selected_job_post.pk }}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        delete: true
+                    })
+                }).then(() => {
+                    return window.location.replace("{% url 'job_post:index' %}")
+                })             
+            }
         }
-        document.querySelector('#dialog-footer--confirm-btn').onclick = () => {
-            <!-- console.log(`/update_job_post/{{ selected_job_post.pk }}`) -->
-            fetch(`/update_job_post/{{ selected_job_post.pk }}`, {
-                method: 'PUT',
-                body: JSON.stringify({
-                    delete: true
-                })
-              }).then(() => {
-                return window.location.replace("{% url 'job_post:index' %}")
-              })             
-        }
-    }
+    })
 </script>
 {% endblock %}
