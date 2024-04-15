@@ -46,14 +46,16 @@
         {% endif %}
     </div>
     <div>
+        Upload Job Information File:
+        <input type="file" name="job_info_file">
+    </div>
+    <div>
         Job Description:
         <textarea class="form-control" name="job_desc_text">{{ edited_job_post.job_desc_text }}</textarea>
-        <input type="file" name="job_desc_file">
     </div>
     <div>
         Job Requirement:
         <textarea class="form-control" name="job_requirement_text">{{ edited_job_post.job_requirement_text }}</textarea>
-        <input type="file" name="job_requirement_file">
     </div>
     <div>
         Related Major:

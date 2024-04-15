@@ -152,8 +152,7 @@ def create_job_post(request):
             
             saved_job_post = JobPost.objects.last()
             saved_job_post.job_major.set(job_major)
-            saved_job_post.job_desc_file = request.FILES.get('job_desc_file')
-            saved_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
+            saved_job_post.job_info_file = request.FILES.get('job_info_file')
             saved_job_post.save()
             
             return HttpResponseRedirect(reverse('job_post:index'))
@@ -188,10 +187,9 @@ def edit_job_post(request, job_post_id):
             edited_job_post.job_title = request.POST.get('job_title')
             edited_job_post.job_type = request.POST.get('job_type')
             edited_job_post.company = Company.objects.get(pk=request.POST.get('company'))
+            edited_job_post.job_info_file = request.FILES.get('job_info_file')
             edited_job_post.job_desc_text = request.POST.get('job_desc_text')
-            edited_job_post.job_desc_file = request.FILES.get('job_desc_file')
             edited_job_post.job_requirement_text = request.POST.get('job_requirement_text')
-            edited_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
             edited_job_post.job_location =  request.POST.get('job_location')
             edited_job_post.job_status =  request.POST.get('job_status')
             edited_job_post.job_major.set(Major.objects.filter(pk__in=request.POST.getlist('job_major'))) 
