@@ -236,6 +236,8 @@ def posted_job_posts(request):
    
     if is_permitted_poster(request.user):
         
+        search_term = ''
+        
         if is_employer(request.user):
             all_job_posts = request.user.emp_user_id.get().job_posted_by_emp.all()
         else:
@@ -246,7 +248,8 @@ def posted_job_posts(request):
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/posted_job_posts.html', {
-            'all_job_posts': all_job_posts
+            'all_job_posts': all_job_posts,
+            'search_term': search_term
         })
         
     return render(request, 'job_post/posted_job_posts.html', {
