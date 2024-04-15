@@ -15,6 +15,30 @@
 
 {% if is_job_post_owner %}
 <p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" download>Download Applicants List (PDF)</a></p>
+<button class="delete_button">Delete</button>
 {% endif %}
 
+<dialog>
+    <header>
+        <h2>Confirm Deletion</h2>
+    </header>
+    <div>
+        Are you sure you want to permanently remove this job post?
+    </div>
+    <footer>
+        <menu>
+            <button id="dialog-footer--cancel-btn">Cancel</button>
+            <button id="dialog-footer--confirm-btn">Confirm</button>
+        </menu>
+    </footer>
+</dialog>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    document.querySelector('.delete_button').onclick = () => {
+        document.querySelector('dialog').showModal()
+    }
+</script>
 {% endblock %}
