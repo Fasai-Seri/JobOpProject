@@ -6,7 +6,7 @@
 <h1>Following</h1> 
 
 <form action="{% url 'job_post:following' %}" method='GET'>
-<input type="search" placeholder="Search.." name='search_term' value="{{ search_term }}">
+<input type="search" placeholder="Search.." name='search_term' value="{{ search_term }}" />
 </form>
 
 {% if not all_job_posts %}
