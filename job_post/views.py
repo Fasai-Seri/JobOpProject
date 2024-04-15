@@ -106,6 +106,9 @@ def following(request):
 
 @login_required      
 def followed_companies(request):
+    
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_companies = request.user.followed_company.all().filter(
@@ -115,7 +118,8 @@ def followed_companies(request):
     else:
         all_companies = request.user.followed_company.all()
     return render(request, 'job_post/followed_companies.html', {
-        'all_companies': all_companies
+        'all_companies': all_companies,
+        'search_term': search_term
     })
 
 @login_required  
