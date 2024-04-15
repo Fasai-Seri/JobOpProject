@@ -15,4 +15,8 @@ urlpatterns = [
     path("job_post/<int:job_post_id>/edit", views.edit_job_post, name="edit_job_post"),
     re_path("job_post(?:/(?P<job_post_id>[0-9]+))?/$", views.display_job_post, name="display_job_post"),
     path('generate_pdf/<int:job_post_id>', views.generate_pdf, name='generate_pdf'),
+    
+    #APIs
+    path("update_job_post/<int:job_post_id>", views.update_job_post, name="update_job_post"),
+
 ]
