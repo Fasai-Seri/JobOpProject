@@ -155,7 +155,8 @@ def create_job_post(request):
         return render(request, 'job_post/create_job_post.html', {
             'job_type_choices': JobPost.job_type_choices,
             'all_companies': Company.objects.all(),
-            'all_major': Major.objects.all()
+            'all_major': Major.objects.all(),
+            'is_employer': is_employer(request.user)
         })
         
     return render(request, 'job_post/create_job_post.html', {

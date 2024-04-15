@@ -25,12 +25,19 @@
     </div>
     <div>
         *Company:
+        {% if is_employer %}
+        <select name="company" class="form-control dropdown_with_search" disabled>
+            <option value="{{ request.user.emp_user_id.get.comp.pk }}" selected>{{ request.user.emp_user_id.get.comp.comp_name }}</option>
+        </select>
+        <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
+        {% else %}
         <select name="company" class="form-control dropdown_with_search">
             <option value=""></option>
-            {% for company in all_companies %}
+            {% for company in all_companies %}              
             <option value="{{ company.pk }}">{{ company.comp_name }}</option>
             {% endfor %}
         </select>
+        {% endif %}
     </div>
     <div>
         Job Description:
