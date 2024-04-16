@@ -40,7 +40,6 @@ const CompanyList = () => {
       </div>
     );
   }
-
   return (
     <div>
       <SearchBar />
@@ -49,9 +48,13 @@ const CompanyList = () => {
           Create Company
         </a>
       )}
-      {companies.map((comp) => {
-        return <Company comp={comp} />;
-      })}
+      {companies.length == 0 ? (
+        <h2>No company found</h2>
+      ) : (
+        companies.map((comp) => {
+          return <Company comp={comp} />;
+        })
+      )}
     </div>
   );
 };

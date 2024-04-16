@@ -161,9 +161,8 @@ def update_user(request):
             )
 
         elif Employer.objects.filter(user__id = request.user.id).exists():
-            print(data.get('comp', ''))
             Employer.objects.filter(user__id = request.user.id).update(
-                comp= data.get('comp', ''),
+                # comp= data.get('comp', ''),
                 emp_position= data.get('emp_position', '')
             )
 

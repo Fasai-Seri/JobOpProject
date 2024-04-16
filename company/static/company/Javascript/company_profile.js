@@ -143,32 +143,35 @@ const CompanyProfile = () => {
         .addTo(map.current);
 
       const gc = new maptilersdkMaptilerGeocoder.GeocodingControl();
-
-      map.current.addControl(gc, "top-left");
+      if (props.disabled == "false") {
+        map.current.addControl(gc, "top-left");
+      }
 
       map.current.on("click", async function (e) {
-        if (marker.current) {
-          marker.current.remove();
-        }
+        if (props.disabled == "false") {
+          if (marker.current) {
+            marker.current.remove();
+          }
 
-        marker.current = new maplibregl.Marker({ color: "#FF0000" })
-          .setLngLat([e.lngLat.lng, e.lngLat.lat])
-          .addTo(map.current);
-        const results = await maptilersdk.geocoding.reverse([
-          e.lngLat.lng,
-          e.lngLat.lat,
-        ]);
-        document.getElementById("info").innerHTML =
-          JSON.stringify(results.features[0].place_name_en) +
-          "<br />" +
-          JSON.stringify(e.lngLat.wrap());
-        compAdd.current = {
-          comp_long: e.lngLat.lng,
-          comp_lat: e.lngLat.lat,
-          comp_address: results.features[0].place_name_en,
-        };
-        console.log(company);
-        console.log(compAdd);
+          marker.current = new maplibregl.Marker({ color: "#FF0000" })
+            .setLngLat([e.lngLat.lng, e.lngLat.lat])
+            .addTo(map.current);
+          const results = await maptilersdk.geocoding.reverse([
+            e.lngLat.lng,
+            e.lngLat.lat,
+          ]);
+          document.getElementById("info").innerHTML =
+            JSON.stringify(results.features[0].place_name_en) +
+            "<br />" +
+            JSON.stringify(e.lngLat.wrap());
+          compAdd.current = {
+            comp_long: e.lngLat.lng,
+            comp_lat: e.lngLat.lat,
+            comp_address: results.features[0].place_name_en,
+          };
+          console.log(company);
+          console.log(compAdd);
+        }
       });
     }, [API_KEY, center, zoom]);
 
@@ -280,21 +283,6 @@ const CompanyProfile = () => {
           ></textarea>
         </div>
         <div class="form-group">
-          <label for="comp_name">Company Address</label>
-          <textarea
-            type="text"
-            class="form-control"
-            id="comp_address"
-            name="comp_address"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Address"
-            value={company.comp_address}
-            onChange={handleCompanyChange}
-            onKeyUp={textAreaAdjust}
-            required
-          ></textarea>
-        </div>
-        <div class="form-group">
           <label for="comp_name">Company Contact Info</label>
           <textarea
             type="text"
@@ -322,7 +310,11 @@ const CompanyProfile = () => {
             </button>
           </div>
         )}
-        <Map lat={Number(company.comp_lat)} long={Number(company.comp_long)} />
+        <Map
+          lat={Number(company.comp_lat)}
+          long={Number(company.comp_long)}
+          disabled={isDisabled}
+        />
       </form>
       {posts.map((post) => {
         return <PostSection post={post} />;

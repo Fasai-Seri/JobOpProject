@@ -127,14 +127,6 @@ const CreateCompany = () => {
           Company Description:{" "}
           <textarea class="form-control" name="comp_desc"></textarea>
         </div>
-        <div class="form-group">
-          Company Address:{" "}
-          <textarea
-            class="form-control"
-            name="comp_address"
-            required
-          ></textarea>
-        </div>
 
         <div class="form-group">
           Company Contact Info:{" "}
