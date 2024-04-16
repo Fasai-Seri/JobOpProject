@@ -73,6 +73,7 @@
                                 Location:
                                 <textarea class="form-control" name="job_location"></textarea>
                             </div>
+                            <div id="job_location"></div>
                             <input type="submit" class="btn btn-primary" value="Create"/>
                         </form>
                     </div>
@@ -88,4 +89,10 @@
         $('.dropdown_with_search').select2();
     });
 </script>
+<script
+  id="create_job_post_script"
+  type="text/babel"
+  src="../static/job_post/Javascript/create_job_post.js"
+  data-csrf-token="{{ csrf_token }}"
+></script>
 {% endblock %}
