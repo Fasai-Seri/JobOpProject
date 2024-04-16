@@ -5,6 +5,8 @@
 
 <h1>Create Job Post</h1>
 
+<p>{{ fill_company }}</p>
+
 {% if warning %}
 {{ warning }}
 
@@ -25,22 +27,31 @@
     </div>
     <div>
         *Company:
+        {% if is_employer %}
+        <select name="company" class="form-control dropdown_with_search" disabled>
+            <option value="{{ request.user.emp_user_id.get.comp.pk }}" selected>{{ request.user.emp_user_id.get.comp.comp_name }}</option>
+        </select>
+        <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
+        {% else %}
         <select name="company" class="form-control dropdown_with_search">
             <option value=""></option>
-            {% for company in all_companies %}
+            {% for company in all_companies %}              
             <option value="{{ company.pk }}">{{ company.comp_name }}</option>
             {% endfor %}
         </select>
+        {% endif %}
+    </div>
+    <div>
+        Upload Job Information File:
+        <input type="file" name="job_info_file">
     </div>
     <div>
         Job Description:
         <textarea class="form-control" name="job_desc_text"></textarea>
-        <input type="file" name="job_desc_file">
     </div>
     <div>
         Job Requirement:
         <textarea class="form-control" name="job_requirement_text"></textarea>
-        <input type="file" name="job_requirement_file">
     </div>
     <div>
         Related Major:

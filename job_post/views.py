@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.http import FileResponse
 from django.urls import reverse
 
@@ -10,6 +11,7 @@ from datetime import date
 from reportlab.pdfgen import canvas
 from io import BytesIO
 import datetime
+import json
 
 from .models import *
 # Create your views here.
@@ -111,6 +113,10 @@ def followed_companies(request):
 @login_required  
 def create_job_post(request):
     if is_permitted_poster(request.user):
+        if is_employer(request.user) and not Employer.objects.get(user=request.user).comp:
+            return render(request, 'job_post/create_job_post.html', {
+            'warning': "Set your company before creating new post."
+            })
         if request.method == "POST":
             job_title = request.POST.get('job_title')
             job_type = request.POST.get('job_type')
@@ -146,8 +152,7 @@ def create_job_post(request):
             
             saved_job_post = JobPost.objects.last()
             saved_job_post.job_major.set(job_major)
-            saved_job_post.job_desc_file = request.FILES.get('job_desc_file')
-            saved_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
+            saved_job_post.job_info_file = request.FILES.get('job_info_file')
             saved_job_post.save()
             
             return HttpResponseRedirect(reverse('job_post:index'))
@@ -155,7 +160,9 @@ def create_job_post(request):
         return render(request, 'job_post/create_job_post.html', {
             'job_type_choices': JobPost.job_type_choices,
             'all_companies': Company.objects.all(),
-            'all_major': Major.objects.all()
+            'all_major': Major.objects.all(),
+            'is_employer': is_employer(request.user),
+            # 'fill_company': Employer.objects.get(user=request.user).comp is not None
         })
         
     return render(request, 'job_post/create_job_post.html', {
@@ -180,14 +187,17 @@ def edit_job_post(request, job_post_id):
             edited_job_post.job_title = request.POST.get('job_title')
             edited_job_post.job_type = request.POST.get('job_type')
             edited_job_post.company = Company.objects.get(pk=request.POST.get('company'))
+            edited_job_post.job_info_file = request.FILES.get('job_info_file')
             edited_job_post.job_desc_text = request.POST.get('job_desc_text')
-            edited_job_post.job_desc_file = request.FILES.get('job_desc_file')
             edited_job_post.job_requirement_text = request.POST.get('job_requirement_text')
-            edited_job_post.job_requirement_file = request.FILES.get('job_requirement_file')
-            edited_job_post.job_close_date =  request.POST.get('job_close_date')
             edited_job_post.job_location =  request.POST.get('job_location')
             edited_job_post.job_status =  request.POST.get('job_status')
             edited_job_post.job_major.set(Major.objects.filter(pk__in=request.POST.getlist('job_major'))) 
+            
+            job_close_date =  request.POST.get('job_close_date')
+            if job_close_date != '':
+                edited_job_post.job_close_date = job_close_date
+                
             edited_job_post.save()
             return HttpResponseRedirect(reverse('job_post:display_job_post', args=(job_post_id,)))
             
@@ -196,7 +206,8 @@ def edit_job_post(request, job_post_id):
             'job_type_choices': JobPost.job_type_choices,
             'all_companies': Company.objects.all(),
             'all_major': Major.objects.all(),
-            'job_status_choices': JobPost.job_status_choices
+            'job_status_choices': JobPost.job_status_choices,
+            'is_employer': is_employer(request.user)
         })
         
     return render(request, 'job_post/edit_job_post.html', {
@@ -299,3 +310,35 @@ def generate_pdf_file(job_post_id):
 
     merger.write(f'media/job_post/applicants_list/{job_post_id}applicants_list_with_resume.pdf')
     merger.close()
+
+@csrf_exempt
+@login_required
+def update_job_post(request, job_post_id):
+
+    try:
+        selected_job_post = JobPost.objects.get(pk=job_post_id)
+    except JobPost.DoesNotExist:
+        return JsonResponse({"error": "Job post not found."}, status=404)
+
+    if request.method == "GET":
+        return JsonResponse(selected_job_post.serialize())
+
+    elif request.method == "PUT":
+        if is_job_post_owner(request.user, job_post_id):
+            data = json.loads(request.body)
+            if data.get("delete") is not None:
+                selected_job_post.delete()
+            # if data.get("archived") is not None:
+            #     selected_job_post.archived = data["archived"]
+            # selected_job_post.save()
+                pass
+            return HttpResponse(status=204)
+        return JsonResponse({
+            "error": "You don't have permission to edit the job post"
+        }, status=403)
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
+        
+        

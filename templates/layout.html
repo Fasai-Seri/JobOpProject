@@ -49,6 +49,25 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.1.2/dist/maplibre-gl.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.1.2/dist/maplibre-gl.min.css"
+    />
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@maptiler/sdk@2.0.1/dist/maptiler-sdk.min.css"
+    />
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.js"></script>
+    <link
+      href="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -105,9 +124,23 @@
                 href="{% url 'user_profiles:index' user.id %}"
                 >User Profile</a
               >
-              <a class="dropdown-item" href="{% url 'job_post:applied_job_posts' %}" id="applied_job_posts_link">Applied Job</a>
-              <a class="dropdown-item" href="{% url 'job_post:posted_job_posts' %}" id="posted_job_posts_link">Posted Job</a>
-              <a class="dropdown-item" href="{% url 'job_post:followed_companies' %}">Followed Company</a>
+              <a
+                class="dropdown-item"
+                href="{% url 'job_post:applied_job_posts' %}"
+                id="applied_job_posts_link"
+                >Applied Job</a
+              >
+              <a
+                class="dropdown-item"
+                href="{% url 'job_post:posted_job_posts' %}"
+                id="posted_job_posts_link"
+                >Posted Job</a
+              >
+              <a
+                class="dropdown-item"
+                href="{% url 'job_post:followed_companies' %}"
+                >Followed Company</a
+              >
               {% if perms.user_profiles.is_professor %}
               <a
                 class="dropdown-item"
@@ -150,14 +183,19 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        if(document.getElementById('navbarDropdown').innerHTML.includes('student.chula.ac.th')) {
-          document.querySelector('#posted_job_posts_link').style.display = 'none'
+      document.addEventListener("DOMContentLoaded", () => {
+        if (
+          document
+            .getElementById("navbarDropdown")
+            .innerHTML.includes("student.chula.ac.th")
+        ) {
+          document.querySelector("#posted_job_posts_link").style.display =
+            "none";
+        } else {
+          document.querySelector("#applied_job_posts_link").style.display =
+            "none";
         }
-        else {
-          document.querySelector('#applied_job_posts_link').style.display = 'none'          
-        }
-      })
+      });
     </script>
   </body>
 </html>

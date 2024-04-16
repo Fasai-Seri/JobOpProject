@@ -28,6 +28,12 @@
     </div>
     <div>
         *Company:
+        {% if is_employer %}
+        <select name="company" class="form-control dropdown_with_search" disabled>
+            <option value="{{ edited_job_post.company.pk }}" selected>{{ edited_job_post.company.comp_name }}</option>
+        </select>
+        <input type="hidden" name="company" value="{{ edited_job_post.company.pk }}">
+        {% else %}
         <select name="company" class="form-control dropdown_with_search">
             {% for company in all_companies %}
             {% if company == edited_job_post.company %}
@@ -37,16 +43,19 @@
             {% endif %}
             {% endfor %}
         </select>
+        {% endif %}
+    </div>
+    <div>
+        Upload Job Information File:
+        <input type="file" name="job_info_file">
     </div>
     <div>
         Job Description:
         <textarea class="form-control" name="job_desc_text">{{ edited_job_post.job_desc_text }}</textarea>
-        <input type="file" name="job_desc_file">
     </div>
     <div>
         Job Requirement:
         <textarea class="form-control" name="job_requirement_text">{{ edited_job_post.job_requirement_text }}</textarea>
-        <input type="file" name="job_requirement_file">
     </div>
     <div>
         Related Major:
