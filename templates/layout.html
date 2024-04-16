@@ -83,18 +83,22 @@
             <a class="nav-link ml-3" href="{% url 'job_post:index' %}">All Posts</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'job_post:following' %}"
-              >Following</a
-            >
+            <a class="nav-link ml-3" href="{% url 'job_post:following' %}">Following</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'job_post:favourite' %}"
-              >Favorite</a
-            >
+            <a class="nav-link ml-3" href="{% url 'job_post:favourite' %}">Favorite</a>
           </li>
           <li class="nav-item">
             <a class="nav-link ml-3" href="{% url 'company:index' %}">Company</a>
           </li>
+          
+          {% if perms.user_profiles.is_professor or perms.user_profiles.is_employer %}
+          <li class="nav-item">
+            <a class="nav-link ml-3" href="{% url 'job_post:create_job_post' %}">Create Post</a>
+          </li>
+          {% endif %}
+          
+
         </ul>
       </div>
       <div class="ml-auto pr-3">
@@ -217,23 +221,5 @@
           });
       });
     </script>
-    <style>
-      .nav-link:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-          border-radius: 5px;
-      }
-      
-      .nav-link:not(:hover) {
-          background-color: transparent;
-      }
-
-      .nav-link {
-          opacity: 0.8; 
-          padding: 10px 10px;
-      }
-  </style>
-  
-
-
   </body>
 </html>

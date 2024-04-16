@@ -1,18 +1,39 @@
-.input-group {
-    width: 100%; /* ทำให้ครอบเนื้อหาเต็มพื้นที่ */
-    max-width: 500px; /* ปรับขนาดสูงสุดของช่องค้นหา */
-    margin: auto; /* จัดกลางตามแนวนอน */
+/* Search btn */
+/*.input-group {
+    width: 100%;
+    max-width: 500px; 
+    margin: auto;
 }
 
 input[type="search"] {
-    width: calc(100% - 40px); /* ลดขนาดของ input เพื่อให้มีพื้นที่สำหรับปุ่มค้นหา */
-    border-radius: 20px; /* กำหนดขอบโค้งให้กับช่องค้นหา */
-    padding: 10px; /* กำหนดการเรียงข้อความข้างในช่องค้นหา */
-    font-size: 16px; /* กำหนดขนาดตัวอักษร */
+    width: calc(100% - 40px);
+    border-radius: 20px;
+    padding: 10px; 
+    font-size: 16px;
 }
 
 .input-group-btn .btn {
-    border-radius: 20px; /* กำหนดขอบโค้งให้กับปุ่มค้นหา */
-    padding: 10px 20px; /* กำหนดการเรียงข้อความภายในปุ่มค้นหา */
-    font-size: 16px; /* กำหนดขนาดตัวอักษร */
+    border-radius: 20px; 
+    padding: 10px 20px; 
+    font-size: 16px; 
 }
+/* Search btn */ */
+
+/* layout navbar */
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+      
+.nav-link:not(:hover) {
+    background-color: transparent;
+}
+
+.nav-link {
+    opacity: 0.8; 
+    padding: 10px 10px;
+}
+
+  
+
+
