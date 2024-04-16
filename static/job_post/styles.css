@@ -13,8 +13,7 @@
     opacity: 0.8; 
     padding: 10px 10px;
 }
-/* layout navbar */
-
+/* ------------------------------------------------------------------------- */
 /* show active */
 #show_active {
     width: 20px; 
@@ -27,13 +26,11 @@
     height: 20px; 
     background-color: gray;
 }
-/* show active */
-
+/* ------------------------------------------------------------------------- */
 /* upload file */
 .custom-file-label::after {
     background-color: rgba(25, 24, 24, 0.79);
     color: white;
 }
-/* upload file */
-
+/* ------------------------------------------------------------------------- */
 
