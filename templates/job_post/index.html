@@ -125,11 +125,17 @@
 {% block script %}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelector('.no-result-found-for-js').style.display = 'none'
+
             document.querySelectorAll('.filter_checkbox').forEach((checkbox) => {
                 checkbox.onclick = () => {
                     let selected_job_type = []
                     let selected_job_major = []
                     let selected_job_status = []
+                    var no_result_found = true
+                    
+                    console.log(selected_job_major)
 
                     document.getElementsByName('job_type').forEach((checkbox) => {
                         if(checkbox.checked) {
@@ -203,14 +209,22 @@
 
                         if(pass_all_filter) {
                             job_post.style.display = 'block'
+                            no_result_found = false
                         }
                         else {
                             job_post.style.display = 'none'
-                        }
-                        
-                        
+                        }                        
                     })
+                    console.log((no_result_found && !document.querySelector('.no-result-found-for-js')))
+
+                    if(no_result_found) {
+                        document.querySelector('.no-result-found-for-js').style.display = 'block'
+                    }
+                    else {
+                        document.querySelector('.no-result-found-for-js').style.display = 'none'
+                    }                                                                                
                 }
+                
             })
         })
     </script>
