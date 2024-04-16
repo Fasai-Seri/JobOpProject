@@ -16,7 +16,3 @@ input[type="search"] {
     padding: 10px 20px; /* กำหนดการเรียงข้อความภายในปุ่มค้นหา */
     font-size: 16px; /* กำหนดขนาดตัวอักษร */
 }
-
-.smtest {
-    color: red;  
-}
