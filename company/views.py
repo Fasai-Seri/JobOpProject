@@ -37,15 +37,15 @@ def index(request) :
 
 @login_required(login_url='/user_profiles/')
 def comp_info(request, comp_id):
-     if Employer.objects.filter(user__id = request.user.id).exists():
+     if Employer.objects.filter(user__id = request.user.id, comp__id = comp_id).exists():
         return render(request, 'company/compinfo.html', {
                 'comp_id': comp_id,
-                'isUserEmployer': True,
+                'canEdit': True,
             })
      else:
          return render(request, 'company/compinfo.html', {
                 'comp_id': comp_id,
-                'isUserEmployer': False
+                'canEdit': False
             })
 
 @login_required(login_url='/user_profiles/')

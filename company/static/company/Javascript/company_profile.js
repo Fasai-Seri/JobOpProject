@@ -8,6 +8,7 @@ const CompanyProfile = () => {
   const comp_id = parseInt(data.compId, 10);
   const csrftoken = data.csrfToken;
   const post_href = data.postHref.slice(0, -1);
+  const can_edit = data.canEdit
 
   React.useEffect(() => {
     fetch_company();
@@ -227,7 +228,7 @@ const CompanyProfile = () => {
         />
       )}
 
-      {isDisabled == "true" ? (
+      {isDisabled == "true" ? ( can_edit == 'True' &&
         <button class="btn btn-primary" onClick={handleEditCompClick}>
           Edit
         </button>
