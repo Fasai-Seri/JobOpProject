@@ -220,6 +220,9 @@ def edit_job_post(request, job_post_id):
             edited_job_post.job_location =  request.POST.get('job_location')
             edited_job_post.job_status =  request.POST.get('job_status')
             edited_job_post.job_major.set(Major.objects.filter(pk__in=request.POST.getlist('job_major'))) 
+            edited_job_post.job_address = request.POST.get('job_address')
+            edited_job_post.job_location_long = request.POST.get('job_location_long')
+            edited_job_post.job_location_lat = request.POST.get('job_location_lat')
             
             job_close_date =  request.POST.get('job_close_date')
             if job_close_date != '':
