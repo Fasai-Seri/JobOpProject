@@ -9,6 +9,7 @@ const ProfilePanel = (props) => {
   const user_id = parseInt(data.userId, 10);
   const current_user_id = parseInt(data.currentUserId, 10);
   const csrftoken = data.csrfToken;
+  const create_comp = data.createComp;
 
   React.useEffect(() => {
     fetchUser();
@@ -52,6 +53,7 @@ const ProfilePanel = (props) => {
     setIsDisabled("true");
     setPreviewPhoto("");
     setPreviewResume("");
+    $("#comp").val("").trigger("change");
   }
 
   function handleProfileChange(e) {
@@ -152,7 +154,10 @@ const ProfilePanel = (props) => {
   }
 
   $(document).ready(function () {
-    $(".js-example-basic-single").select2();
+    $("#comp").select2({
+      placeholder: "Select your company",
+      allowClear: true,
+    });
   });
 
   $("#comp").on("change", function (e) {
@@ -350,11 +355,20 @@ const ProfilePanel = (props) => {
           user.type == "employer" && (
             <div>
               <div class="form-group">Company</div>
+              <div hidden={user.comp ? true : false}>
+                <div>You can only edit this field once.</div>
+                <div>
+                  Couldn't find your company?{" "}
+                  <a href={create_comp}>Create Here</a>
+                </div>
+              </div>
               <select
                 class="js-example-basic-single js-states form-control"
                 id="comp"
                 name="comp"
-                disabled={isDisabled == "true" ? true : false}
+                disabled={
+                  user.comp ? true : isDisabled == "true" ? true : false
+                }
                 required
               >
                 <option></option>
