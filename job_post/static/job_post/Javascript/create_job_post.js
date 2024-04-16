@@ -89,5 +89,5 @@ const ShowMap = () => {
     );
   };
   
-  ReactDOM.render(<ShowMap />, document.querySelector("#job_location"));
+  ReactDOM.render(<ShowMap />, document.querySelector("#show_map"));
   
