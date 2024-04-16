@@ -36,4 +36,6 @@
 }
 /* upload file */
 
-
+.maplibregl-canvas {
+    width: 400px;
+}
