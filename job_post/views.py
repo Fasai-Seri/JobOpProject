@@ -61,43 +61,58 @@ def write_bytesio_to_file(filename, bytesio):
 
 @login_required    
 def index(request):
+    
     all_job_posts = JobPost.objects.all() 
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
            
     return render(request, 'job_post/index.html', {
-        'all_job_posts': all_job_posts,
+        'all_job_posts': all_job_posts.order_by('job_status'),
         'job_type_choices': JobPost.job_type_choices,
         'all_major': Major.objects.all(),
         'job_status_choices': JobPost.job_status_choices,
+        'search_term': search_term
     })
 
 @login_required      
 def favourite(request):
+    
     all_job_posts = request.user.favourite_posts.all() 
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/favourite.html', {
-        'all_job_posts': all_job_posts,
+        'all_job_posts': all_job_posts.order_by('job_status'),
+        'search_term': search_term
     })
 
 @login_required      
 def following(request):
+    
     all_job_posts = JobPost.objects.filter(company__in=request.user.followed_company.all())
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/following.html', {
-        'all_job_posts': all_job_posts,
-        'followed_companies': request.user.followed_company.all()
+        'all_job_posts': all_job_posts.order_by('job_status'),
+        'followed_companies': request.user.followed_company.all(),
+        'search_term': search_term
     })
 
 @login_required      
 def followed_companies(request):
+    
+    search_term = ''
+    
     if request.GET.get('search_term'):
         search_term = request.GET.get('search_term')
         all_companies = request.user.followed_company.all().filter(
@@ -107,16 +122,22 @@ def followed_companies(request):
     else:
         all_companies = request.user.followed_company.all()
     return render(request, 'job_post/followed_companies.html', {
-        'all_companies': all_companies
+        'all_companies': all_companies.order_by('comp_name'),
+        'search_term': search_term
     })
 
 @login_required  
 def create_job_post(request):
+    
     if is_permitted_poster(request.user):
-        if is_employer(request.user) and not Employer.objects.get(user=request.user).comp:
-            return render(request, 'job_post/create_job_post.html', {
-            'warning': "Set your company before creating new post."
-            })
+        
+        if is_employer(request.user):
+            employer = Employer.objects.get(user=request.user)
+            if not employer.comp or not employer.user.fname or not employer.user.lname or not employer.user.phone:
+                return render(request, 'job_post/create_job_post.html', {
+                'warning': "Set your personal information before creating new job post."
+                })
+                
         if request.method == "POST":
             job_title = request.POST.get('job_title')
             job_type = request.POST.get('job_type')
@@ -138,6 +159,7 @@ def create_job_post(request):
                                 job_location = job_location,
                                 job_status = job_status
                                 )
+            
             if Employer.objects.filter(user_id=request.user):
                 poster_emp = Employer.objects.filter(user_id=request.user).first()
                 new_job_post.poster_emp = poster_emp
@@ -162,7 +184,6 @@ def create_job_post(request):
             'all_companies': Company.objects.all(),
             'all_major': Major.objects.all(),
             'is_employer': is_employer(request.user),
-            # 'fill_company': Employer.objects.get(user=request.user).comp is not None
         })
         
     return render(request, 'job_post/create_job_post.html', {
@@ -219,6 +240,8 @@ def posted_job_posts(request):
    
     if is_permitted_poster(request.user):
         
+        search_term = ''
+        
         if is_employer(request.user):
             all_job_posts = request.user.emp_user_id.get().job_posted_by_emp.all()
         else:
@@ -229,7 +252,8 @@ def posted_job_posts(request):
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/posted_job_posts.html', {
-            'all_job_posts': all_job_posts
+            'all_job_posts': all_job_posts.order_by('job_status'),
+            'search_term': search_term
         })
         
     return render(request, 'job_post/posted_job_posts.html', {
@@ -242,13 +266,15 @@ def applied_job_posts(request):
     if is_student(request.user):
         
         all_job_posts = request.user.student_user_id.get().applied_job_posts.all()
+        search_term = ''
             
         if request.GET.get('search_term'):
             search_term = request.GET.get('search_term')
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/applied_job_posts.html', {
-            'all_job_posts': all_job_posts
+            'all_job_posts': all_job_posts.order_by('job_status'),
+            'search_term': search_term
         })
         
     return render(request, 'job_post/applied_job_posts.html', {
