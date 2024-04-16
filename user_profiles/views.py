@@ -222,5 +222,6 @@ def create_employer(request):
     return render(request, 'user_profiles/create_employer.html')
 
 @login_required(login_url='/user_profiles/')
+@csrf_exempt
 def get_company(request):
     return get_all_company(request)

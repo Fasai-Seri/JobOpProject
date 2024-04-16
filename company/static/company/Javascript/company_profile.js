@@ -94,6 +94,11 @@ const CompanyProfile = () => {
     setPreviewLogo("");
   }
 
+  async function handleFollowClick() {
+    await fetch(`follow_company/${comp_id}`);
+    fetch_company();
+  }
+
   function PostSection(props) {
     return (
       <div>
@@ -238,6 +243,11 @@ const CompanyProfile = () => {
           />
         </div>
       )}
+
+      <button class="btn btn-primary" onClick={handleFollowClick}>
+        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+        {company.isFollowedByUser ? "Unfollow" : "follow"}
+      </button>
 
       <form method="post" onSubmit={handleCompanySubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
