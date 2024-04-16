@@ -7,8 +7,14 @@
 
 <h1>Applied Job Posts</h1>
 <form action="{% url 'job_post:applied_job_posts' %}" method="GET">
-  <input type="search" placeholder="Search.." name="search_term" />
+  <input type="search" placeholder="Search.." name="search_term" value="{{ search_term }}"/>
 </form>
-{{ all_job_posts }} 
+
+  {% if not all_job_posts %}
+  No Result Found
+  {% else %}
+  {{ all_job_posts }} 
+  {% endif %}
+  
 {% endif %}
 {% endblock %}

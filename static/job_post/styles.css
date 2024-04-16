@@ -1,0 +1,39 @@
+/* Search btn */
+/*.input-group {
+    width: 100%;
+    max-width: 500px; 
+    margin: auto;
+}
+
+input[type="search"] {
+    width: calc(100% - 40px);
+    border-radius: 20px;
+    padding: 10px; 
+    font-size: 16px;
+}
+
+.input-group-btn .btn {
+    border-radius: 20px; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+}
+/* Search btn */ */
+
+/* layout navbar */
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+      
+.nav-link:not(:hover) {
+    background-color: transparent;
+}
+
+.nav-link {
+    opacity: 0.8; 
+    padding: 10px 10px;
+}
+
+  
+
+
