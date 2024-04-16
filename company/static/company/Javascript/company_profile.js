@@ -131,16 +131,20 @@ const CompanyProfile = () => {
     React.useEffect(() => {
       if (map.current) return;
       if (!mapContainer.current) return;
-      map.current = new maplibregl.Map({
+      map.current = new maptilersdk.Map({
         container: mapContainer.current,
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
         center: center,
         zoom: zoom,
       });
 
-      marker.current = new maplibregl.Marker({ color: "#FF0000" })
+      marker.current = new maptilersdk.Marker({ color: "#FF0000" })
         .setLngLat(center)
         .addTo(map.current);
+
+      const gc = new maptilersdkMaptilerGeocoder.GeocodingControl();
+
+      map.current.addControl(gc, "top-left");
 
       map.current.on("click", async function (e) {
         if (marker.current) {
