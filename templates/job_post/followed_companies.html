@@ -6,7 +6,13 @@
 <h1>Followed Company </h1>
 
 <form action="{% url 'job_post:followed_companies' %}" method='GET'>
-<input type="search" placeholder="Search.." name='search_term'>
+<input type="search" placeholder="Search.." name='search_term' value="{{ search_term }}">
 </form>
-{{ all_companies }}
+
+    {% if not all_companies %}
+    No Result Found
+    {% else %}
+    {{ all_companies }}
+    {% endif %}
+
 {% endblock %}
