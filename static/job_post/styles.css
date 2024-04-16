@@ -28,6 +28,12 @@
     background-color: gray;
 }
 /* show active */
-  
+
+/* upload file */
+.custom-file-label::after {
+    background-color: rgba(25, 24, 24, 0.79);
+    color: white;
+}
+/* upload file */
 
 
