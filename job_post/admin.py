@@ -4,6 +4,6 @@ from .models import *
 # Register your models here.
 
 class JobPostAdmin(admin.ModelAdmin):
-    filter_horizontal = ('job_major', 'favourite_user',)
+    filter_horizontal = ('job_major', 'favourite_user', 'applicants',)
     
 admin.site.register(JobPost, JobPostAdmin)

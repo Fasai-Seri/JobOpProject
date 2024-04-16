@@ -7,5 +7,8 @@
   src="../static/company/Javascript/company_list.js"
   data-csrf-token="{{ csrf_token }}"
   data-companies="{{ all_companies }}"
+  data-is-employer="{{ isUserEmployer }}"
+  data-create-comp="{% url 'company:create_company_page' %}"
+  data-comp-href="{% url 'company:comp_info' %}"
 ></script>
 {% endblock %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %} {% load static %} {% block body %}
+
+{% if warning %}
+{{ warning }}
+
+{% else %}
+
+<h1>Applied Job Posts</h1>
+<form action="{% url 'job_post:applied_job_posts' %}" method="GET">
+  <input type="search" placeholder="Search.." name="search_term" />
+</form>
+{{ all_job_posts }} 
+{% endif %}
+{% endblock %}

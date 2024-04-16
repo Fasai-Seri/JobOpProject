@@ -6,6 +6,8 @@
   type="text/babel"
   src="../static/user_profiles/Javascript/profile_panel.js"
   data-user-id="{{ user_id }}"
+  data-current-user-id="{{ current_user_id }}"
   data-csrf-token="{{ csrf_token }}"
+  data-create-comp="{% url 'company:create_company_page' %}"
 ></script>
 {% endblock %}

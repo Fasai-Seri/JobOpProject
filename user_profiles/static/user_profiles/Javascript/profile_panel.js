@@ -4,16 +4,18 @@ const ProfilePanel = (props) => {
   const [isDisabled, setIsDisabled] = React.useState("true");
   const [previewPhoto, setPreviewPhoto] = React.useState("");
   const [previewResume, setPreviewResume] = React.useState("");
+  const [companies, setCompanies] = React.useState([]);
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
+  const current_user_id = parseInt(data.currentUserId, 10);
   const csrftoken = data.csrfToken;
+  const create_comp = data.createComp;
 
   React.useEffect(() => {
     fetchUser();
     fetchMajors();
+    fetchCompanies();
   }, []);
-
-  React.useEffect(() => {}, [isDisabled]);
 
   function fetchUser() {
     fetch(`get_user/${user_id}`)
@@ -34,6 +36,15 @@ const ProfilePanel = (props) => {
       });
   }
 
+  function fetchCompanies() {
+    fetch("get_company")
+      .then((response) => response.json())
+      .then((companies) => {
+        console.log(companies);
+        setCompanies(companies);
+      });
+  }
+
   function handleEditClick() {
     setIsDisabled("false");
   }
@@ -42,6 +53,7 @@ const ProfilePanel = (props) => {
     setIsDisabled("true");
     setPreviewPhoto("");
     setPreviewResume("");
+    $("#comp").val("").trigger("change");
   }
 
   function handleProfileChange(e) {
@@ -76,29 +88,45 @@ const ProfilePanel = (props) => {
   }
 
   function handleUploadResume() {
-    const resume = document.querySelector("#resume").files[0];
-    if (resume) {
-      const formData = new FormData();
-      formData.append("student_resume", resume);
-      console.log(resume);
-      fetch("update_student_resume", {
-        method: "POST",
-        body: formData,
-      });
+    if (user.type == "student") {
+      const resume = document.querySelector("#resume").files[0];
+      if (resume) {
+        const formData = new FormData();
+        formData.append("student_resume", resume);
+        console.log(resume);
+        fetch("update_student_resume", {
+          method: "POST",
+          body: formData,
+        });
+      }
     }
   }
 
   function handleProfileSubmit() {
-    fetch(`update_user`, {
-      method: "POST",
-      body: JSON.stringify({
-        fname: user.fname,
-        lname: user.lname,
-        phone: user.phone,
-        major: user.major,
-        user_photo: user.user_photo,
-      }),
-    });
+    if (user.type == "employer") {
+      fetch(`update_user`, {
+        method: "POST",
+        body: JSON.stringify({
+          fname: user.fname,
+          lname: user.lname,
+          phone: user.phone,
+          user_photo: user.user_photo,
+          comp: user.comp,
+          emp_position: user.emp_position,
+        }),
+      });
+    } else {
+      fetch(`update_user`, {
+        method: "POST",
+        body: JSON.stringify({
+          fname: user.fname,
+          lname: user.lname,
+          phone: user.phone,
+          major: user.major,
+          user_photo: user.user_photo,
+        }),
+      });
+    }
   }
 
   function MajorSelect() {
@@ -112,7 +140,9 @@ const ProfilePanel = (props) => {
           name="major"
           disabled={isDisabled == "true" ? true : false}
           onChange={handleProfileChange}
+          required
         >
+          <option></option>
           {majors.map((major) => (
             <option value={major.id}>
               {major.desc} ({major.id})
@@ -122,6 +152,17 @@ const ProfilePanel = (props) => {
       </div>
     );
   }
+
+  $(document).ready(function () {
+    $("#comp").select2({
+      placeholder: "Select your company",
+      allowClear: true,
+    });
+  });
+
+  $("#comp").on("change", function (e) {
+    handleProfileChange(e);
+  });
 
   return (
     <div>
@@ -168,7 +209,7 @@ const ProfilePanel = (props) => {
           />
         </div>
       )}
-      {isDisabled == "true" && (
+      {isDisabled == "true" && user.user_id == current_user_id && (
         <button class="btn btn-primary" onClick={handleEditClick}>
           Edit
         </button>
@@ -187,6 +228,8 @@ const ProfilePanel = (props) => {
             disabled={isDisabled == "true" ? true : false}
             value={user.fname}
             onChange={handleProfileChange}
+            required
+            minlength="3"
           />
         </div>
         <div class="form-group">
@@ -200,6 +243,8 @@ const ProfilePanel = (props) => {
             disabled={isDisabled == "true" ? true : false}
             value={user.lname}
             onChange={handleProfileChange}
+            required
+            minlength="3"
           />
         </div>
         <div class="form-group">
@@ -213,6 +258,9 @@ const ProfilePanel = (props) => {
             disabled={isDisabled == "true" ? true : false}
             value={user.phone}
             onChange={handleProfileChange}
+            required
+            minlength="10"
+            maxlength="10"
           />
         </div>
         <div class="form-group">
@@ -226,6 +274,7 @@ const ProfilePanel = (props) => {
             disabled
             value={user.email}
             onChange={handleProfileChange}
+            required
           />
         </div>
         {user.type == "student" ? (
@@ -303,32 +352,58 @@ const ProfilePanel = (props) => {
         ) : user.type == "professor" ? (
           <MajorSelect />
         ) : (
-          <div>
-            <div class="form-group">Company</div>
-            <div class="form-group">
-              <label for="email">Position</label>
-              <input
-                type="text"
-                class="form-control"
-                id="position"
-                name="position"
-                placeholder="Position"
-                disabled={isDisabled == "true" ? true : false}
-                value={user.position}
-                onChange={handleProfileChange}
-              />
+          user.type == "employer" && (
+            <div>
+              <div class="form-group">Company</div>
+              <div hidden={user.comp ? true : false}>
+                <div>You can only edit this field once.</div>
+                <div>
+                  Couldn't find your company?{" "}
+                  <a href={create_comp}>Create Here</a>
+                </div>
+              </div>
+              <select
+                class="js-example-basic-single js-states form-control"
+                id="comp"
+                name="comp"
+                disabled={
+                  user.comp ? true : isDisabled == "true" ? true : false
+                }
+                required
+              >
+                <option></option>
+                {companies.map((comp) => {
+                  if (user.comp == comp.comp_id) {
+                    return (
+                      <option value={comp.comp_id} selected="selected">
+                        {comp.comp_name}
+                      </option>
+                    );
+                  } else {
+                    return (
+                      <option value={comp.comp_id} selected="">
+                        {comp.comp_name}
+                      </option>
+                    );
+                  }
+                })}
+              </select>
+              <div class="form-group">
+                <label for="email">Position</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="emp_position"
+                  name="emp_position"
+                  placeholder="Position"
+                  value={user.emp_position}
+                  disabled={isDisabled == "true" ? true : false}
+                  onChange={handleProfileChange}
+                />
+              </div>
             </div>
-          </div>
+          )
         )}
-
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Example textarea</label>
-          <textarea
-            class="form-control"
-            id="exampleFormControlTextarea1"
-            rows="3"
-          ></textarea>
-        </div>
         {isDisabled == "false" && (
           <div>
             <input

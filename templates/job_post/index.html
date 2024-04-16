@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h1>Main Page </h1> 
+
+<form>
+        <p>Job Type: </p>
+        {% for choice in job_type_choices %}
+        <label>
+            <input type="checkbox" name="job_type" value="{{ choice.1 }}" class="filter_checkbox">{{ choice.1 }}
+        </label>
+        {% endfor %}
+        <p>Related Major:</p>
+        {% for major in all_major %}
+        <label>
+            <input type="checkbox" name="job_major" value="{{ major.pk }}" class="filter_checkbox">{{ major.major_id }}
+        </label>
+        {% endfor %}
+        <p>Status:</p>
+        {% for choice in job_status_choices %}
+        <label>
+            <input type="checkbox" name="job_status" value="{{ choice.1 }}" class="filter_checkbox">{{ choice.1 }}
+        </label>
+        {% endfor %}
+</form>
+<form action="{% url 'job_post:index' %}" method='GET'>
+<input type="search" placeholder="Search.." name='search_term'>
+</form>
+{% for job_post in all_job_posts %}
+<div class="job_post_div">
+    <p class="job_title">{{ job_post.job_title }}</p>
+    <p class="company">{{ job_post.company }}</p>
+    <p class="job_type">{{ job_post.get_job_type_display }}</p>
+    {% for major in job_post.job_major.all %}
+    <span class="job_major">{{ major.pk }}</span>
+    {% endfor %}
+    <p class="job_status">{{ job_post.get_job_status_display }}</p>
+</div>
+{% endfor %}
+{% endblock %}
+
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.filter_checkbox').forEach((checkbox) => {
+            checkbox.onclick = () => {
+                let selected_job_type = []
+                let selected_job_major = []
+                let selected_job_status = []
+
+                document.getElementsByName('job_type').forEach((checkbox) => {
+                    if(checkbox.checked) {
+                        selected_job_type.push(checkbox.value)
+                    }
+                })
+
+                document.getElementsByName('job_major').forEach((checkbox) => {
+                    if(checkbox.checked) {
+                        selected_job_major.push(checkbox.value)
+                    }
+                }) 
+
+                document.getElementsByName('job_status').forEach((checkbox) => {
+                    if(checkbox.checked) {
+                        selected_job_status.push(checkbox.value)
+                    }
+                })
+
+                document.querySelectorAll('.job_post_div').forEach((job_post) => {
+                    const job_type = job_post.querySelector('.job_type').innerHTML
+                    const job_status = job_post.querySelector('.job_status').innerHTML
+                    let job_major = []
+                    console.log(job_post.getElementsByClassName('job_major'))
+                    if(job_post.getElementsByClassName('job_major') != null) {
+                        job_major_list = job_post.getElementsByClassName('job_major')
+                        for(let major of job_major_list) {
+                            job_major.push(major.innerHTML)
+                        }
+                    }
+
+                    pass_all_filter = false
+                    pass_major_filter = false
+                    pass_type_filter = false
+                    pass_status_filter = false
+                    
+                    if(selected_job_major.length != 0) {
+                        for(let selected_major of selected_job_major) {
+                        for(let major of job_major) {
+                            if(major == selected_major) {
+                                pass_major_filter = true
+                            }
+                        }
+                    }
+                    }
+                    else {
+                        pass_major_filter = true
+                    }                   
+
+                    if(selected_job_type.length != 0) {
+                        if(selected_job_type.includes(job_type)) {
+                            pass_type_filter = true
+                        }
+                    }
+                    else {
+                        pass_type_filter = true
+                    }
+
+                    if(selected_job_status.length != 0) {
+                        if(selected_job_status.includes(job_status)) {
+                            pass_status_filter = true
+                        }
+                    }
+                    else {
+                        pass_status_filter = true
+                    }
+
+                    if(pass_type_filter && pass_status_filter && pass_major_filter) {
+                        pass_all_filter = true
+                    }
+
+                    if(pass_all_filter) {
+                        job_post.style.display = 'block'
+                    }
+                    else {
+                        job_post.style.display = 'none'
+                    }
+                    
+                    
+                })
+            }
+        })
+    })
+</script>
+{% endblock %}

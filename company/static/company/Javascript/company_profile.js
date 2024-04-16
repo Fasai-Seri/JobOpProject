@@ -1,22 +1,32 @@
 const CompanyProfile = () => {
   const [company, setCompany] = React.useState({});
+  const compAdd = React.useRef({});
+  const [posts, setPosts] = React.useState([]);
   const [isDisabled, setIsDiabled] = React.useState("true");
   const [previewLogo, setPreviewLogo] = React.useState("");
   const data = document.getElementById("company_script").dataset;
   const comp_id = parseInt(data.compId, 10);
   const csrftoken = data.csrfToken;
-  console.log(csrftoken);
+  const post_href = data.postHref.slice(0, -1);
+
   React.useEffect(() => {
     fetch_company();
+    fetch_company_posts();
   }, []);
-
-  console.log(company);
 
   function fetch_company() {
     fetch(`get_company/${comp_id}`)
       .then((response) => response.json())
       .then((comp) => {
         setCompany(comp);
+      });
+  }
+
+  function fetch_company_posts() {
+    fetch(`get_company_job_posts/${comp_id}`)
+      .then((response) => response.json())
+      .then((posts) => {
+        setPosts(posts);
       });
   }
 
@@ -31,18 +41,36 @@ const CompanyProfile = () => {
       ...prevComp,
       [name]: value,
     }));
-    console.log(name, value);
   }
 
   function handleCompanySubmit() {
-    fetch(`update_company/${comp_id}`, {
-      method: "POST",
-      body: JSON.stringify({
-        comp_name: company.comp_name,
-        comp_desc: company.comp_desc,
-      }),
-    });
-    console.log(company);
+    if (compAdd.current) {
+      fetch(`update_company/${comp_id}`, {
+        method: "POST",
+        body: JSON.stringify({
+          comp_name: company.comp_name,
+          comp_name_th: company.comp_name_th,
+          comp_desc: company.comp_desc,
+          comp_address: compAdd.current.comp_address,
+          comp_long: compAdd.current.comp_long,
+          comp_lat: compAdd.current.comp_lat,
+          comp_contact_info: company.comp_contact_info,
+        }),
+      });
+    } else {
+      fetch(`update_company/${comp_id}`, {
+        method: "POST",
+        body: JSON.stringify({
+          comp_name: company.comp_name,
+          comp_name_th: company.comp_name_th,
+          comp_desc: company.comp_desc,
+          comp_address: company.comp_address,
+          comp_long: company.comp_long,
+          comp_lat: company.comp_lat,
+          comp_contact_info: company.comp_contact_info,
+        }),
+      });
+    }
   }
 
   function handleLogoUpload() {
@@ -66,8 +94,118 @@ const CompanyProfile = () => {
     setPreviewLogo("");
   }
 
+  function PostSection(props) {
+    return (
+      <div>
+        <img
+          src={props.post.company_logo}
+          class="rounded-circle"
+          width="100px"
+          height="100px"
+        />
+        <a href={post_href + "/" + props.post.job_id}>{props.post.job_title}</a>
+        <p>{props.post.job_type}</p>
+        <p>{props.post.company}</p>
+        <p>{props.post.job_location}</p>
+        <p>Posted date: {props.post.job_post_date}</p>
+        <p>
+          Close date:{" "}
+          {props.post.job_close_date ? props.post.job_close_date : "-"}
+        </p>
+      </div>
+    );
+  }
+  console.log(company);
+  console.log(compAdd);
+
+  function Map(props) {
+    const mapContainer = React.useRef();
+    const map = React.useRef();
+    const marker = React.useRef();
+    const [center] = React.useState([props.long, props.lat]);
+    const [zoom] = React.useState(14);
+    const [API_KEY] = React.useState("GofhIpWUfkKFYIIo84aL");
+    maptilersdk.config.apiKey = "GofhIpWUfkKFYIIo84aL";
+
+    if (!props.lat | !props.long) return <div></div>;
+    React.useEffect(() => {
+      if (map.current) return;
+      if (!mapContainer.current) return;
+      map.current = new maptilersdk.Map({
+        container: mapContainer.current,
+        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
+        center: center,
+        zoom: zoom,
+      });
+
+      marker.current = new maptilersdk.Marker({ color: "#FF0000" })
+        .setLngLat(center)
+        .addTo(map.current);
+
+      const gc = new maptilersdkMaptilerGeocoder.GeocodingControl();
+      if (props.disabled == "false") {
+        map.current.addControl(gc, "top-left");
+      }
+
+      map.current.on("click", async function (e) {
+        if (props.disabled == "false") {
+          if (marker.current) {
+            marker.current.remove();
+          }
+
+          marker.current = new maplibregl.Marker({ color: "#FF0000" })
+            .setLngLat([e.lngLat.lng, e.lngLat.lat])
+            .addTo(map.current);
+          const results = await maptilersdk.geocoding.reverse([
+            e.lngLat.lng,
+            e.lngLat.lat,
+          ]);
+          document.getElementById("info").innerHTML =
+            JSON.stringify(results.features[0].place_name_en) +
+            "<br />" +
+            JSON.stringify(e.lngLat.wrap());
+          compAdd.current = {
+            comp_long: e.lngLat.lng,
+            comp_lat: e.lngLat.lat,
+            comp_address: results.features[0].place_name_en,
+          };
+          console.log(company);
+          console.log(compAdd);
+        }
+      });
+    }, [API_KEY, center, zoom]);
+
+    return (
+      <div>
+        <div class="form-group">
+          <label for="comp_name">Company Address</label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="comp_address"
+            name="comp_address"
+            disabled={isDisabled == "true" ? true : false}
+            placeholder="Company Address"
+            value={company.comp_address}
+            required
+          ></textarea>
+        </div>
+        <pre
+          id="info"
+          class="position-relative d-block w-75 p-2 mt-2 rounded"
+        ></pre>
+        <div ref={mapContainer} class="position-absolute w-100 h-50" />
+      </div>
+    );
+  }
+
+  function textAreaAdjust(e) {
+    e.target.style.height = "1px";
+    e.target.style.height = e.target.scrollHeight + "px";
+  }
+
   return (
-    <div>
+    <div class="position-relative">
       {previewLogo ? (
         <img
           class="rounded-circle"
@@ -114,11 +252,25 @@ const CompanyProfile = () => {
             placeholder="Company Name"
             value={company.comp_name}
             onChange={handleCompanyChange}
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="comp_name">Company Thai Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="comp_name_th"
+            name="comp_name_th"
+            disabled={isDisabled == "true" ? true : false}
+            placeholder="Company Thai Name"
+            value={company.comp_name_th}
+            onChange={handleCompanyChange}
           />
         </div>
         <div class="form-group">
           <label for="comp_name">Company Desciption</label>
-          <input
+          <textarea
             type="text"
             class="form-control"
             id="comp_desc"
@@ -127,7 +279,23 @@ const CompanyProfile = () => {
             placeholder="Company Desciption"
             value={company.comp_desc}
             onChange={handleCompanyChange}
-          />
+            onKeyUp={textAreaAdjust}
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="comp_name">Company Contact Info</label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="comp_contact_info"
+            name="comp_contact_info"
+            disabled={isDisabled == "true" ? true : false}
+            placeholder="Company Contact Info"
+            value={company.comp_contact_info}
+            onChange={handleCompanyChange}
+            onKeyUp={textAreaAdjust}
+            required
+          ></textarea>
         </div>
         {isDisabled == "false" && (
           <div>
@@ -142,7 +310,15 @@ const CompanyProfile = () => {
             </button>
           </div>
         )}
+        <Map
+          lat={Number(company.comp_lat)}
+          long={Number(company.comp_long)}
+          disabled={isDisabled}
+        />
       </form>
+      {posts.map((post) => {
+        return <PostSection post={post} />;
+      })}
     </div>
   );
 };

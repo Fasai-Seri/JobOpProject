@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h1>Following</h1> 
+
+<form action="{% url 'job_post:following' %}" method='GET'>
+<input type="search" placeholder="Search.." name='search_term'>
+</form>
+
+{{ all_job_posts }}
+
+{{ followed_companies }}
+
+<a href="{% url 'job_post:followed_companies' %}"><button>more</button></a>
+
+{% endblock %}

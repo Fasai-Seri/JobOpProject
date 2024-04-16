@@ -3,20 +3,22 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import auth
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from user_profiles.models import *
 from user_profiles.forms import UserForm
+from company.views import get_all_company
 
 
 # Create your views here.
+@login_required(login_url='/user_profiles/')
 def index(request,user_id):
     return render(request, 'user_profiles/profile.html', {
-        'user_id': user_id
+        'user_id': user_id,
+        'current_user_id': request.user.id,
     })
 
 def login_view(request):
@@ -30,18 +32,29 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             auth.login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            print(request.user.has_perm('user_profiles.is_professor'))
+            print('login')
+            if request.user.fname == None:
+                print('fname blank')
+                return HttpResponseRedirect(reverse("user_profiles:index", kwargs={'user_id': request.user.id}))
+            else :
+                print('fname not blank')
+                return HttpResponseRedirect(reverse("job_post:index"))
+            
         else:
             return render(request, "user_profiles/login.html", {
                 "message": "Invalid username and/or password."
             })
     else:
-        return render(request, "user_profiles/login.html")
+        if request.user.id:
+            return HttpResponse(status=422)
+        else:
+            return render(request, "user_profiles/login.html")
 
-
+@login_required(login_url='/user_profiles/')
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("user_profiles:login"))
 
 @csrf_exempt
 def register(request):
@@ -82,6 +95,7 @@ def register(request):
         return render(request, "user_profiles/register.html")
 
 @csrf_exempt
+@login_required(login_url='/user_profiles/')
 def fill_info(request) :
     if request.method == "POST":
         fname = request.POST["fname"]
@@ -104,10 +118,11 @@ def fill_info(request) :
             Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         elif Professor.objects.filter(user__id = request.user.id).exists():
             Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("job_post:index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
-    
+
+@login_required(login_url='/user_profiles/')
 def get_user(request, user_id):
     user = User.objects.get(pk=user_id).serialize()
     if Student.objects.filter(user__id = user_id).exists():
@@ -123,13 +138,15 @@ def get_user(request, user_id):
         user.update(employer)
         return JsonResponse(user, safe=False)
     
+@login_required(login_url='/user_profiles/')
 def get_major(request):
     majors = Major.objects.all()
     return JsonResponse([major.serialize() for major in majors], safe=False)
 
 @csrf_exempt
+@login_required(login_url='/user_profiles/')
 def update_user(request):
-    url = reverse(index, kwargs={'user_id': request.user.id})
+    url = reverse("user_profiles:index", kwargs={'user_id': request.user.id})
     if request.method == 'POST':
         data = json.loads(request.body)
         user = UserForm(data, instance=User.objects.get(pk=request.user.id))
@@ -143,6 +160,12 @@ def update_user(request):
                 major = data.get('major', '')
             )
 
+        elif Employer.objects.filter(user__id = request.user.id).exists():
+            Employer.objects.filter(user__id = request.user.id).update(
+                # comp= data.get('comp', ''),
+                emp_position= data.get('emp_position', '')
+            )
+
         if user.is_valid():
             user.save()
         return HttpResponseRedirect(url)
@@ -150,6 +173,7 @@ def update_user(request):
         return HttpResponseRedirect(url) 
 
 @csrf_exempt
+@login_required(login_url='/user_profiles/')
 def update_user_photo(request):
     if request.method == 'POST':
         photo = request.FILES.get('user_photo')
@@ -159,6 +183,8 @@ def update_user_photo(request):
         return HttpResponse('Upload Photo Succesful')
     
 @csrf_exempt
+@login_required(login_url='/user_profiles/')
+@permission_required('user_profiles.is_student', raise_exception=True)
 def update_student_resume(request):
     if request.method == 'POST':
         resume = request.FILES.get('student_resume')
@@ -167,3 +193,34 @@ def update_student_resume(request):
         student.student_resume = resume
         student.save()
         return HttpResponse('Upload Resume Succesful')
+
+@csrf_exempt
+@login_required(login_url='/user_profiles/')
+@permission_required('user_profiles.is_professor', raise_exception=True)
+def create_employer(request):
+    if request.method == "POST":
+        username = request.POST["email"]
+        email = request.POST["email"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "user_profiles/create_employer.html", {
+                "message": "Passwords must match."
+            })
+        try:
+            user = User.objects.create_user(username, email, password)
+            user.save()
+            employer = Employer.objects.create(user=User.objects.get(email=email), prof=Professor.objects.get(user=request.user))
+            employer.save()
+            return render(request, "user_profiles/create_employer.html", {
+                "message": f"Created Account {email}"
+            })
+        except IntegrityError:
+            return render(request, "user_profiles/create_employer.html", {
+                "message": "Email already exists."
+            })
+    return render(request, 'user_profiles/create_employer.html')
+
+@login_required(login_url='/user_profiles/')
+def get_company(request):
+    return get_all_company(request)

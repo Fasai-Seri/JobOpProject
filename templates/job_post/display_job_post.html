@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h1>Display Job Post</h1>
+
+{{ warning }}
+
+{{ selected_job_post }}
+<a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}">
+    <button>Edit</button>
+</a>
+{{ all_applicants }}
+
+{% if is_job_post_owner %}
+<p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" download>Download Applicants List (PDF)</a></p>
+{% endif %}
+<button class="show_delete_dialog">Delete</button>
+
+<dialog>
+    <header>
+        <h2>Confirm Deletion</h2>
+    </header>
+    <div>
+        Are you sure you want to permanently remove this job post?
+    </div>
+    <footer>
+        <menu>
+            <button id="dialog-footer--cancel-btn">Cancel</button>
+            <button id="dialog-footer--confirm-btn" job_post_id="{{ selected_job_post.pk }}">Confirm</button>
+        </menu>
+    </footer>
+</dialog>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.show_delete_dialog').onclick = () => {
+            document.querySelector('dialog').showModal()
+            document.querySelector('#dialog-footer--cancel-btn').onclick = () => {
+                document.querySelector('dialog').close()
+            }
+            document.querySelector('#dialog-footer--confirm-btn').onclick = () => {
+                <!-- console.log(`/update_job_post/{{ selected_job_post.pk }}`) -->
+                fetch(`/update_job_post/{{ selected_job_post.pk }}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        delete: true
+                    })
+                }).then(() => {
+                    return window.location.replace("{% url 'job_post:index' %}")
+                })             
+            }
+        }
+    })
+</script>
+{% endblock %}

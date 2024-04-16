@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h1>Edit Job Post</h1>
+
+{% if warning %}
+{{ warning }}
+
+{% else %}
+<form action="{% url 'job_post:edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        *Job Title: <input class="form-control" name="job_title" value="{{ edited_job_post.job_title }}">
+    </div>
+    <div class="form-group">
+        *Job Type: 
+        <select name="job_type" class="form-control">
+            {% for choice in job_type_choices %}
+            {% if choice.0 == edited_job_post.job_type %}
+            <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+            {% else %}
+            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endif %}
+            {% endfor %}   
+        </select>
+    </div>
+    <div>
+        *Company:
+        {% if is_employer %}
+        <select name="company" class="form-control dropdown_with_search" disabled>
+            <option value="{{ edited_job_post.company.pk }}" selected>{{ edited_job_post.company.comp_name }}</option>
+        </select>
+        <input type="hidden" name="company" value="{{ edited_job_post.company.pk }}">
+        {% else %}
+        <select name="company" class="form-control dropdown_with_search">
+            {% for company in all_companies %}
+            {% if company == edited_job_post.company %}
+            <option value="{{ company.pk }}" selected>{{ company.comp_name }}</option>
+            {% else %}
+            <option value="{{ company.pk }}">{{ company.comp_name }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+        {% endif %}
+    </div>
+    <div>
+        Upload Job Information File:
+        <input type="file" name="job_info_file">
+    </div>
+    <div>
+        Job Description:
+        <textarea class="form-control" name="job_desc_text">{{ edited_job_post.job_desc_text }}</textarea>
+    </div>
+    <div>
+        Job Requirement:
+        <textarea class="form-control" name="job_requirement_text">{{ edited_job_post.job_requirement_text }}</textarea>
+    </div>
+    <div>
+        Related Major:
+        {% for major in all_major %}              
+        {% if major in edited_job_post.job_major.all %}
+        <label>
+            <input type="checkbox" name="job_major" value="{{ major.pk }}" checked>{{ major.major_id }}
+        </label>
+        {% else %}
+        <label>
+            <input type="checkbox" name="job_major" value="{{ major.pk }}">{{ major.major_id }}
+        </label>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div>
+        Close Date:
+        <input type="datetime-local" class="form-control" name="job_close_date" value="{{ edited_job_post.job_close_date|date:'Y-m-d H:i' }}">
+    </div>
+    <div>
+        Location:
+        <textarea class="form-control" name="job_location">{{ edited_job_post.job_location }}</textarea>
+    </div>
+    Status:
+        <select name="job_status" class="form-control">
+            {% for choice in job_status_choices %}
+            {% if choice.0 == edited_job_post.job_status %}
+            <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
+            {% else %}
+            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endif %}
+            {% endfor %}   
+        </select>
+    <input type="submit" class="btn btn-primary" value="Save"/>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function() {
+        $('.dropdown_with_search').select2();
+    });
+</script>
+{% endblock %}

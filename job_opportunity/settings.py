@@ -16,6 +16,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGIN_URL = '/user_profiles/'
+
 MEDIA_ROOT = BASE_DIR/'media'
 MEDIA_URL = '/media/'
 # Quick-start development settings - unsuitable for production
@@ -27,7 +29,7 @@ SECRET_KEY = "django-insecure-x^+xec=!r^$o@zbyn4q3y71i7k4v@tv$u_)q499hy+2c^8p$sv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -87,10 +89,6 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = "user_profiles.User"
-AUTHENTICATION_BACKENDS = [
-    "user_profiles.auth.custom_authentication.CustomAuthentication",
-]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -108,6 +106,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+]
+
+AUTH_USER_MODEL = "user_profiles.User"
+AUTHENTICATION_BACKENDS = [
+    "user_profiles.auth.custom_authentication.CustomAuthentication",
 ]
 
 
@@ -132,3 +135,4 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
