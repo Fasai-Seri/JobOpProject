@@ -58,9 +58,12 @@
             <div class="mt-3">
                 {% if not all_job_posts %}
                     <div class="card">
-                        <div class="card-body">No Result Found</div>
+                        <div class="card-body no-result-found">No Result Found</div>
                     </div>
                 {% else %} 
+                    <div class="card card-body no-result-found-for-js">
+                        <div>No Result Found</div>
+                    </div>
                     {% for job_post in all_job_posts %}
                         <div class="job_post_div card mb-3">
                             <div class="row no-gutters align-items-center">

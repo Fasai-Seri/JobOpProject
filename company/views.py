@@ -37,20 +37,23 @@ def index(request) :
 
 @login_required(login_url='/user_profiles/')
 def comp_info(request, comp_id):
-     if Employer.objects.filter(user__id = request.user.id).exists():
+     if Employer.objects.filter(user__id = request.user.id, comp__id = comp_id).exists():
         return render(request, 'company/compinfo.html', {
                 'comp_id': comp_id,
-                'isUserEmployer': True,
+                'canEdit': True,
             })
      else:
          return render(request, 'company/compinfo.html', {
                 'comp_id': comp_id,
-                'isUserEmployer': False
+                'canEdit': False
             })
 
 @login_required(login_url='/user_profiles/')
 def get_company(request, comp_id):
     company = Company.objects.get(pk = comp_id).serialize()
+    company.update({
+        'isFollowedByUser': Company.objects.get(pk = comp_id) in request.user.followed_company.all()
+    })
     return JsonResponse(company, safe=False)
 
 @login_required(login_url='/user_profiles/')
@@ -78,7 +81,6 @@ def update_company(request, comp_id):
             comp_lat = data.get('comp_lat', ''),
             comp_contact_info = data.get('comp_contact_info', ''),
         )
-        print(data)
 
         return HttpResponseRedirect(url)
     else:
@@ -118,5 +120,13 @@ def create_company_page(request):
     else:
         return render(request, 'company/create_company.html')
 
-
-    
+@login_required(login_url='/user_profiles/')
+def follow_company(request, comp_id):
+    url = reverse("company:comp_info", kwargs={'comp_id': comp_id})
+    comp = Company.objects.get(pk=comp_id)
+    user = request.user
+    if comp in user.followed_company.all():
+        user.followed_company.remove(comp)
+    else:
+        user.followed_company.add(comp)
+    return HttpResponseRedirect(url)

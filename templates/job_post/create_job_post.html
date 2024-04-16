@@ -87,8 +87,8 @@
                                 <label for="job_location"><strong>Location</strong>:</label>
                                 <textarea id="job_location" class="form-control" name="job_location"></textarea>
                             </div>
-
-                            <input type="submit" class="btn btn-dark btn-block" value="Create"/>
+                            <div id="show_map"></div>
+                            <input type="submit" class="btn btn-primary" value="Create"/>
                         </form>
                     </div>
                 </div>
@@ -104,6 +104,12 @@
         $('.dropdown_with_search').select2();
     });
 </script>
+<script
+  id="create_job_post_script"
+  type="text/babel"
+  src="../static/job_post/Javascript/create_job_post.js"
+  data-csrf-token="{{ csrf_token }}"
+></script>
 
 <script>
     $(document).ready(function() {
