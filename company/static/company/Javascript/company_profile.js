@@ -8,6 +8,7 @@ const CompanyProfile = () => {
   const comp_id = parseInt(data.compId, 10);
   const csrftoken = data.csrfToken;
   const post_href = data.postHref.slice(0, -1);
+  const can_edit = data.canEdit
 
   React.useEffect(() => {
     fetch_company();
@@ -92,6 +93,11 @@ const CompanyProfile = () => {
     fetch_company();
     setIsDiabled("true");
     setPreviewLogo("");
+  }
+
+  async function handleFollowClick() {
+    await fetch(`follow_company/${comp_id}`);
+    fetch_company();
   }
 
   function PostSection(props) {
@@ -222,7 +228,7 @@ const CompanyProfile = () => {
         />
       )}
 
-      {isDisabled == "true" ? (
+      {isDisabled == "true" ? ( can_edit == 'True' &&
         <button class="btn btn-primary" onClick={handleEditCompClick}>
           Edit
         </button>
@@ -238,6 +244,11 @@ const CompanyProfile = () => {
           />
         </div>
       )}
+
+      <button class="btn btn-primary" onClick={handleFollowClick}>
+        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+        {company.isFollowedByUser ? "Unfollow" : "follow"}
+      </button>
 
       <form method="post" onSubmit={handleCompanySubmit}>
         <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />

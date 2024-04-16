@@ -1,4 +1,4 @@
-const ProfilePanel = (props) => {
+const ProfilePanel = () => {
   const [user, setUser] = React.useState({});
   const [majors, setMajors] = React.useState([]);
   const [isDisabled, setIsDisabled] = React.useState("true");
@@ -53,7 +53,7 @@ const ProfilePanel = (props) => {
     setIsDisabled("true");
     setPreviewPhoto("");
     setPreviewResume("");
-    $("#comp").val("").trigger("change");
+    $("#comp").val(`${user.comp}`).trigger("change");
   }
 
   function handleProfileChange(e) {
@@ -283,7 +283,9 @@ const ProfilePanel = (props) => {
               <div>
                 <MajorSelect />
                 <p>Resume</p>
-                <embed src={user.resume} width="50%" height="1050px" />:
+                <embed src={user.resume} width="50%" height="1050px" />
+                
+                :
               </div>
             ) : previewResume ? (
               <div>

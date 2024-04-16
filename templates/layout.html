@@ -68,37 +68,55 @@
       href="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css"
       rel="stylesheet"
     />
+    <script src="https://cdn.maptiler.com/maptiler-geocoding-control/v1.2.0/maptilersdk.umd.js"></script>
+    <link
+      href="https://cdn.maptiler.com/maptiler-geocoding-control/v1.2.0/style.css"
+      rel="stylesheet"
+    />
     <!-- Smart Add -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
     <!-- Smart Add -->
-    <link href="{% static 'job_post/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'job_post/styles.css' %}" rel="stylesheet" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="{% url 'job_post:index' %}">Job Opportunities</a>
+      <a class="navbar-brand" href="{% url 'job_post:index' %}"
+        >Job Opportunities</a
+      >
 
       <div>
         <ul class="navbar-nav mr-auto inline-block">
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'job_post:index' %}">All Posts</a>
+            <a class="nav-link ml-3" href="{% url 'job_post:index' %}"
+              >All Posts</a
+            >
           </li>
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'job_post:following' %}">Following</a>
+            <a class="nav-link ml-3" href="{% url 'job_post:following' %}"
+              >Following</a
+            >
           </li>
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'job_post:favourite' %}">Favorite</a>
+            <a class="nav-link ml-3" href="{% url 'job_post:favourite' %}"
+              >Favorite</a
+            >
           </li>
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'company:index' %}">Company</a>
+            <a class="nav-link ml-3" href="{% url 'company:index' %}"
+              >Company</a
+            >
           </li>
-          
+
           {% if perms.user_profiles.is_professor or perms.user_profiles.is_employer %}
           <li class="nav-item">
-            <a class="nav-link ml-3" href="{% url 'job_post:create_job_post' %}">Create Post</a>
+            <a class="nav-link ml-3" href="{% url 'job_post:create_job_post' %}"
+              >Create Post</a
+            >
           </li>
           {% endif %}
-          
-
         </ul>
       </div>
       <div class="ml-auto pr-3">
@@ -114,7 +132,7 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              {{ request.user.email }}  
+              {{ request.user.email }}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="26"
@@ -211,14 +229,14 @@
     </script>
 
     <script>
-      document.querySelectorAll('.nav-link').forEach(item => {
-          item.addEventListener('mouseenter', event => {
-              item.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-          });
+      document.querySelectorAll(".nav-link").forEach((item) => {
+        item.addEventListener("mouseenter", (event) => {
+          item.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+        });
 
-          item.addEventListener('mouseleave', event => {
-              item.style.backgroundColor = 'transparent';
-          });
+        item.addEventListener("mouseleave", (event) => {
+          item.style.backgroundColor = "transparent";
+        });
       });
     </script>
   </body>
