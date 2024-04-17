@@ -89,7 +89,8 @@ def register(request):
             return render(request, "user_profiles/register.html", {
                 "message": "Email already exists."
             })
-        login(request, user)
+        auth.authenticate(request, username=username, password=password)
+        auth.login(request, user)
         return render(request, "user_profiles/fillinfo.html")
     else:
         return render(request, "user_profiles/register.html")
@@ -191,7 +192,7 @@ def update_user_photo(request):
     
 @csrf_exempt
 @login_required(login_url='/user_profiles/')
-# @permission_required('user_profiles.is_student', raise_exception=True)
+@permission_required('user_profiles.is_student', raise_exception=True)
 def update_student_resume(request):
     if request.method == 'POST':
         resume = request.FILES.get('student_resume')
@@ -203,7 +204,7 @@ def update_student_resume(request):
 
 @csrf_exempt
 @login_required(login_url='/user_profiles/')
-# @permission_required('user_profiles.is_student', raise_exception=True)
+@permission_required('user_profiles.is_student', raise_exception=True)
 def update_student_portfolio(request):
      if request.method == 'POST':
         portfolio = request.FILES.getlist('student_portfolio')
@@ -214,7 +215,7 @@ def update_student_portfolio(request):
 
 @csrf_exempt
 @login_required(login_url='/user_profiles/')
-# @permission_required('user_profiles.is_student', raise_exception=True)
+@permission_required('user_profiles.is_student', raise_exception=True)
 def remove_student_portfolio(request, file_name):
     Portfolio.objects.filter(student= Student.objects.get(user=request.user), student_portfolio = 'user_profiles/Portfolio/'+file_name).delete()
     return HttpResponse('Remove Portfolio Succesful')
