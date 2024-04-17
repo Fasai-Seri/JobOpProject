@@ -118,7 +118,7 @@ def fill_info(request) :
         if Student.objects.filter(user__id = request.user.id).exists():
             Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         elif Professor.objects.filter(user__id = request.user.id).exists():
-            Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
+            Professor.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         return HttpResponseRedirect(reverse("job_post:index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
