@@ -9,76 +9,92 @@
     {{ warning }}
 
     {% else %}
+
         <div class="container mt-3">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="mb-3 bg-light p-4 rounded shadow-sm">
-                        <h4>Create Job Post</h4>
+                    <div class="mb-4 border rounded-lg shadow-sm p-3">
+                        <h4 class="mb-4">Create Job Post</h4>
                         <hr>
                         <form action="{% url 'job_post:create_job_post' %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
+
                             <div class="form-group">
-                                * Job Title:<input class="form-control" name="job_title" required>
+                                <label for="job_title"><strong>* Job Title:</strong></label>
+                                <input type="text" id="job_title" class="form-control" name="job_title" required>
                             </div>
+
                             <div class="form-group">
-                                * Job Type: 
-                                <select name="job_type" class="form-control" required>
+                                <label for="job_type"><strong>* Job Type:</strong></label>
+                                <select id="job_type" name="job_type" class="form-control" required onfocus="removeEmptyOption(this)">
                                     <option value=""></option>
                                     {% for choice in job_type_choices %}
                                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                                    {% endfor %}   
+                                    {% endfor %}
                                 </select>
                             </div>
-                            <div>
-                                * Company:
+
+                            <div class="form-group">
+                                <label for="company"><strong>* Company:</strong></label>
                                 {% if is_employer %}
-                                <select name="company" class="form-control dropdown_with_search" disabled required>
-                                    <option value="{{ request.user.emp_user_id.get.comp.pk }}" selected>{{ request.user.emp_user_id.get.comp.comp_name }}</option>
-                                </select>
+                                <input type="text" id="company" class="form-control" name="company_name" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
                                 <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
                                 {% else %}
-                                <select name="company" class="form-control dropdown_with_search" required>
+                                <select id="company" name="company" class="form-control" required required onfocus="removeEmptyOption(this)">
                                     <option value=""></option>
-                                    {% for company in all_companies %}              
+                                    {% for company in all_companies %}
                                     <option value="{{ company.pk }}">{{ company.comp_name }}</option>
                                     {% endfor %}
                                 </select>
                                 {% endif %}
                             </div>
-                            <div>
-                                Upload Job Information File:
-                                <input type="file" name="job_info_file">
+
+                            <hr>
+                           
+                            <div class="form-group">
+                                <label for="job_info_file"><strong>Upload Job Information File:</strong></label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="job_info_file" name="job_info_file" onchange="updateFileName(this)">
+                                    <label class="custom-file-label" for="job_info_file" id="file_label">Choose file</label>
+                                </div>
                             </div>
-                            <div>
-                                Job Description:
-                                <textarea class="form-control" name="job_desc_text"></textarea>
+                    
+                            <div class="form-group">
+                                <label for="job_desc_text"><strong>Job Description:</strong></label>
+                                <textarea rows="5" id="job_desc_text" class="form-control" name="job_desc_text"></textarea>
                             </div>
-                            <div>
-                                Job Requirement:
-                                <textarea class="form-control" name="job_requirement_text"></textarea>
+
+                            <div class="form-group">
+                                <label for="job_requirement_text"><strong>Job Requirement:</strong></label>
+                                <textarea rows="5" id="job_requirement_text" class="form-control" name="job_requirement_text"></textarea>
                             </div>
-                            <div>
-                                Related Major:
+
+                            <div class="form-group">
+                                <label><strong>Related Major:</strong></label><br>
                                 {% for major in all_major %}
                                 <label>
-                                    <input type="checkbox" name="job_major" value="{{ major.pk }}">{{ major.major_id }}
+                                    <input type="checkbox" name="job_major" value="{{ major.pk }}"> {{ major.major_id }}
                                 </label>
                                 {% endfor %}
                             </div>
-                            <div>
-                                Close Date:
-                                <input type="datetime-local" class="form-control" name="job_close_date">
+
+                            <div class="form-group">
+                                <label for="job_close_date"><strong>Close Date:</strong></label>
+                                <input type="datetime-local" id="job_close_date" class="form-control" name="job_close_date">
                             </div>
-                            <div>
-                                Location:
-                                <textarea class="form-control" name="job_location"></textarea>
+
+                            <div class="form-group">
+                                <label for="job_location"><strong>Location</strong>:</label>
+                                <textarea id="job_location" class="form-control" name="job_location"></textarea>
                             </div>
                             <input type="submit" class="btn btn-primary" value="Create"/>
+                            <div id="show_map"></div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
     {% endif %}
 {% endblock %}
 
@@ -88,4 +104,34 @@
         $('.dropdown_with_search').select2();
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+        $('.dropdown_with_search').select2();
+
+        // Get current date and time
+        var currentDate = new Date();
+        var currentDateTime = currentDate.toISOString().slice(0,16);
+
+        // Set min attribute for Close Date input
+        $('input[name="job_close_date"]').attr('min', currentDateTime);
+    });
+</script>
+
+<script>
+    function removeEmptyOption(selectElement) {
+        if (selectElement.value == '') {
+            selectElement.removeChild(selectElement.options[0]);
+        }
+    }
+</script>
+
+<script>
+    function updateFileName(input) {
+        var fileName = input.files[0].name;
+        var label = document.getElementById('file_label');
+        label.innerHTML = fileName;
+    }
+</script>
+
 {% endblock %}
