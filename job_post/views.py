@@ -148,9 +148,6 @@ def create_job_post(request):
             job_post_date = datetime.datetime.now()
             job_close_date =  request.POST.get('job_close_date')
             job_location =  request.POST.get('job_location')
-            job_address = request.POST.get('job_address')
-            job_location_long = request.POST.get('job_location_long')
-            job_location_lat = request.POST.get('job_location_lat')
             job_status = 'active'
                 
             new_job_post = JobPost(job_title=job_title, 
@@ -160,9 +157,6 @@ def create_job_post(request):
                                 job_requirement_text=job_requirement_text, 
                                 job_post_date = job_post_date,
                                 job_location = job_location,
-                                job_address = job_address,
-                                job_location_long = job_location_long,
-                                job_location_lat = job_location_lat,
                                 job_status = job_status
                                 )
             
@@ -220,9 +214,6 @@ def edit_job_post(request, job_post_id):
             edited_job_post.job_location =  request.POST.get('job_location')
             edited_job_post.job_status =  request.POST.get('job_status')
             edited_job_post.job_major.set(Major.objects.filter(pk__in=request.POST.getlist('job_major'))) 
-            edited_job_post.job_address = request.POST.get('job_address')
-            edited_job_post.job_location_long = request.POST.get('job_location_long')
-            edited_job_post.job_location_lat = request.POST.get('job_location_lat')
             
             job_close_date =  request.POST.get('job_close_date')
             if job_close_date != '':
