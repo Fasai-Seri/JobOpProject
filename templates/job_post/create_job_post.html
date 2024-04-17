@@ -56,6 +56,7 @@
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="job_info_file" name="job_info_file" onchange="updateFileName(this)">
                                     <label class="custom-file-label" for="job_info_file" id="file_label">Choose file</label>
+                                    <button type="button" class="btn btn-danger btn-block mt-2" id="clear_button" style="display: none;" onclick="clearFile()">Clear</button>
                                 </div>
                             </div>
                     
@@ -135,9 +136,26 @@
 
 <script>
     function updateFileName(input) {
-        var fileName = input.files[0].name;
+        var fileName = input.files[0] ? input.files[0].name : 'Choose file';
         var label = document.getElementById('file_label');
         label.innerHTML = fileName;
+
+        // Check if file is selected and show/hide clear button accordingly
+        var clearButton = document.getElementById('clear_button');
+        clearButton.style.display = input.files[0] ? 'block' : 'none';
+    }
+</script>
+
+<script>
+    function clearFile() {
+        var fileInput = document.getElementById('job_info_file');
+        fileInput.value = ''; // Clear the selected file
+        var label = document.getElementById('file_label');
+        label.innerHTML = 'Choose file'; // Reset the label text
+
+        // Hide the clear button
+        var clearButton = document.getElementById('clear_button');
+        clearButton.style.display = 'none';
     }
 </script>
 
