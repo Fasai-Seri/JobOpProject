@@ -102,6 +102,28 @@ const ProfilePanel = () => {
     }
   }
 
+  function handleUploadPortfolio() {
+    if (user.type == "student") {
+      const portfolio = document.querySelector("#portfolio").files;
+      console.log(portfolio);
+      if (portfolio) {
+        const formData = new FormData();
+        for (let i = 0; i < portfolio.length; i++) {
+          formData.append("student_portfolio", portfolio[i], portfolio[i].name);
+        }
+        fetch("update_student_portfolio", {
+          method: "POST",
+          body: formData,
+        });
+      }
+    }
+  }
+
+  async function handleRemovePortfolio(file_name) {
+    await fetch(`remove_student_portfolio/${file_name}`);
+    fetchUser();
+  }
+
   function handleProfileSubmit() {
     if (user.type == "employer") {
       fetch(`update_user`, {
@@ -149,6 +171,212 @@ const ProfilePanel = () => {
             </option>
           ))}
         </select>
+      </div>
+    );
+  }
+
+  function StudentResume() {
+    if (user.resume) {
+      if (isDisabled == "true") {
+        return (
+          <div>
+            <MajorSelect />
+            <p>Resume</p>
+            <embed src={user.resume} width="50%" height="1050px" />
+            <p>Portfolio</p>
+            <embed src={user.portfolio} width="50%" height="1050px" />
+          </div>
+        );
+      } else {
+        if (previewResume) {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+              <embed src={previewResume} width="50%" height="1050px" />
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+              <embed src={user.resume} width="50%" height="1050px" />
+            </div>
+          );
+        }
+      }
+    } else {
+      if (isDisabled == "true") {
+        return (
+          <div>
+            <MajorSelect />
+            <p>Resume</p>
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              value="No Resume"
+            />
+          </div>
+        );
+      } else {
+        if (previewResume) {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <MajorSelect />
+              <p>Resume</p>
+              <input
+                type="file"
+                class="form-control-file"
+                id="resume"
+                name="resume"
+                onChange={handlePreviewResume}
+              />
+            </div>
+          );
+        }
+      }
+    }
+  }
+
+  function StudentPortfolio() {
+    function handleButtonClick(file) {
+      const display = document.getElementById("portfolio_display");
+      const clone = display.cloneNode(true);
+      clone.setAttribute("src", file);
+      display.parentNode.replaceChild(clone, display);
+    }
+
+    if (user.student_portfolio) {
+      if (isDisabled == "true") {
+        return (
+          <div>
+            <p>Portfolio</p>
+            {user.student_portfolio.map((file) => {
+              const file_name = String(file.student_portfolio).split("/")[
+                String(file.student_portfolio).split("/").length - 1
+              ];
+              return (
+                <div>
+                  <input
+                    type="button"
+                    onClick={() => handleButtonClick(file.student_portfolio)}
+                    value={file_name}
+                  />
+                  <input
+                    type="button"
+                    onClick={() => handleRemovePortfolio(file_name)}
+                    value="Remove"
+                  />
+                </div>
+              );
+            })}
+            <embed
+              id="portfolio_display"
+              src={user.student_portfolio[0].student_portfolio}
+              width="50%"
+              height="1050px"
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <p>Portfolio</p>
+            <input
+              type="file"
+              class="form-control-file"
+              id="portfolio"
+              name="portfolio"
+              multiple
+            />
+            {user.student_portfolio.map((file) => {
+              const file_name = String(file.student_portfolio).split("/")[
+                String(file.student_portfolio).split("/").length - 1
+              ];
+              return (
+                <input
+                  type="button"
+                  onClick={() => handleButtonClick(file.student_portfolio)}
+                  value={file_name}
+                />
+              );
+            })}
+            <embed
+              id="portfolio_display"
+              src={user.student_portfolio[0].student_portfolio}
+              width="50%"
+              height="1050px"
+            />
+          </div>
+        );
+      }
+    } else {
+      if (isDisabled == "true") {
+        return (
+          <div>
+            <p>Portfolio</p>
+
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              value="No Portfolio"
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <p>Portfolio</p>
+            <input
+              type="file"
+              class="form-control-file"
+              id="portfolio"
+              name="portfolio"
+              multiple
+            />
+            ;
+          </div>
+        );
+      }
+    }
+  }
+
+  function StudentProfile() {
+    return (
+      <div>
+        <StudentResume />
+        <StudentPortfolio />
       </div>
     );
   }
@@ -284,8 +512,7 @@ const ProfilePanel = () => {
                 <MajorSelect />
                 <p>Resume</p>
                 <embed src={user.resume} width="50%" height="1050px" />
-                
-                :
+                <StudentPortfolio />
               </div>
             ) : previewResume ? (
               <div>
@@ -299,6 +526,7 @@ const ProfilePanel = () => {
                   onChange={handlePreviewResume}
                 />
                 <embed src={previewResume} width="50%" height="1050px" />
+                <StudentPortfolio />
               </div>
             ) : (
               <div>
@@ -312,6 +540,7 @@ const ProfilePanel = () => {
                   onChange={handlePreviewResume}
                 />
                 <embed src={user.resume} width="50%" height="1050px" />
+                <StudentPortfolio />
               </div>
             )
           ) : isDisabled == "true" ? (
@@ -324,6 +553,7 @@ const ProfilePanel = () => {
                 disabled
                 value="No Resume"
               />
+              <StudentPortfolio />
             </div>
           ) : previewResume ? (
             <div>
@@ -337,6 +567,7 @@ const ProfilePanel = () => {
                 onChange={handlePreviewResume}
               />
               <embed src={previewResume} width="50%" height="1050px" />
+              <StudentPortfolio />
             </div>
           ) : (
             <div>
@@ -349,6 +580,7 @@ const ProfilePanel = () => {
                 name="resume"
                 onChange={handlePreviewResume}
               />
+              <StudentPortfolio />
             </div>
           )
         ) : user.type == "professor" ? (
@@ -413,6 +645,7 @@ const ProfilePanel = () => {
               onClick={() => {
                 handleUploadProfile();
                 handleUploadResume();
+                handleUploadPortfolio();
               }}
               type="submit"
               value="Save"

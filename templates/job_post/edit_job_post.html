@@ -79,7 +79,8 @@
         Location:
         <textarea class="form-control" name="job_location">{{ edited_job_post.job_location }}</textarea>
     </div>
-    Status:
+    <div>
+        Status:
         <select name="job_status" class="form-control">
             {% for choice in job_status_choices %}
             {% if choice.0 == edited_job_post.job_status %}
@@ -89,6 +90,8 @@
             {% endif %}
             {% endfor %}   
         </select>
+    </div>
+    <div id="show_map"></div>
     <input type="submit" class="btn btn-primary" value="Save"/>
 </form>
 {% endif %}
@@ -100,4 +103,6 @@
         $('.dropdown_with_search').select2();
     });
 </script>
+
+
 {% endblock %}

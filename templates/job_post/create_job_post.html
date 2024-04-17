@@ -37,8 +37,8 @@
                             <div class="form-group">
                                 <label for="company"><strong>* Company:</strong></label>
                                 {% if is_employer %}
-                                <input type="text" id="company" class="form-control" name="company" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
-                                <input type="hidden" name="company_id" value="{{ request.user.emp_user_id.get.comp.pk }}">
+                                <input type="text" id="company" class="form-control" name="company_name" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
+                                <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
                                 {% else %}
                                 <select id="company" name="company" class="form-control" required required onfocus="removeEmptyOption(this)">
                                     <option value=""></option>
@@ -106,12 +106,6 @@
         $('.dropdown_with_search').select2();
     });
 </script>
-<script
-  id="create_job_post_script"
-  type="text/babel"
-  src="../static/job_post/Javascript/create_job_post.js"
-  data-csrf-token="{{ csrf_token }}"
-></script>
 
 <script>
     $(document).ready(function() {

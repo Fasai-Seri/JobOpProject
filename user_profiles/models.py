@@ -88,6 +88,7 @@ class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id', null=True)
     major = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id', null=True)
     student_resume = models.FileField(upload_to='user_profiles/Files', null=True, blank=True)
+    
     def serialize(self):
         if self.student_resume:
             return {
@@ -107,3 +108,14 @@ class Student(models.Model):
                    return {
                     'type': 'student',
                 }
+
+class Portfolio(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.PROTECT, related_name='portfolio_owner', null=True)
+    student_portfolio = models.FileField(upload_to='user_profiles/Portfolio', null=True, blank=True)
+    
+    def serialize(self):
+        if self.student_portfolio:
+            return {
+                'student': self.student.id,
+                'student_portfolio': self.student_portfolio.url[1:]
+            }

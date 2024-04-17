@@ -26,7 +26,9 @@ const FillInfo = () => {
           id="major"
           name="major"
           onChange={handleMajorChange}
+          required
         >
+          <option></option>
           {majors.map((major) => (
             <option value={major.id}>
               {major.desc} ({major.id})

@@ -89,7 +89,8 @@ def register(request):
             return render(request, "user_profiles/register.html", {
                 "message": "Email already exists."
             })
-        login(request, user)
+        auth.authenticate(request, username=username, password=password)
+        auth.login(request, user)
         return render(request, "user_profiles/fillinfo.html")
     else:
         return render(request, "user_profiles/register.html")
@@ -117,7 +118,7 @@ def fill_info(request) :
         if Student.objects.filter(user__id = request.user.id).exists():
             Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         elif Professor.objects.filter(user__id = request.user.id).exists():
-            Student.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
+            Professor.objects.filter(user__id = request.user.id).update(major = Major.objects.get(pk=major))
         return HttpResponseRedirect(reverse("job_post:index"))
     else:
         return render(request, "user_profiles/fillinfo.html")
@@ -128,6 +129,13 @@ def get_user(request, user_id):
     if Student.objects.filter(user__id = user_id).exists():
         student = Student.objects.get(user__id = user_id).serialize()
         user.update(student)
+        # print(Student.objects.get(user__id = user_id).id)
+        # print(Portfolio.objects.filter(student_id = Student.objects.get(user__id = user_id).id))
+        if Portfolio.objects.filter(student = Student.objects.get(user__id = user_id)).exists():
+            file_list = []
+            for file in Portfolio.objects.filter(student = Student.objects.get(user__id = user_id)):
+                file_list.append(file.serialize())
+            user.update({'student_portfolio': file_list})
         return JsonResponse(user, safe=False)
     if Professor.objects.filter(user__id = user_id).exists():
         professor = Professor.objects.filter(user__id = user_id).first().serialize()
@@ -188,11 +196,29 @@ def update_user_photo(request):
 def update_student_resume(request):
     if request.method == 'POST':
         resume = request.FILES.get('student_resume')
-        print(resume)
+        # print(resume)
         student = Student.objects.get(user__id = request.user.id)
         student.student_resume = resume
         student.save()
         return HttpResponse('Upload Resume Succesful')
+
+@csrf_exempt
+@login_required(login_url='/user_profiles/')
+@permission_required('user_profiles.is_student', raise_exception=True)
+def update_student_portfolio(request):
+     if request.method == 'POST':
+        portfolio = request.FILES.getlist('student_portfolio')
+        for file in portfolio:
+            file_ins = Portfolio(student= Student.objects.get(user=request.user), student_portfolio = file)
+            file_ins.save()
+        return HttpResponse('Upload Portfolio Succesful')
+
+@csrf_exempt
+@login_required(login_url='/user_profiles/')
+@permission_required('user_profiles.is_student', raise_exception=True)
+def remove_student_portfolio(request, file_name):
+    Portfolio.objects.filter(student= Student.objects.get(user=request.user), student_portfolio = 'user_profiles/Portfolio/'+file_name).delete()
+    return HttpResponse('Remove Portfolio Succesful')
 
 @csrf_exempt
 @login_required(login_url='/user_profiles/')
