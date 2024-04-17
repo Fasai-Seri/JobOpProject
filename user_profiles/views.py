@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from user_profiles.models import *
 from user_profiles.forms import UserForm
 from company.views import get_all_company
+from django.db.models import Q
 
 
 # Create your views here.
@@ -251,3 +252,17 @@ def create_employer(request):
 @csrf_exempt
 def get_company(request):
     return get_all_company(request)
+
+@login_required(login_url='/user_profiles/')
+def followed_comp(request):
+    if request.GET.get('search_term'):
+        search_term = request.GET.get('search_term')
+        followed_comp = request.user.followed_company.filter(
+            Q(comp_name__icontains=search_term) |
+            Q(comp_desc__icontains=search_term) 
+            )
+    else:
+        followed_comp = request.user.followed_company.all()   
+    return render(request, 'user_profiles/followed_comp.html', {
+        'followed_companies': json.dumps([comp.serialize() for comp in followed_comp])
+    })
