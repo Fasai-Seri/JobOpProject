@@ -93,7 +93,16 @@ def favourite(request):
     })
 
 #-------------------------------------------------------------------------------------------
-
+def toggle_favorite(request, job_post_id):
+    job_post = JobPost.objects.get(pk=job_post_id)
+    user = request.user
+    if job_post in user.favourite_posts.all():
+        user.favourite_posts.remove(job_post)
+        is_favorite = False
+    else:
+        user.favourite_posts.add(job_post)
+        is_favorite = True
+    return JsonResponse({'is_favorite': is_favorite})
 #-------------------------------------------------------------------------------------------
 
 
