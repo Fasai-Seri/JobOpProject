@@ -3,49 +3,51 @@
 
 {% block body %}
 
-    {{ warning }}
-
-    
-
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12" style="padding-left: 5px; padding-right: 5px;">
-                <!--------------------------------------------------------------------------------->
-                    {% if selected_job_post in request.user.favourite_posts.all %}
-                    <div type="button" class="favorite-button" data-job-post-id="{{ selected_job_post.id }}">
-                        <div class="position-absolute" style="top: 16px; right: 20px">
-                            <img src="https://icons.iconarchive.com/icons/designbolts/free-valentine-heart/256/Heart-icon.png" alt="Favorite" style="width: 32px; height: 32px;">
-                        </div>
-                    </div> <!-- favorite -->
-                    {% else %}
-                    <div type="button" class="favorite-button" data-job-post-id="{{ selected_job_post.id }}">
-                        <div class="position-absolute" style="top: 16px; right: 20px">
-                            <img src="https://cdn-icons-png.freepik.com/256/1077/1077035.png" alt="Unfavorite" style="width: 32px; height: 32px;">
-                        </div>
-                    </div><!-- unfavorite -->
-                    {% endif %}
-                <!--------------------------------------------------------------------------------->
-
                 <div class="mb-4 border rounded-lg shadow-sm p-3">
                     {{ selected_job_post }}
-                        
-                                                
-                                 
-
-
-
-                    <!---------------------------------------------------------------------------------->
+                    
+                    <!-------------- fav / unfav ------------------------------------------------------------------->
+                        {% if selected_job_post in request.user.favourite_posts.all %}
+                        <div type="button" class="favorite-button" data-job-post-id="{{ selected_job_post.id }}">
+                            <div class="position-absolute" style="top: 16px; right: 20px">
+                                <img src="https://icons.iconarchive.com/icons/designbolts/free-valentine-heart/256/Heart-icon.png" alt="Favorite" style="width: 32px; height: 32px;">
+                            </div>
+                        </div><!-- favorite -->
+                        {% else %}
+                        <div type="button" class="favorite-button" data-job-post-id="{{ selected_job_post.id }}">
+                            <div class="position-absolute" style="top: 16px; right: 20px">
+                                <img src="https://cdn-icons-png.freepik.com/256/1077/1077035.png" alt="Unfavorite" style="width: 32px; height: 32px;">
+                            </div>
+                        </div><!-- unfavorite -->
+                        {% endif %}
+                    
+                    <!----------------- apply btn ---------------------------------------------------------------->
                         {% if is_student %}
                             <hr>
-                            <button class="btn btn-success btn-block">Apply Job</button>
-                            <a href="{% url 'job_post:index'  %}" style="text-decoration: none;"><button class="btn btn-info btn-block">Back Home Page</button></a>
+                            {% if is_student in  all_applicants %}
+                                <div type="button" class="apply-button" data-job-post-id="{{ selected_job_post.id }}">
+                                    <button type="submit" class="btn btn-danger btn-block">Unapply This Job</button>
+                                </div><!-- apply -->
+                            {% else %}
+                                <div type="button" class="apply-button" data-job-post-id="{{ selected_job_post.id }}">
+                                    <button type="submit" class="btn btn-success btn-block">Apply This Job</button>
+                                </div><!-- un apply -->
+                            {% endif %}
+                            
+                            <a href="{% url 'job_post:index'  %}" style="text-decoration: none;">
+                                <button class="btn btn-info btn-block mt-2">Explore Other Jobs</button>
+                            </a>
                         {% endif %}
-                    <!---------------------------------------------------------------------------------->
+
+                    <!---------------- func button ------------------------------------------------------------------>
                         {% if is_job_post_owner %}
                             <hr>
                             <a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}" style="text-decoration: none;"><button class="btn btn-info btn-block">Edit</button></a>
 
-                            <div class="show_delete_dialog"><button class="btn btn-danger mt-2 btn-block">Delete</button></div>
+                            <div class="show_delete_dialog"><button class="btn btn-danger mt-2 btn-block">Delete This Job</button></div>
                     
                             <dialog style="border-radius: 10px;">
                                 <header>
@@ -61,6 +63,8 @@
                                     </menu>
                                 </footer>
                             </dialog>
+
+                            <a href="{% url 'job_post:posted_job_posts' %}" style="text-decoration: none;"><button class="btn btn-dark btn-block mt-2">My Posted Jobs</button></a>
                         {% endif %}
                     <!---------------------------------------------------------------------------------->
                 </div>
@@ -69,49 +73,80 @@
     </div>
 
     {% if is_job_post_owner %}
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-4 border rounded-lg shadow-sm p-3">
-                    <div class=""><i class="bi bi-6-square-fill"></i><h3>Applicants List</h3></div>
-                    <hr>
-                   
-                        {{ all_applicants }}
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-4 border rounded-lg shadow-sm p-3">
+                        <div class=""><i class="bi bi-6-square-fill"></i><h3>Applicants List</h3></div>
+                        <hr>
+                        
+                            {{ all_applicants }}
 
                         <hr>
                         <p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" style="text-decoration: none;" download>
                             <button class="btn btn-success btn-block">Download Applicants List (PDF)</button></a></p>
-                    
                         
+                            
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
 {% endblock %}
 
 {% block script %}
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelector('.show_delete_dialog').onclick = () => {
-            document.querySelector('dialog').showModal()
-            document.querySelector('#dialog-footer--cancel-btn').onclick = () => {
-                document.querySelector('dialog').close()
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.show_delete_dialog').onclick = () => {
+                document.querySelector('dialog').showModal()
+                document.querySelector('#dialog-footer--cancel-btn').onclick = () => {
+                    document.querySelector('dialog').close()
+                }
+                document.querySelector('#dialog-footer--confirm-btn').onclick = () => {
+                    <!-- console.log(`/update_job_post/{{ selected_job_post.pk }}`) -->
+                    fetch(`/update_job_post/{{ selected_job_post.pk }}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            delete: true
+                        })
+                    }).then(() => {
+                        return window.location.replace("{% url 'job_post:posted_job_posts' %}")
+                    })             
+                }
             }
-            document.querySelector('#dialog-footer--confirm-btn').onclick = () => {
-                <!-- console.log(`/update_job_post/{{ selected_job_post.pk }}`) -->
-                fetch(`/update_job_post/{{ selected_job_post.pk }}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        delete: true
-                    })
-                }).then(() => {
-                    return window.location.replace("{% url 'job_post:posted_job_posts' %}")
-                })             
-            }
-        }
-    })
-</script>
+        })
+    </script>
+
+    <!--------------------------- apply btn -------------------------------------------------------------------------->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const applyButtons = document.querySelectorAll('.apply-button');
+
+        applyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const jobId = button.dataset.jobPostId;
+                const isApplied = button.classList.contains('apply');
+
+                // request POST 
+                fetch(`/apply_job/${jobId}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_apply) {
+                        button.innerHTML = '<div type="button" class="apply-button" data-job-post-id="{{ selected_job_post.id }}"><button type="submit" class="btn btn-danger btn-block">Unapply This Job</button></div>';
+                    } else {
+                        button.innerHTML = '<div type="button" class="apply-button" data-job-post-id="{{ selected_job_post.id }}"><button type="submit" class="btn btn-success btn-block">Apply This Job</button></div>';
+                    }
+                });
+            });
+        });
+        });
+    </script>
+
+    
 
 {% endblock %}

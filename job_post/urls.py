@@ -21,5 +21,6 @@ urlpatterns = [
 
     #------------------------------------------------------------------------------------------------------------
     path('toggle_favorite/<int:job_post_id>/', views.toggle_favorite, name='toggle_favorite'),
+    path("apply_job/<int:job_post_id>/", views.apply_job, name="apply_job"),
    
 ]
