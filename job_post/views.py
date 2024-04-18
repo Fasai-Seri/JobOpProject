@@ -89,6 +89,11 @@ def favourite(request):
         
     return render(request, 'job_post/favourite.html', {
         'all_job_posts': all_job_posts.order_by('job_status'),
+        #---------------------------------------------------------
+        'job_type_choices': JobPost.job_type_choices,
+        'all_major': Major.objects.all(),
+        'job_status_choices': JobPost.job_status_choices,
+        #---------------------------------------------------------
         'search_term': search_term
     })
 
@@ -271,6 +276,11 @@ def posted_job_posts(request):
             
         return render(request, 'job_post/posted_job_posts.html', {
             'all_job_posts': all_job_posts.order_by('job_status'),
+            #---------------------------------------------------------
+            'job_type_choices': JobPost.job_type_choices,
+            'all_major': Major.objects.all(),
+            'job_status_choices': JobPost.job_status_choices,
+            #---------------------------------------------------------
             'search_term': search_term
         })
         
