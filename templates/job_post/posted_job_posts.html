@@ -111,8 +111,9 @@
 
                                         <hr>
 
-                                        <a href="{% url 'job_post:display_job_post' job_post_id=job_post.pk %}"><button class="btn btn-outline-dark">Read More</button></a>
-                                        <a href="{% url 'job_post:display_job_post' job_post_id=job_post.pk %}"><button class="btn btn-outline-dark ml-2">Read More</button></a>
+                                        <a href="{% url 'job_post:display_job_post' job_post_id=job_post.pk %}"><button class="btn btn-dark">View Post</button></a>
+                                        <a href="{% url 'job_post:edit_job_post' job_post_id=job_post.id %}"><button class="btn btn-info ml-2">Edit</button></a>
+                                    
                                         <!--------------------------------------------------------------------------------->
                                             {% if job_post in request.user.favourite_posts.all %}
                                             <div type="button" class="favorite-button" data-job-post-id="{{ job_post.id }}">

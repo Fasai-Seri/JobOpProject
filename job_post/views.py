@@ -124,7 +124,12 @@ def following(request):
     return render(request, 'job_post/following.html', {
         'all_job_posts': all_job_posts.order_by('job_status'),
         'followed_companies': request.user.followed_company.all(),
-        'search_term': search_term
+        'search_term': search_term,
+         #---------------------------------------------------------
+        'job_type_choices': JobPost.job_type_choices,
+        'all_major': Major.objects.all(),
+        'job_status_choices': JobPost.job_status_choices,
+        #---------------------------------------------------------
     })
 
 @login_required      
