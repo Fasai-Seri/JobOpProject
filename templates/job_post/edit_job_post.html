@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="mb-4 border rounded-lg shadow-sm p-3">
-                    <h4 class="mb-4">Edit Job Post</h4>
+                    <div class=""><i class="bi bi-6-square-fill"></i><h3>Edit Job Post</h3></div>
                     <hr>
                     <form action="{% url 'job_post:edit_job_post' edited_job_post.pk %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -83,13 +83,13 @@
                             {% if major in edited_job_post.job_major.all %}
                             <div class="form-check">
                             <label class="form-check-label-mt2">
-                                <input type="checkbox" name="job_major" value="{{ major.pk }}" checked>{{ major.major_id }}
+                                <input type="checkbox" class="form-check-input" name="job_major" value="{{ major.pk }}" checked>{{ major.major_id }} : {{ major.major_desc }}
                             </label>
                             </div>
                             {% else %}
                             <div class="form-check">
                             <label class="form-check-label-mt2">
-                                <input type="checkbox" name="job_major" value="{{ major.pk }}">{{ major.major_id }}
+                                <input type="checkbox" class="form-check-input" name="job_major" value="{{ major.pk }}">{{ major.major_id }} : {{ major.major_desc }}
                             </label>
                             </div>
                             {% endif %}

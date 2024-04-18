@@ -89,10 +89,16 @@ def favourite(request):
         
     return render(request, 'job_post/favourite.html', {
         'job_posts_list': all_job_posts.order_by('job_status'),
-        'search_term': search_term
+        'search_term': search_term,
+        #---------------------------------------------------------
+        'job_type_choices': JobPost.job_type_choices,
+        'all_major': Major.objects.all(),
+        'job_status_choices': JobPost.job_status_choices,
+        #---------------------------------------------------------
     })
 
 #-------------------------------------------------------------------------------------------
+@login_required 
 def toggle_favorite(request, job_post_id):
     job_post = JobPost.objects.get(pk=job_post_id)
     user = request.user
@@ -119,7 +125,12 @@ def following(request):
     return render(request, 'job_post/following.html', {
         'job_posts_list': all_job_posts.order_by('job_status'),
         'followed_companies': request.user.followed_company.all(),
-        'search_term': search_term
+        'search_term': search_term,
+         #---------------------------------------------------------
+        'job_type_choices': JobPost.job_type_choices,
+        'all_major': Major.objects.all(),
+        'job_status_choices': JobPost.job_status_choices,
+        #---------------------------------------------------------
     })
 
 @login_required      
@@ -271,7 +282,12 @@ def posted_job_posts(request):
             
         return render(request, 'job_post/posted_job_posts.html', {
             'job_posts_list': all_job_posts.order_by('job_status'),
-            'search_term': search_term
+            'search_term': search_term,
+            #---------------------------------------------------------
+            'job_type_choices': JobPost.job_type_choices,
+            'all_major': Major.objects.all(),
+            'job_status_choices': JobPost.job_status_choices,
+            #---------------------------------------------------------
         })
         
     return render(request, 'job_post/posted_job_posts.html', {
