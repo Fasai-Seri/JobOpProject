@@ -68,7 +68,9 @@ const CreateCompany = () => {
     return (
       <div>
         <div class="form-group">
-          <label for="comp_name">Company Address</label>
+          <label for="comp_name">
+            <b>Company Address</b>
+          </label>
           <textarea
             type="text"
             class="form-control"
@@ -124,20 +126,20 @@ const CreateCompany = () => {
                 />
               </div>
               <div class="form-group">
-                Company Name:{" "}
+                <b>Company Name: </b>
                 <input class="form-control" name="comp_name" required />
               </div>
               <div class="form-group">
-                Company Thai Name:{" "}
+                <b>Company Thai Name: </b>
                 <input class="form-control" name="comp_name_th" />
               </div>
               <div class="form-group">
-                Company Description:{" "}
+                <b>Company Description: </b>
                 <textarea class="form-control" name="comp_desc"></textarea>
               </div>
 
               <div class="form-group">
-                Company Contact Info:{" "}
+                <b>Company Contact Info: </b>
                 <textarea
                   class="form-control"
                   name="comp_contact_info"

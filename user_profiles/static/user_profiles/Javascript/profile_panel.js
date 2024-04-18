@@ -154,7 +154,9 @@ const ProfilePanel = () => {
   function MajorSelect() {
     return (
       <div class="form-group">
-        <label for="major">Major</label>
+        <label for="major">
+          <b>Major</b>
+        </label>
         <select
           class="form-control"
           id="major"
@@ -187,14 +189,17 @@ const ProfilePanel = () => {
       if (isDisabled == "false") {
         return (
           <div>
-            <p>Portfolio</p>
+            <h5 class="mt-3">Portfolio</h5>
+            <hr />
+
             <input
               type="file"
-              class="form-control-file"
+              class="form-control"
               id="portfolio"
               name="portfolio"
               multiple
             />
+            <p class="mt-3">Current Files</p>
             {user.student_portfolio.map((file) => {
               const file_name = String(file.student_portfolio).split("/")[
                 String(file.student_portfolio).split("/").length - 1
@@ -203,14 +208,14 @@ const ProfilePanel = () => {
                 <div>
                   <input
                     type="button"
-                    class="btn btn-dark"
+                    class="btn btn-dark mr-2 mt-2"
                     onClick={() => handleButtonClick(file.student_portfolio)}
                     value={file_name}
                   />
 
                   <input
                     type="button"
-                    class="btn btn-outline-dark"
+                    class="btn btn-outline-dark mt-2"
                     onClick={() => handleRemovePortfolio(file_name)}
                     value="Remove"
                   />
@@ -228,8 +233,8 @@ const ProfilePanel = () => {
       } else {
         return (
           <div>
-            <p>Portfolio</p>
-
+            <h5 class="mt-3">Portfolio</h5>
+            <hr />
             {user.student_portfolio.map((file) => {
               const file_name = String(file.student_portfolio).split("/")[
                 String(file.student_portfolio).split("/").length - 1
@@ -237,7 +242,7 @@ const ProfilePanel = () => {
               return (
                 <input
                   type="button"
-                  class="btn btn-dark"
+                  class="btn btn-dark mr-2"
                   onClick={() => handleButtonClick(file.student_portfolio)}
                   value={file_name}
                 />
@@ -257,27 +262,26 @@ const ProfilePanel = () => {
         return (
           <div>
             <p>Portfolio</p>
-
-            <input
-              type="text"
-              class="form-control"
-              disabled
-              value="No Portfolio"
-            />
+            <hr />
+            <div class="mb-3">
+              <p class="text-muted">No Portfolio</p>
+            </div>
           </div>
         );
       } else {
         return (
           <div>
             <p>Portfolio</p>
-            <input
-              type="file"
-              class="form-control-file"
-              id="portfolio"
-              name="portfolio"
-              multiple
-            />
-            ;
+            <hr />
+            <div class="mb-3">
+              <input
+                type="file"
+                class="form-control"
+                id="portfolio"
+                name="portfolio"
+                multiple
+              />
+            </div>
           </div>
         );
       }
@@ -293,6 +297,19 @@ const ProfilePanel = () => {
 
   $("#comp").on("change", function (e) {
     handleProfileChange(e);
+  });
+
+  $(".custom-file-input, .photo").on("change", function () {
+    console.log("triggered");
+    const file = $(this).val();
+    const fileName = file.split("\\")[file.split("\\").length - 1];
+    $(this).next(".custom-file-label, .photo").html(fileName);
+  });
+  $(".custom-file-input, .resume").on("change", function () {
+    console.log("triggered");
+    const file = $(this).val();
+    const fileName = file.split("\\")[file.split("\\").length - 1];
+    $(this).next(".custom-file-label, .resume").html(fileName);
   });
 
   return (
@@ -350,14 +367,23 @@ const ProfilePanel = () => {
                   name="csrfmiddlewaretoken"
                   value={csrftoken}
                 />
-                <input
-                  type="file"
-                  class="form-control-file"
-                  id="profile_photo"
-                  name="user_photo"
-                  enctype="multipart/form-data"
-                  onChange={handlePreviewProfile}
-                />
+                <div class="custom-file mt-3">
+                  <input
+                    type="file"
+                    class="custom-file-input photo"
+                    id="profile_photo"
+                    name="user_photo"
+                    enctype="multipart/form-data"
+                    onChange={handlePreviewProfile}
+                  />
+                  <label
+                    class="custom-file-label photo"
+                    for="portfolio"
+                    id="file_label"
+                  >
+                    Choose Profile Image
+                  </label>
+                </div>
               </div>
             )}
 
@@ -373,13 +399,14 @@ const ProfilePanel = () => {
               />
 
               <div class="form-group">
-                <label for="fname">First name</label>
+                <label for="fname">
+                  <b>First Name</b>
+                </label>
                 <input
                   type="text"
                   class="form-control"
                   id="fname"
                   name="fname"
-                  placeholder="First name"
                   disabled={isDisabled == "true" ? true : false}
                   value={user.fname}
                   onChange={handleProfileChange}
@@ -388,13 +415,14 @@ const ProfilePanel = () => {
                 />
               </div>
               <div class="form-group">
-                <label for="lname">Last name</label>
+                <label for="lname">
+                  <b>Last name</b>
+                </label>
                 <input
                   type="text"
                   class="form-control"
                   id="lname"
                   name="lname"
-                  placeholder="Last name"
                   disabled={isDisabled == "true" ? true : false}
                   value={user.lname}
                   onChange={handleProfileChange}
@@ -403,13 +431,14 @@ const ProfilePanel = () => {
                 />
               </div>
               <div class="form-group">
-                <label for="phone">Phone number</label>
+                <label for="phone">
+                  <b>Phone number</b>
+                </label>
                 <input
                   type="text"
                   class="form-control"
                   id="phone"
                   name="phone"
-                  placeholder="Phone number"
                   disabled={isDisabled == "true" ? true : false}
                   value={user.phone}
                   onChange={handleProfileChange}
@@ -419,13 +448,14 @@ const ProfilePanel = () => {
                 />
               </div>
               <div class="form-group">
-                <label for="email">Email address</label>
+                <label for="email">
+                  <b>Email address</b>
+                </label>
                 <input
                   type="email"
                   class="form-control"
                   id="email"
                   name="email"
-                  placeholder="name@example.com"
                   disabled
                   value={user.email}
                   onChange={handleProfileChange}
@@ -437,35 +467,57 @@ const ProfilePanel = () => {
                   isDisabled == "true" ? (
                     <div>
                       <MajorSelect />
-                      <p>Resume</p>
+                      <h5>Resume</h5>
+                      <hr />
                       <embed src={user.resume} width="50%" height="500px" />
                       <StudentPortfolio />
                     </div>
                   ) : previewResume ? (
                     <div>
                       <MajorSelect />
-                      <p>Resume</p>
-                      <input
-                        type="file"
-                        class="form-control-file"
-                        id="resume"
-                        name="resume"
-                        onChange={handlePreviewResume}
-                      />
+                      <h5>Resume</h5>
+                      <hr />
+                      <div class="custom-file">
+                        <input
+                          type="file"
+                          class="custom-file-input resume"
+                          id="resume"
+                          name="resume"
+                          onChange={handlePreviewResume}
+                        />
+                        <label
+                          class="custom-file-label resume"
+                          for="portfolio"
+                          id="file_label"
+                        >
+                          Choose file
+                        </label>
+                      </div>
+
                       <embed src={previewResume} width="50%" height="500px" />
                       <StudentPortfolio />
                     </div>
                   ) : (
                     <div>
                       <MajorSelect />
-                      <p>Resume</p>
-                      <input
-                        type="file"
-                        class="form-control-file"
-                        id="resume"
-                        name="resume"
-                        onChange={handlePreviewResume}
-                      />
+                      <h5>Resume</h5>
+                      <hr />
+                      <div class="custom-file">
+                        <input
+                          type="file"
+                          class="custom-file-input resume"
+                          id="resume"
+                          name="resume"
+                          onChange={handlePreviewResume}
+                        />
+                        <label
+                          class="custom-file-label resume"
+                          for="portfolio"
+                          id="file_label"
+                        >
+                          Choose file
+                        </label>
+                      </div>
                       <embed src={user.resume} width="50%" height="500px" />
                       <StudentPortfolio />
                     </div>
@@ -473,40 +525,56 @@ const ProfilePanel = () => {
                 ) : isDisabled == "true" ? (
                   <div>
                     <MajorSelect />
-                    <p>Resume</p>
-                    <input
-                      type="text"
-                      class="form-control"
-                      disabled
-                      value="No Resume"
-                    />
+                    <h5>Resume</h5>
+                    <hr />
+                    <p class="text-muted">No Resume</p>
                     <StudentPortfolio />
                   </div>
                 ) : previewResume ? (
                   <div>
                     <MajorSelect />
-                    <p>Resume</p>
-                    <input
-                      type="file"
-                      class="form-control-file"
-                      id="resume"
-                      name="resume"
-                      onChange={handlePreviewResume}
-                    />
+                    <h5>Resume</h5>
+                    <hr />
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input resume"
+                        id="resume"
+                        name="resume"
+                        onChange={handlePreviewResume}
+                      />
+                      <label
+                        class="custom-file-label resume"
+                        for="portfolio"
+                        id="file_label"
+                      >
+                        Choose file
+                      </label>
+                    </div>
                     <embed src={previewResume} width="50%" height="500px" />
                     <StudentPortfolio />
                   </div>
                 ) : (
                   <div>
                     <MajorSelect />
-                    <p>Resume</p>
-                    <input
-                      type="file"
-                      class="form-control-file"
-                      id="resume"
-                      name="resume"
-                      onChange={handlePreviewResume}
-                    />
+                    <h5>Resume</h5>
+                    <hr />
+                    <div class="custom-file">
+                      <input
+                        type="file"
+                        class="custom-file-input resume"
+                        id="resume"
+                        name="resume"
+                        onChange={handlePreviewResume}
+                      />
+                      <label
+                        class="custom-file-label resume"
+                        for="portfolio"
+                        id="file_label"
+                      >
+                        Choose file
+                      </label>
+                    </div>
                     <StudentPortfolio />
                   </div>
                 )
@@ -515,7 +583,9 @@ const ProfilePanel = () => {
               ) : (
                 user.type == "employer" && (
                   <div>
-                    <div class="form-group">Company</div>
+                    <div class="form-group">
+                      <b>Company</b>
+                    </div>
                     <div hidden={user.comp ? true : false}>
                       <div>You can only edit this field once.</div>
                       <div>
@@ -550,13 +620,14 @@ const ProfilePanel = () => {
                       })}
                     </select>
                     <div class="form-group">
-                      <label for="email">Position</label>
+                      <label for="email">
+                        <b>Position</b>
+                      </label>
                       <input
                         type="text"
                         class="form-control"
                         id="emp_position"
                         name="emp_position"
-                        placeholder="Position"
                         value={user.emp_position}
                         disabled={isDisabled == "true" ? true : false}
                         onChange={handleProfileChange}

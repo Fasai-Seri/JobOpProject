@@ -31,6 +31,14 @@ const CompanyProfile = () => {
       });
   }
 
+  async function handleFavPost(post_id) {
+    await fetch(`favorite/${post_id}`, {
+      method: "POST",
+      headers: { "X-CSRFToken": csrftoken },
+    });
+    fetch_company_posts();
+  }
+
   function handleLogoPreview() {
     const logo = document.querySelector("#comp_logo").files[0];
     setPreviewLogo(URL.createObjectURL(logo));
@@ -118,18 +126,20 @@ const CompanyProfile = () => {
             </div>
             <div class="col-md-10">
               <div class="card-body">
-                <h5 class="job_title card-title">
+                <h5 class="job_title card-title">{props.post.job_title}</h5>
+                <h6>
                   <a
-                    href={post_href + "/" + props.post.job_id}
-                    class="color-black"
+                    class="company card-subtitle mb-3 text-muted"
+                    href={data.compHref.slice(0, -1) + "/" + props.post.comp_id}
                   >
-                    {props.post.job_title}
+                    {props.post.company}
                   </a>
-                </h5>
-                <h5>{props.post.job_type}</h5>
-                <h6 class="company card-subtitle mb-3 text-muted">
-                  {props.post.company}
                 </h6>
+
+                <div class="job_type card-text">
+                  {props.post.job_type.charAt(0).toUpperCase() +
+                    props.post.job_type.slice(1)}
+                </div>
                 <div class="job_type card-text">{props.post.job_location}</div>
                 <div class="d-flex align-items-center mt-3">
                   <div
@@ -152,27 +162,41 @@ const CompanyProfile = () => {
                 >
                   <button class="btn btn-outline-dark mt-2">Read More</button>
                 </a>
-                <div
-                  class="position-absolute"
-                  style={{ top: " 20px", right: "20px" }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
+                {props.post.isFavorite ? (
+                  <div
+                    type="button"
+                    class="favorite-button"
+                    onClick={() => handleFavPost(props.post.job_id)}
                   >
-                    <path
-                      fill="currentColor"
-                      d="M12 20.325q-.35 0-.712-.125t-.638-.4l-1.725-1.575q-2.65-2.425-4.788-4.812T2 8.15Q2 5.8 3.575 4.225T7.5 2.65q1.325 0 2.5.562t2 1.538q.825-.975 2-1.537t2.5-.563q2.35 0 3.925 1.575T22 8.15q0 2.875-2.125 5.275T15.05 18.25l-1.7 1.55q-.275.275-.637.4t-.713.125M11.05 6.75q-.725-1.025-1.55-1.563t-2-.537q-1.5 0-2.5 1t-1 2.5q0 1.3.925 2.763t2.213 2.837q1.287 1.375 2.65 2.575T12 18.3q.85-.775 2.213-1.975t2.65-2.575q1.287-1.375 2.212-2.837T20 8.15q0-1.5-1-2.5t-2.5-1q-1.175 0-2 .538T12.95 6.75q-.175.25-.425.375T12 7.25q-.275 0-.525-.125t-.425-.375m.95 4.725"
-                    ></path>
-                  </svg>
-                </div>
-                {/* <p>Posted date: {props.post.job_post_date}</p>
-                <p>
-                  Close date:{" "}
-                  {props.post.job_close_date ? props.post.job_close_date : "-"}
-                </p> */}
+                    <div
+                      class="position-absolute"
+                      style={{ top: "20px", right: "20px" }}
+                    >
+                      <img
+                        width="40vh"
+                        height="40vh"
+                        src="https://icons.iconarchive.com/icons/designbolts/free-valentine-heart/256/Heart-icon.png"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    type="button"
+                    class="favorite-button"
+                    onClick={() => handleFavPost(props.post.job_id)}
+                  >
+                    <div
+                      class="position-absolute"
+                      style={{ top: "20px", right: "20px" }}
+                    >
+                      <img
+                        width="40vh"
+                        height="40vh"
+                        src="https://cdn-icons-png.freepik.com/256/1077/1077035.png"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -242,7 +266,9 @@ const CompanyProfile = () => {
     return (
       <div>
         <div class="form-group">
-          <label for="comp_name">Company Address</label>
+          <label for="comp_name">
+            <b>Company Address</b>
+          </label>
           <textarea
             type="text"
             class="form-control"
@@ -335,55 +361,59 @@ const CompanyProfile = () => {
                 value={csrftoken}
               />
               <div class="form-group">
-                <label for="comp_name">Company Name</label>
+                <label for="comp_name">
+                  <b>Company Name</b>
+                </label>
                 <input
                   type="text"
                   class="form-control"
                   id="comp_name"
                   name="comp_name"
                   disabled={isDisabled == "true" ? true : false}
-                  placeholder="Company Name"
                   value={company.comp_name}
                   onChange={handleCompanyChange}
                   required
                 />
               </div>
               <div class="form-group">
-                <label for="comp_name">Company Thai Name</label>
+                <label for="comp_name">
+                  <b>Company Thai Name</b>
+                </label>
                 <input
                   type="text"
                   class="form-control"
                   id="comp_name_th"
                   name="comp_name_th"
                   disabled={isDisabled == "true" ? true : false}
-                  placeholder="Company Thai Name"
                   value={company.comp_name_th}
                   onChange={handleCompanyChange}
                 />
               </div>
               <div class="form-group">
-                <label for="comp_name">Company Desciption</label>
+                <label for="comp_name">
+                  <b>Company Description</b>
+                </label>
                 <textarea
                   type="text"
                   class="form-control"
                   id="comp_desc"
                   name="comp_desc"
                   disabled={isDisabled == "true" ? true : false}
-                  placeholder="Company Desciption"
                   value={company.comp_desc}
                   onChange={handleCompanyChange}
                   onKeyUp={textAreaAdjust}
                 ></textarea>
               </div>
               <div class="form-group">
-                <label for="comp_name">Company Contact Info</label>
+                <label for="comp_name">
+                  <b>Company Contact Info</b>
+                </label>
                 <textarea
                   type="text"
                   class="form-control"
                   id="comp_contact_info"
                   name="comp_contact_info"
                   disabled={isDisabled == "true" ? true : false}
-                  placeholder="Company Contact Info"
                   value={company.comp_contact_info}
                   onChange={handleCompanyChange}
                   onKeyUp={textAreaAdjust}
