@@ -1,42 +1,53 @@
 {% extends "layout.html" %} {% block body %}
 <div id="create_employer">
-  <h2>Create Employer Account</h2>
+  <div class="container mt-3 w-50">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="mb-3 bg-light p-4 rounded shadow-sm">
+          <h2>Create Employer Account</h2>
 
-  {% if message %}
-  <div>{{ message }}</div>
-  {% endif %}
+          {% if message %}
+          <div>{{ message }}</div>
+          {% endif %}
 
-  <form action="{% url 'user_profiles:create_employer' %}" method="post">
-    {% csrf_token %}
-    <div class="form-group">
-      <input
-        class="form-control"
-        type="email"
-        name="email"
-        placeholder="Email Address"
-      />
+          <form
+            action="{% url 'user_profiles:create_employer' %}"
+            method="post"
+          >
+            {% csrf_token %}
+            <div class="form-group">
+              <input
+                class="form-control"
+                type="email"
+                name="email"
+                placeholder="Email Address"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="form-control"
+                type="password"
+                name="password"
+                placeholder="Password"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                class="form-control"
+                type="password"
+                name="confirmation"
+                placeholder="Confirm Password"
+              />
+            </div>
+            <input
+              class="btn btn-dark"
+              type="submit"
+              value="Create Employer Account"
+            />
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <input
-        class="form-control"
-        type="password"
-        name="password"
-        placeholder="Password"
-      />
-    </div>
-    <div class="form-group">
-      <input
-        class="form-control"
-        type="password"
-        name="confirmation"
-        placeholder="Confirm Password"
-      />
-    </div>
-    <input
-      class="btn btn-primary"
-      type="submit"
-      value="Create Employer Account"
-    />
-  </form>
+  </div>
 </div>
 {% endblock %} {% block script %} {% endblock %}

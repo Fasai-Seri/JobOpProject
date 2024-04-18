@@ -184,38 +184,7 @@ const ProfilePanel = () => {
     }
 
     if (user.student_portfolio) {
-      if (isDisabled == "true") {
-        return (
-          <div>
-            <p>Portfolio</p>
-            {user.student_portfolio.map((file) => {
-              const file_name = String(file.student_portfolio).split("/")[
-                String(file.student_portfolio).split("/").length - 1
-              ];
-              return (
-                <div>
-                  <input
-                    type="button"
-                    onClick={() => handleButtonClick(file.student_portfolio)}
-                    value={file_name}
-                  />
-                  <input
-                    type="button"
-                    onClick={() => handleRemovePortfolio(file_name)}
-                    value="Remove"
-                  />
-                </div>
-              );
-            })}
-            <embed
-              id="portfolio_display"
-              src={user.student_portfolio[0].student_portfolio}
-              width="50%"
-              height="1050px"
-            />
-          </div>
-        );
-      } else {
+      if (isDisabled == "false") {
         return (
           <div>
             <p>Portfolio</p>
@@ -231,8 +200,44 @@ const ProfilePanel = () => {
                 String(file.student_portfolio).split("/").length - 1
               ];
               return (
+                <div>
+                  <input
+                    type="button"
+                    class="btn btn-dark"
+                    onClick={() => handleButtonClick(file.student_portfolio)}
+                    value={file_name}
+                  />
+
+                  <input
+                    type="button"
+                    class="btn btn-outline-dark"
+                    onClick={() => handleRemovePortfolio(file_name)}
+                    value="Remove"
+                  />
+                </div>
+              );
+            })}
+            <embed
+              id="portfolio_display"
+              src={user.student_portfolio[0].student_portfolio}
+              width="50%"
+              height="500px"
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <p>Portfolio</p>
+
+            {user.student_portfolio.map((file) => {
+              const file_name = String(file.student_portfolio).split("/")[
+                String(file.student_portfolio).split("/").length - 1
+              ];
+              return (
                 <input
                   type="button"
+                  class="btn btn-dark"
                   onClick={() => handleButtonClick(file.student_portfolio)}
                   value={file_name}
                 />
@@ -242,7 +247,7 @@ const ProfilePanel = () => {
               id="portfolio_display"
               src={user.student_portfolio[0].student_portfolio}
               width="50%"
-              height="1050px"
+              height="500px"
             />
           </div>
         );
@@ -433,7 +438,7 @@ const ProfilePanel = () => {
                     <div>
                       <MajorSelect />
                       <p>Resume</p>
-                      <embed src={user.resume} width="50%" height="1050px" />
+                      <embed src={user.resume} width="50%" height="500px" />
                       <StudentPortfolio />
                     </div>
                   ) : previewResume ? (
@@ -447,7 +452,7 @@ const ProfilePanel = () => {
                         name="resume"
                         onChange={handlePreviewResume}
                       />
-                      <embed src={previewResume} width="50%" height="1050px" />
+                      <embed src={previewResume} width="50%" height="500px" />
                       <StudentPortfolio />
                     </div>
                   ) : (
@@ -461,7 +466,7 @@ const ProfilePanel = () => {
                         name="resume"
                         onChange={handlePreviewResume}
                       />
-                      <embed src={user.resume} width="50%" height="1050px" />
+                      <embed src={user.resume} width="50%" height="500px" />
                       <StudentPortfolio />
                     </div>
                   )
@@ -488,7 +493,7 @@ const ProfilePanel = () => {
                       name="resume"
                       onChange={handlePreviewResume}
                     />
-                    <embed src={previewResume} width="50%" height="1050px" />
+                    <embed src={previewResume} width="50%" height="500px" />
                     <StudentPortfolio />
                   </div>
                 ) : (
@@ -563,7 +568,7 @@ const ProfilePanel = () => {
               {isDisabled == "false" && (
                 <div>
                   <input
-                    class="btn btn-dark"
+                    class="btn btn-dark mr-2"
                     onClick={() => {
                       handleUploadProfile();
                       handleUploadResume();
@@ -572,7 +577,10 @@ const ProfilePanel = () => {
                     type="submit"
                     value="Save"
                   />
-                  <button class="btn btn-dark" onClick={handleCancleClick}>
+                  <button
+                    class="btn btn-outline-dark"
+                    onClick={handleCancleClick}
+                  >
                     Cancle
                   </button>
                 </div>

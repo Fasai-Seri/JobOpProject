@@ -23,7 +23,6 @@
                         <label><input type="checkbox" name="job_type" value="{{ choice.1 }}" class="filter_checkbox" /> {{ choice.1 }}</label>
                     </div>
                     {% endfor %}
-
                     <div class="font-weight-bold mb-2">Related Major</div>
                     {% for major in all_major %}
                     <div class="checkbox">
@@ -57,7 +56,7 @@
             <!-- END SEARCH INPUT -->
 
             <div class="mt-3">
-                {% if not all_job_posts %}
+                {% if not job_posts_list %}
                     <div class="card">
                         <div class="card-body no-result-found">No Result Found</div>
                     </div>
@@ -65,7 +64,7 @@
                     <div class="card card-body no-result-found-for-js">
                         <div>No Result Found</div>
                     </div>
-                    {% for job_post in all_job_posts %}
+                    {% for job_post in job_posts_list %}
                         <div class="job_post_div card mb-3">
                             <div class="row no-gutters align-items-center">
                                 <!-- Need to change, link with company photo. Hard code for now -->
@@ -133,7 +132,7 @@
         </div>
     </div>
 </div>
-  
+
 {% endblock %}
 
 {% block script %}

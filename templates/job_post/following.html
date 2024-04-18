@@ -31,6 +31,7 @@
                         </div>
                         {% endfor %}
 
+<<<<<<< HEAD
                         <div class="font-weight-bold mb-2">Status</div>
                         {% for choice in job_status_choices %}
                         <div class="checkbox">
@@ -41,6 +42,13 @@
                     <!-- END FILTER BY CATEGORY -->
                 </div>
             </div>
+=======
+{% if not job_posts_list %}
+No Result Found
+{% else %}
+{{ job_posts_list }}
+{% endif %}
+>>>>>>> ee4992b3c6a7cf23dca5a65ba5d96eba1e8bf7d1
 
             <div class="col-md-8 offset-md-2">
                 <div class=""><i class="bi bi-6-square-fill"></i><h3>Following</h3></div>
