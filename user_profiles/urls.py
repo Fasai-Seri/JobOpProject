@@ -24,6 +24,7 @@ urlpatterns = [
     path('update_student_portfolio', views.update_student_portfolio, name='update_student_portfolio'),
     path('remove_student_portfolio/<str:file_name>', views.remove_student_portfolio, name='remove_student_portfolio'),
     path('get_company', views.get_company, name='get_company'),
+    path('followed_comp', views.followed_comp, name='followed_comp'),
 
 ]
 

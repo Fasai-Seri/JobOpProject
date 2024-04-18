@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
   <head>
     <script
       src="https://unpkg.com/react@17/umd/react.production.min.js"
@@ -24,43 +24,51 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
-    <h2>Register</h2>
+  <body class="h-100 d-flex align-items-center">
+    <div class="container mt-3 w-50">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="mb-3 bg-light p-4 rounded shadow-sm">
+            <h2>Register</h2>
+            <hr />
+            {% if message %}
+            <div>{{ message }}</div>
+            {% endif %}
 
-    {% if message %}
-    <div>{{ message }}</div>
-    {% endif %}
+            <form action="{% url 'user_profiles:register' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  type="password"
+                  name="confirmation"
+                  placeholder="Confirm Password"
+                />
+              </div>
+              <input class="btn btn-dark" type="submit" value="Register" />
+            </form>
 
-    <form action="{% url 'user_profiles:register' %}" method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <input
-          class="form-control"
-          type="email"
-          name="email"
-          placeholder="Email Address"
-        />
+            Already have an account?
+            <a href="{% url 'user_profiles:login' %}">Log In here.</a>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <input
-          class="form-control"
-          type="password"
-          name="password"
-          placeholder="Password"
-        />
-      </div>
-      <div class="form-group">
-        <input
-          class="form-control"
-          type="password"
-          name="confirmation"
-          placeholder="Confirm Password"
-        />
-      </div>
-      <input class="btn btn-primary" type="submit" value="Register" />
-    </form>
-
-    Already have an account?
-    <a href="{% url 'user_profiles:login' %}">Log In here.</a>
+    </div>
   </body>
 </html>

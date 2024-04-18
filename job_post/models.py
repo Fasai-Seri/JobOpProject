@@ -59,6 +59,7 @@ class JobPost(models.Model):
                 'job_location': self.job_location,
                 'job_post_date': self.job_post_date,
                 'job_close_date': self.job_close_date,
+                'job_status': self.job_status,
             }
         else:
             return {
@@ -70,6 +71,7 @@ class JobPost(models.Model):
                 'job_location': self.job_location,
                 'job_post_date': self.job_post_date,
                 'job_close_date': self.job_close_date,
+                'job_status': self.job_status,
             }
 
     def __str__(self):

@@ -1,9 +1,7 @@
-const CompanyList = () => {
-  const data = document.querySelector("#company_list_script").dataset;
+const FollowedCompList = () => {
+  const data = document.querySelector("#followed_comp_script").dataset;
   const companies = JSON.parse(data.companies);
   const csrftoken = data.csrfToken;
-  const isEmployer = data.isEmployer;
-  const create_comp_link = data.createComp;
   const comp_href = data.compHref.slice(0, -1);
   console.log(comp_href);
 
@@ -39,7 +37,7 @@ const CompanyList = () => {
                 <img
                   class="rounded-circle"
                   src={props.comp.comp_logo}
-                  width="150vw"
+                  width="150vh"
                   height="150vh"
                 />
               </div>
@@ -62,12 +60,7 @@ const CompanyList = () => {
       <div class="row justify-content-center">
         <div class="col-md-12">
           <div class="mb-3 bg-light p-4 rounded shadow-sm">
-            {isEmployer == "True" && (
-              <a class="btn btn-dark float-right" href={create_comp_link}>
-                Create Company
-              </a>
-            )}
-            <h4>Company List</h4>
+            <h4>Followed Company</h4>
             <hr />
             <SearchBar />
             {companies.length == 0 ? (
@@ -84,4 +77,4 @@ const CompanyList = () => {
   );
 };
 
-ReactDOM.render(<CompanyList />, document.querySelector("#company_list"));
+ReactDOM.render(<FollowedCompList />, document.querySelector("#followed_comp"));

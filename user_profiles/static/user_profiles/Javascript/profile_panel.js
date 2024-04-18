@@ -175,99 +175,6 @@ const ProfilePanel = () => {
     );
   }
 
-  function StudentResume() {
-    if (user.resume) {
-      if (isDisabled == "true") {
-        return (
-          <div>
-            <MajorSelect />
-            <p>Resume</p>
-            <embed src={user.resume} width="50%" height="1050px" />
-            <p>Portfolio</p>
-            <embed src={user.portfolio} width="50%" height="1050px" />
-          </div>
-        );
-      } else {
-        if (previewResume) {
-          return (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
-              <input
-                type="file"
-                class="form-control-file"
-                id="resume"
-                name="resume"
-                onChange={handlePreviewResume}
-              />
-              <embed src={previewResume} width="50%" height="1050px" />
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
-              <input
-                type="file"
-                class="form-control-file"
-                id="resume"
-                name="resume"
-                onChange={handlePreviewResume}
-              />
-              <embed src={user.resume} width="50%" height="1050px" />
-            </div>
-          );
-        }
-      }
-    } else {
-      if (isDisabled == "true") {
-        return (
-          <div>
-            <MajorSelect />
-            <p>Resume</p>
-            <input
-              type="text"
-              class="form-control"
-              disabled
-              value="No Resume"
-            />
-          </div>
-        );
-      } else {
-        if (previewResume) {
-          return (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
-              <input
-                type="file"
-                class="form-control-file"
-                id="resume"
-                name="resume"
-                onChange={handlePreviewResume}
-              />
-            </div>
-          );
-        } else {
-          return (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
-              <input
-                type="file"
-                class="form-control-file"
-                id="resume"
-                name="resume"
-                onChange={handlePreviewResume}
-              />
-            </div>
-          );
-        }
-      }
-    }
-  }
-
   function StudentPortfolio() {
     function handleButtonClick(file) {
       const display = document.getElementById("portfolio_display");
@@ -277,38 +184,7 @@ const ProfilePanel = () => {
     }
 
     if (user.student_portfolio) {
-      if (isDisabled == "true") {
-        return (
-          <div>
-            <p>Portfolio</p>
-            {user.student_portfolio.map((file) => {
-              const file_name = String(file.student_portfolio).split("/")[
-                String(file.student_portfolio).split("/").length - 1
-              ];
-              return (
-                <div>
-                  <input
-                    type="button"
-                    onClick={() => handleButtonClick(file.student_portfolio)}
-                    value={file_name}
-                  />
-                  <input
-                    type="button"
-                    onClick={() => handleRemovePortfolio(file_name)}
-                    value="Remove"
-                  />
-                </div>
-              );
-            })}
-            <embed
-              id="portfolio_display"
-              src={user.student_portfolio[0].student_portfolio}
-              width="50%"
-              height="1050px"
-            />
-          </div>
-        );
-      } else {
+      if (isDisabled == "false") {
         return (
           <div>
             <p>Portfolio</p>
@@ -324,8 +200,44 @@ const ProfilePanel = () => {
                 String(file.student_portfolio).split("/").length - 1
               ];
               return (
+                <div>
+                  <input
+                    type="button"
+                    class="btn btn-dark"
+                    onClick={() => handleButtonClick(file.student_portfolio)}
+                    value={file_name}
+                  />
+
+                  <input
+                    type="button"
+                    class="btn btn-outline-dark"
+                    onClick={() => handleRemovePortfolio(file_name)}
+                    value="Remove"
+                  />
+                </div>
+              );
+            })}
+            <embed
+              id="portfolio_display"
+              src={user.student_portfolio[0].student_portfolio}
+              width="50%"
+              height="500px"
+            />
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <p>Portfolio</p>
+
+            {user.student_portfolio.map((file) => {
+              const file_name = String(file.student_portfolio).split("/")[
+                String(file.student_portfolio).split("/").length - 1
+              ];
+              return (
                 <input
                   type="button"
+                  class="btn btn-dark"
                   onClick={() => handleButtonClick(file.student_portfolio)}
                   value={file_name}
                 />
@@ -335,7 +247,7 @@ const ProfilePanel = () => {
               id="portfolio_display"
               src={user.student_portfolio[0].student_portfolio}
               width="50%"
-              height="1050px"
+              height="500px"
             />
           </div>
         );
@@ -372,15 +284,6 @@ const ProfilePanel = () => {
     }
   }
 
-  function StudentProfile() {
-    return (
-      <div>
-        <StudentResume />
-        <StudentPortfolio />
-      </div>
-    );
-  }
-
   $(document).ready(function () {
     $("#comp").select2({
       placeholder: "Select your company",
@@ -393,269 +296,299 @@ const ProfilePanel = () => {
   });
 
   return (
-    <div>
-      {previewPhoto ? (
-        <img
-          class="rounded-circle"
-          src={previewPhoto}
-          width="200"
-          height="200"
-        />
-      ) : user.user_photo ? (
-        <img
-          class="rounded-circle"
-          src={user.user_photo}
-          width="200"
-          height="200"
-        />
-      ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="200"
-          height="200"
-          fill="currentColor"
-          class="bi bi-person-circle"
-          viewBox="0 0 16 16"
-        >
-          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-          <path
-            fill-rule="evenodd"
-            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
-          />
-        </svg>
-      )}
-      {isDisabled == "false" && (
-        <div>
-          <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
-          <input
-            type="file"
-            class="form-control-file"
-            id="profile_photo"
-            name="user_photo"
-            enctype="multipart/form-data"
-            onChange={handlePreviewProfile}
-          />
-        </div>
-      )}
-      {isDisabled == "true" && user.user_id == current_user_id && (
-        <button class="btn btn-primary" onClick={handleEditClick}>
-          Edit
-        </button>
-      )}
-      <form id="profile_form" method="post" onSubmit={handleProfileSubmit}>
-        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+    <div class="container mt-3">
+      <div class="row justify-content-center">
+        <div class="col-md-7">
+          <div class="mb-3 bg-light p-4 rounded shadow-sm">
+            {isDisabled == "true" && user.user_id == current_user_id && (
+              <div>
+                <button
+                  class="btn btn-dark float-right"
+                  onClick={handleEditClick}
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+            <h4>User Profiles</h4>
+            <hr />
 
-        <div class="form-group">
-          <label for="fname">First name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="fname"
-            name="fname"
-            placeholder="First name"
-            disabled={isDisabled == "true" ? true : false}
-            value={user.fname}
-            onChange={handleProfileChange}
-            required
-            minlength="3"
-          />
-        </div>
-        <div class="form-group">
-          <label for="lname">Last name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lname"
-            name="lname"
-            placeholder="Last name"
-            disabled={isDisabled == "true" ? true : false}
-            value={user.lname}
-            onChange={handleProfileChange}
-            required
-            minlength="3"
-          />
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone number</label>
-          <input
-            type="text"
-            class="form-control"
-            id="phone"
-            name="phone"
-            placeholder="Phone number"
-            disabled={isDisabled == "true" ? true : false}
-            value={user.phone}
-            onChange={handleProfileChange}
-            required
-            minlength="10"
-            maxlength="10"
-          />
-        </div>
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="name@example.com"
-            disabled
-            value={user.email}
-            onChange={handleProfileChange}
-            required
-          />
-        </div>
-        {user.type == "student" ? (
-          user.resume ? (
-            isDisabled == "true" ? (
-              <div>
-                <MajorSelect />
-                <p>Resume</p>
-                <embed src={user.resume} width="50%" height="1050px" />
-                <StudentPortfolio />
-              </div>
-            ) : previewResume ? (
-              <div>
-                <MajorSelect />
-                <p>Resume</p>
-                <input
-                  type="file"
-                  class="form-control-file"
-                  id="resume"
-                  name="resume"
-                  onChange={handlePreviewResume}
-                />
-                <embed src={previewResume} width="50%" height="1050px" />
-                <StudentPortfolio />
-              </div>
+            {previewPhoto ? (
+              <img
+                class="rounded-circle"
+                src={previewPhoto}
+                width="200"
+                height="200"
+              />
+            ) : user.user_photo ? (
+              <img
+                class="rounded-circle"
+                src={user.user_photo}
+                width="200"
+                height="200"
+              />
             ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="200"
+                height="200"
+                fill="currentColor"
+                class="bi bi-person-circle"
+                viewBox="0 0 16 16"
+              >
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path
+                  fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                />
+              </svg>
+            )}
+            {isDisabled == "false" && (
               <div>
-                <MajorSelect />
-                <p>Resume</p>
+                <input
+                  type="hidden"
+                  name="csrfmiddlewaretoken"
+                  value={csrftoken}
+                />
                 <input
                   type="file"
                   class="form-control-file"
-                  id="resume"
-                  name="resume"
-                  onChange={handlePreviewResume}
+                  id="profile_photo"
+                  name="user_photo"
+                  enctype="multipart/form-data"
+                  onChange={handlePreviewProfile}
                 />
-                <embed src={user.resume} width="50%" height="1050px" />
-                <StudentPortfolio />
               </div>
-            )
-          ) : isDisabled == "true" ? (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
+            )}
+
+            <form
+              id="profile_form"
+              method="post"
+              onSubmit={handleProfileSubmit}
+            >
               <input
-                type="text"
-                class="form-control"
-                disabled
-                value="No Resume"
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value={csrftoken}
               />
-              <StudentPortfolio />
-            </div>
-          ) : previewResume ? (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
-              <input
-                type="file"
-                class="form-control-file"
-                id="resume"
-                name="resume"
-                onChange={handlePreviewResume}
-              />
-              <embed src={previewResume} width="50%" height="1050px" />
-              <StudentPortfolio />
-            </div>
-          ) : (
-            <div>
-              <MajorSelect />
-              <p>Resume</p>
-              <input
-                type="file"
-                class="form-control-file"
-                id="resume"
-                name="resume"
-                onChange={handlePreviewResume}
-              />
-              <StudentPortfolio />
-            </div>
-          )
-        ) : user.type == "professor" ? (
-          <MajorSelect />
-        ) : (
-          user.type == "employer" && (
-            <div>
-              <div class="form-group">Company</div>
-              <div hidden={user.comp ? true : false}>
-                <div>You can only edit this field once.</div>
-                <div>
-                  Couldn't find your company?{" "}
-                  <a href={create_comp}>Create Here</a>
-                </div>
-              </div>
-              <select
-                class="js-example-basic-single js-states form-control"
-                id="comp"
-                name="comp"
-                disabled={
-                  user.comp ? true : isDisabled == "true" ? true : false
-                }
-                required
-              >
-                <option></option>
-                {companies.map((comp) => {
-                  if (user.comp == comp.comp_id) {
-                    return (
-                      <option value={comp.comp_id} selected="selected">
-                        {comp.comp_name}
-                      </option>
-                    );
-                  } else {
-                    return (
-                      <option value={comp.comp_id} selected="">
-                        {comp.comp_name}
-                      </option>
-                    );
-                  }
-                })}
-              </select>
+
               <div class="form-group">
-                <label for="email">Position</label>
+                <label for="fname">First name</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="emp_position"
-                  name="emp_position"
-                  placeholder="Position"
-                  value={user.emp_position}
+                  id="fname"
+                  name="fname"
+                  placeholder="First name"
                   disabled={isDisabled == "true" ? true : false}
+                  value={user.fname}
                   onChange={handleProfileChange}
+                  required
+                  minlength="3"
                 />
               </div>
-            </div>
-          )
-        )}
-        {isDisabled == "false" && (
-          <div>
-            <input
-              class="btn btn-primary"
-              onClick={() => {
-                handleUploadProfile();
-                handleUploadResume();
-                handleUploadPortfolio();
-              }}
-              type="submit"
-              value="Save"
-            />
-            <button class="btn btn-primary" onClick={handleCancleClick}>
-              Cancle
-            </button>
+              <div class="form-group">
+                <label for="lname">Last name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lname"
+                  name="lname"
+                  placeholder="Last name"
+                  disabled={isDisabled == "true" ? true : false}
+                  value={user.lname}
+                  onChange={handleProfileChange}
+                  required
+                  minlength="3"
+                />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phone"
+                  name="phone"
+                  placeholder="Phone number"
+                  disabled={isDisabled == "true" ? true : false}
+                  value={user.phone}
+                  onChange={handleProfileChange}
+                  required
+                  minlength="10"
+                  maxlength="10"
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  disabled
+                  value={user.email}
+                  onChange={handleProfileChange}
+                  required
+                />
+              </div>
+              {user.type == "student" ? (
+                user.resume ? (
+                  isDisabled == "true" ? (
+                    <div>
+                      <MajorSelect />
+                      <p>Resume</p>
+                      <embed src={user.resume} width="50%" height="500px" />
+                      <StudentPortfolio />
+                    </div>
+                  ) : previewResume ? (
+                    <div>
+                      <MajorSelect />
+                      <p>Resume</p>
+                      <input
+                        type="file"
+                        class="form-control-file"
+                        id="resume"
+                        name="resume"
+                        onChange={handlePreviewResume}
+                      />
+                      <embed src={previewResume} width="50%" height="500px" />
+                      <StudentPortfolio />
+                    </div>
+                  ) : (
+                    <div>
+                      <MajorSelect />
+                      <p>Resume</p>
+                      <input
+                        type="file"
+                        class="form-control-file"
+                        id="resume"
+                        name="resume"
+                        onChange={handlePreviewResume}
+                      />
+                      <embed src={user.resume} width="50%" height="500px" />
+                      <StudentPortfolio />
+                    </div>
+                  )
+                ) : isDisabled == "true" ? (
+                  <div>
+                    <MajorSelect />
+                    <p>Resume</p>
+                    <input
+                      type="text"
+                      class="form-control"
+                      disabled
+                      value="No Resume"
+                    />
+                    <StudentPortfolio />
+                  </div>
+                ) : previewResume ? (
+                  <div>
+                    <MajorSelect />
+                    <p>Resume</p>
+                    <input
+                      type="file"
+                      class="form-control-file"
+                      id="resume"
+                      name="resume"
+                      onChange={handlePreviewResume}
+                    />
+                    <embed src={previewResume} width="50%" height="500px" />
+                    <StudentPortfolio />
+                  </div>
+                ) : (
+                  <div>
+                    <MajorSelect />
+                    <p>Resume</p>
+                    <input
+                      type="file"
+                      class="form-control-file"
+                      id="resume"
+                      name="resume"
+                      onChange={handlePreviewResume}
+                    />
+                    <StudentPortfolio />
+                  </div>
+                )
+              ) : user.type == "professor" ? (
+                <MajorSelect />
+              ) : (
+                user.type == "employer" && (
+                  <div>
+                    <div class="form-group">Company</div>
+                    <div hidden={user.comp ? true : false}>
+                      <div>You can only edit this field once.</div>
+                      <div>
+                        Couldn't find your company?{" "}
+                        <a href={create_comp}>Create Here</a>
+                      </div>
+                    </div>
+                    <select
+                      class="js-example-basic-single js-states form-control"
+                      id="comp"
+                      name="comp"
+                      disabled={
+                        user.comp ? true : isDisabled == "true" ? true : false
+                      }
+                      required
+                    >
+                      <option></option>
+                      {companies.map((comp) => {
+                        if (user.comp == comp.comp_id) {
+                          return (
+                            <option value={comp.comp_id} selected="selected">
+                              {comp.comp_name}
+                            </option>
+                          );
+                        } else {
+                          return (
+                            <option value={comp.comp_id} selected="">
+                              {comp.comp_name}
+                            </option>
+                          );
+                        }
+                      })}
+                    </select>
+                    <div class="form-group">
+                      <label for="email">Position</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="emp_position"
+                        name="emp_position"
+                        placeholder="Position"
+                        value={user.emp_position}
+                        disabled={isDisabled == "true" ? true : false}
+                        onChange={handleProfileChange}
+                      />
+                    </div>
+                  </div>
+                )
+              )}
+              {isDisabled == "false" && (
+                <div>
+                  <input
+                    class="btn btn-dark mr-2"
+                    onClick={() => {
+                      handleUploadProfile();
+                      handleUploadResume();
+                      handleUploadPortfolio();
+                    }}
+                    type="submit"
+                    value="Save"
+                  />
+                  <button
+                    class="btn btn-outline-dark"
+                    onClick={handleCancleClick}
+                  >
+                    Cancle
+                  </button>
+                </div>
+              )}
+            </form>
           </div>
-        )}
-      </form>
+        </div>
+      </div>
     </div>
   );
 };

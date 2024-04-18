@@ -1,17 +1,16 @@
 /* layout navbar */
 .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
 }
-      
-.nav-link:not(:hover) {
-    background-color: transparent;
 
+.nav-link:not(:hover) {
+  background-color: transparent;
 }
 
 .nav-link {
-    opacity: 0.8; 
-    padding: 10px 10px;
+  opacity: 0.8;
+  padding: 10px 10px;
 }
 
 .navbar {
@@ -23,26 +22,26 @@
 /* ------------------------------------------------------------------------- */
 /* show active */
 #show_active {
-    width: 20px; 
-    height: 20px; 
-    background-color: green;
+  width: 20px;
+  height: 20px;
+  background-color: green;
 }
 
 #show_inactive {
-    width: 20px; 
-    height: 20px; 
-    background-color: gray;
+  width: 20px;
+  height: 20px;
+  background-color: gray;
 }
 /* ------------------------------------------------------------------------- */
 /* upload file */
 .custom-file-label::after {
-    background-color: rgba(25, 24, 24, 0.79);
-    color: white;
+  background-color: rgba(25, 24, 24, 0.79);
+  color: white;
 }
 /* ------------------------------------------------------------------------- */
 /* upload file */
 
 .maplibregl-canvas {
-    width: 400px;
+  width: 400px;
 }
 /* ------------------------------------------------------------------------- */
