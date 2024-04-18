@@ -1,0 +1,92 @@
+{% block body %}
+
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-4 border rounded-lg shadow-sm p-3">
+                        <div class=""><i class="bi bi-6-square-fill"><h3>Create Job Post</h3></i></div>
+                        <hr>
+                        <form action="{% url 'job_post:create_job_post' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label for="job_title"><strong>* Job Title:</strong></label>
+                                <input type="text" id="job_title" class="form-control" name="job_title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="job_type"><strong>* Job Type:</strong></label>
+                                <select id="job_type" name="job_type" class="form-control" required>
+                                    <option value=""></option>
+                                    {% for choice in job_type_choices %}
+                                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="company"><strong>* Company:</strong></label>
+                                {% if is_employer %}
+                                    <input type="text" id="company" class="form-control" name="company_name" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
+                                    <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
+                                {% else %}
+                                    <select id="company" name="company" class="form-control form-control dropdown_with_search" required>
+                                        <option value=""></option>
+                                        {% for company in all_companies %}
+                                        <option value="{{ company.pk }}">{{ company.comp_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+
+                            <hr>
+                           
+                            <div class="form-group">
+                                <label for="job_info_file"><strong>Upload Job Information File:</strong></label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="job_info_file" name="job_info_file" onchange="updateFileName(this)">
+                                    <label class="custom-file-label" for="job_info_file" id="file_label">Choose file</label>
+                                    <button type="button" class="btn btn-danger btn-block mt-2" id="clear_button" style="display: none;" onclick="clearFile()">Clear</button>
+                                </div>
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="job_desc_text"><strong>Job Description:</strong></label>
+                                <textarea rows="5" id="job_desc_text" class="form-control" name="job_desc_text"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="job_requirement_text"><strong>Job Requirement:</strong></label>
+                                <textarea rows="5" id="job_requirement_text" class="form-control" name="job_requirement_text"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label><strong>Related Major:</strong></label><br>
+                                {% for major in all_major %}
+                                <div class="form-check">
+                                    <label class="form-check-label-mt2">
+                                        <input type="checkbox" class="form-check-input" name="job_major" value="{{ major.pk }}"> {{ major.major_id }} : {{ major.major_desc }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="job_close_date"><strong>Close Date:</strong></label>
+                                <input type="datetime-local" id="job_close_date" class="form-control" name="job_close_date">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="job_location"><strong>Location</strong>:</label>
+                                <textarea id="job_location" class="form-control" name="job_location"></textarea>
+                            </div>
+                            
+
+                            <input type="submit" class="btn btn-dark btn-block" value="Create"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+{% endblock %}
