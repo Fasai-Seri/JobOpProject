@@ -65,6 +65,7 @@
                             <div>No Result Found</div>
                         </div>
                         {% for job_post in job_posts_list %}
+                            {{ job_post.company.logo }}
                             <div class="job_post_div card mb-3">
                                 <div class="row no-gutters align-items-center">
                                     <!-- Need to change, link with company photo. Hard code for now -->

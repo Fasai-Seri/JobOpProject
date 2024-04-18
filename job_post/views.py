@@ -98,6 +98,7 @@ def favourite(request):
     })
 
 #-------------------------------------------------------------------------------------------
+@login_required 
 def toggle_favorite(request, job_post_id):
     job_post = JobPost.objects.get(pk=job_post_id)
     user = request.user
