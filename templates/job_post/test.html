@@ -1,14 +1,5 @@
-{% extends "layout.html" %}
-{% load static %}
-
 {% block body %}
 
-    <p>{{ fill_company }}</p>
-
-    {% if warning %}
-    {{ warning }}
-
-    {% else %}
         <div class="container mt-3">
             <div class="row">
                 <div class="col-md-12">
@@ -97,53 +88,5 @@
                 </div>
             </div>
         </div>
-    {% endif %}
-{% endblock %}
-
-{% block script %}
-<script>
-    $(document).ready(function() {
-        $('.dropdown_with_search').select2();
-    });
-</script>
-
-<!------------------------------------------------------------------------------------->
-<script>
-    $(document).ready(function() {
-        $('.dropdown_with_search').select2();
-
-        // Get current date and time
-        var currentDate = new Date();
-        var currentDateTime = currentDate.toISOString().slice(0,16);
-
-        // Set min attribute for Close Date input
-        $('input[name="job_close_date"]').attr('min', currentDateTime);
-    });
-</script>
-
-<script>
-    function updateFileName(input) {
-        var fileName = input.files[0] ? input.files[0].name : 'Choose file';
-        var label = document.getElementById('file_label');
-        label.innerHTML = fileName;
-
-        // Check if file is selected and show/hide clear button accordingly
-        var clearButton = document.getElementById('clear_button');
-        clearButton.style.display = input.files[0] ? 'block' : 'none';
-    }
-</script>
-
-<script>
-    function clearFile() {
-        var fileInput = document.getElementById('job_info_file');
-        fileInput.value = ''; // Clear the selected file
-        var label = document.getElementById('file_label');
-        label.innerHTML = 'Choose file'; // Reset the label text
-
-        // Hide the clear button
-        var clearButton = document.getElementById('clear_button');
-        clearButton.style.display = 'none';
-    }
-</script>
-<!------------------------------------------------------------------------------------->
+   
 {% endblock %}

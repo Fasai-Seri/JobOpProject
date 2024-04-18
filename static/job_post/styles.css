@@ -12,8 +12,14 @@
   opacity: 0.8;
   padding: 10px 10px;
 }
-/* layout navbar */
 
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+/* ------------------------------------------------------------------------- */
 /* show active */
 #show_active {
   width: 20px;
@@ -26,15 +32,16 @@
   height: 20px;
   background-color: gray;
 }
-/* show active */
-
+/* ------------------------------------------------------------------------- */
 /* upload file */
 .custom-file-label::after {
   background-color: rgba(25, 24, 24, 0.79);
   color: white;
 }
-/* upload file */
+/* ------------------------------------------------------------------------- */
+/* upload file create post */
 
 .maplibregl-canvas {
   width: 400px;
 }
+/* ------------------------------------------------------------------------- */
