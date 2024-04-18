@@ -9,7 +9,6 @@
     {{ warning }}
 
     {% else %}
-
         <div class="container mt-3">
             <div class="row">
                 <div class="col-md-12">
@@ -26,7 +25,7 @@
 
                             <div class="form-group">
                                 <label for="job_type"><strong>* Job Type:</strong></label>
-                                <select id="job_type" name="job_type" class="form-control" required onfocus="removeEmptyOption(this)">
+                                <select id="job_type" name="job_type" class="form-control" required>
                                     <option value=""></option>
                                     {% for choice in job_type_choices %}
                                     <option value="{{ choice.0 }}">{{ choice.1 }}</option>
@@ -37,15 +36,15 @@
                             <div class="form-group">
                                 <label for="company"><strong>* Company:</strong></label>
                                 {% if is_employer %}
-                                <input type="text" id="company" class="form-control" name="company_name" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
-                                <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
+                                    <input type="text" id="company" class="form-control" name="company_name" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
+                                    <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
                                 {% else %}
-                                <select id="company" name="company" class="form-control" required required onfocus="removeEmptyOption(this)">
-                                    <option value=""></option>
-                                    {% for company in all_companies %}
-                                    <option value="{{ company.pk }}">{{ company.comp_name }}</option>
-                                    {% endfor %}
-                                </select>
+                                    <select id="company" name="company" class="form-control form-control dropdown_with_search" required>
+                                        <option value=""></option>
+                                        {% for company in all_companies %}
+                                        <option value="{{ company.pk }}">{{ company.comp_name }}</option>
+                                        {% endfor %}
+                                    </select>
                                 {% endif %}
                             </div>
 
@@ -56,6 +55,7 @@
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="job_info_file" name="job_info_file" onchange="updateFileName(this)">
                                     <label class="custom-file-label" for="job_info_file" id="file_label">Choose file</label>
+                                    <button type="button" class="btn btn-danger btn-block mt-2" id="clear_button" style="display: none;" onclick="clearFile()">Clear</button>
                                 </div>
                             </div>
                     
@@ -72,9 +72,11 @@
                             <div class="form-group">
                                 <label><strong>Related Major:</strong></label><br>
                                 {% for major in all_major %}
-                                <label>
-                                    <input type="checkbox" name="job_major" value="{{ major.pk }}"> {{ major.major_id }}
-                                </label>
+                                <div class="form-check">
+                                    <label class="form-check-label-mt2">
+                                        <input type="checkbox" class="form-check-input" name="job_major" value="{{ major.pk }}"> {{ major.major_id }} 
+                                    </label>
+                                </div>
                                 {% endfor %}
                             </div>
 
@@ -87,14 +89,14 @@
                                 <label for="job_location"><strong>Location</strong>:</label>
                                 <textarea id="job_location" class="form-control" name="job_location"></textarea>
                             </div>
-                            <input type="submit" class="btn btn-primary" value="Create"/>
-                            <div id="show_map"></div>
+                            
+
+                            <input type="submit" class="btn btn-dark btn-block" value="Create"/>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
     {% endif %}
 {% endblock %}
 
@@ -105,6 +107,7 @@
     });
 </script>
 
+<!------------------------------------------------------------------------------------->
 <script>
     $(document).ready(function() {
         $('.dropdown_with_search').select2();
@@ -119,19 +122,28 @@
 </script>
 
 <script>
-    function removeEmptyOption(selectElement) {
-        if (selectElement.value == '') {
-            selectElement.removeChild(selectElement.options[0]);
-        }
+    function updateFileName(input) {
+        var fileName = input.files[0] ? input.files[0].name : 'Choose file';
+        var label = document.getElementById('file_label');
+        label.innerHTML = fileName;
+
+        // Check if file is selected and show/hide clear button accordingly
+        var clearButton = document.getElementById('clear_button');
+        clearButton.style.display = input.files[0] ? 'block' : 'none';
     }
 </script>
 
 <script>
-    function updateFileName(input) {
-        var fileName = input.files[0].name;
+    function clearFile() {
+        var fileInput = document.getElementById('job_info_file');
+        fileInput.value = ''; // Clear the selected file
         var label = document.getElementById('file_label');
-        label.innerHTML = fileName;
+        label.innerHTML = 'Choose file'; // Reset the label text
+
+        // Hide the clear button
+        var clearButton = document.getElementById('clear_button');
+        clearButton.style.display = 'none';
     }
 </script>
-
+<!------------------------------------------------------------------------------------->
 {% endblock %}

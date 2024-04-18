@@ -19,4 +19,9 @@ urlpatterns = [
     #APIs
     path("update_job_post/<int:job_post_id>", views.update_job_post, name="update_job_post"),
 
+    #------------------------------------------------------------------------------------------------------------
+    path('toggle_favorite/<int:job_post_id>/', views.toggle_favorite, name='toggle_favorite'),
+
+
+   
 ]
