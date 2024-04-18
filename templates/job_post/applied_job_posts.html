@@ -10,10 +10,10 @@
   <input type="search" placeholder="Search.." name="search_term" value="{{ search_term }}"/>
 </form>
 
-  {% if not all_job_posts %}
+  {% if not job_posts_list %}
   No Result Found
   {% else %}
-  {{ all_job_posts }} 
+  {{ job_posts_list }} 
   {% endif %}
   
 {% endif %}
