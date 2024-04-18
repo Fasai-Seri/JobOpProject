@@ -1,5 +1,4 @@
 import json
-import time
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -10,7 +9,7 @@ from company.models import *
 from user_profiles.models import *
 from job_post.models import *
 from django.db.models import Q
-from datetime import datetime
+from job_post.views import toggle_favorite
 
 # Create your views here.
 @login_required(login_url='/user_profiles/')
@@ -59,7 +58,12 @@ def get_company(request, comp_id):
 
 @login_required(login_url='/user_profiles/')
 def get_company_job_posts(request, comp_id):
-    return JsonResponse([post.serialize() for post in JobPost.objects.filter(company__id = comp_id)], safe=False)
+    jobpost_list = []
+    for post in JobPost.objects.filter(company__id = comp_id):
+        jobpost = post.serialize()
+        jobpost.update({'isFavorite': post in request.user.favourite_posts.all()})
+        jobpost_list.append(jobpost)
+    return JsonResponse(jobpost_list, safe=False)
 
 @login_required(login_url='/user_profiles/')
 def get_all_company(request):
@@ -131,3 +135,8 @@ def follow_company(request, comp_id):
     else:
         user.followed_company.add(comp)
     return HttpResponseRedirect(url)
+
+@login_required(login_url='/user_profiles/')
+def favorite(request, post_id):
+    toggle_favorite(request, post_id)
+    return HttpResponse('Fav Triggered')
