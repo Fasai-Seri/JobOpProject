@@ -35,12 +35,14 @@ const CompanyList = () => {
         <div class="card mb-3">
           <div class="row no-gutters align-items-center">
             <div class="col-md-2 m-2">
-              <img
-                class="rounded-circle"
-                src={props.comp.comp_logo}
-                width="200px"
-                height="200px"
-              />
+              <div class="d-flex align-items-center justify-content-center">
+                <img
+                  class="rounded-circle"
+                  src={props.comp.comp_logo}
+                  width="150vw"
+                  height="150vh"
+                />
+              </div>
             </div>
             <div class="card-body">
               <h5 class="job_title card-title">

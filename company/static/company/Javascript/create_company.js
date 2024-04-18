@@ -47,10 +47,7 @@ const CreateCompany = () => {
           e.lngLat.lng,
           e.lngLat.lat,
         ]);
-        document.getElementById("info").innerHTML =
-          JSON.stringify(results.features[0].place_name_en) +
-          "<br />" +
-          JSON.stringify(e.lngLat.wrap());
+
         document.getElementById("comp_address").innerHTML = String(
           results.features[0].place_name_en
         );
@@ -80,10 +77,6 @@ const CreateCompany = () => {
         </div>
         <input type="hidden" id="comp_long" name="comp_long" />
         <input type="hidden" id="comp_lat" name="comp_lat" />
-        <pre
-          id="info"
-          class="position-relative d-block w-75 p-2 mt-2 rounded"
-        ></pre>
         <div ref={mapContainer} class="position-absolute w-100 h-50" />
       </div>
     );
@@ -147,8 +140,10 @@ const CreateCompany = () => {
                   required
                 ></textarea>
               </div>
-              <input type="submit" class="btn btn-primary" value="Create" />
-              <Map />
+              <div style={{ height: "1000px" }}>
+                <Map />
+              </div>
+              <input type="submit" class="btn btn-dark" value="Create" />
             </form>
           </div>
         </div>

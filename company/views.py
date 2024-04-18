@@ -10,6 +10,7 @@ from company.models import *
 from user_profiles.models import *
 from job_post.models import *
 from django.db.models import Q
+from datetime import datetime
 
 # Create your views here.
 @login_required(login_url='/user_profiles/')
@@ -58,8 +59,8 @@ def get_company(request, comp_id):
 
 @login_required(login_url='/user_profiles/')
 def get_company_job_posts(request, comp_id):
-    jobposts = JobPost.objects.filter(company__id = comp_id)
-    return JsonResponse([jobpost.serialize() for jobpost in jobposts], safe=False)
+    return JsonResponse([post.serialize() for post in JobPost.objects.filter(company__id = comp_id)], safe=False)
+
 @login_required(login_url='/user_profiles/')
 def get_all_company(request):
     all_companies = Company.objects.all()    
