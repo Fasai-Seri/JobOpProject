@@ -8,7 +8,7 @@ const CompanyProfile = () => {
   const comp_id = parseInt(data.compId, 10);
   const csrftoken = data.csrfToken;
   const post_href = data.postHref.slice(0, -1);
-  const can_edit = data.canEdit
+  const can_edit = data.canEdit;
 
   React.useEffect(() => {
     fetch_company();
@@ -182,25 +182,31 @@ const CompanyProfile = () => {
     }, [API_KEY, center, zoom]);
 
     return (
-      <div>
-        <div class="form-group">
-          <label for="comp_name">Company Address</label>
-          <textarea
-            type="text"
-            class="form-control"
-            id="comp_address"
-            name="comp_address"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Address"
-            value={company.comp_address}
-            required
-          ></textarea>
+      <div class="container mt-3">
+        <div class="row justify-content-center">
+          <div class="col-md-12">
+            <div class="mb-3 bg-light p-4 rounded shadow-sm">
+              <div class="form-group">
+                <label for="comp_name">Company Address</label>
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="comp_address"
+                  name="comp_address"
+                  disabled={isDisabled == "true" ? true : false}
+                  placeholder="Company Address"
+                  value={company.comp_address}
+                  required
+                ></textarea>
+              </div>
+              <pre
+                id="info"
+                class="position-relative d-block w-75 p-2 mt-2 rounded"
+              ></pre>
+              <div ref={mapContainer} class="position-absolute w-100 h-50" />
+            </div>
+          </div>
         </div>
-        <pre
-          id="info"
-          class="position-relative d-block w-75 p-2 mt-2 rounded"
-        ></pre>
-        <div ref={mapContainer} class="position-absolute w-100 h-50" />
       </div>
     );
   }
@@ -211,125 +217,156 @@ const CompanyProfile = () => {
   }
 
   return (
-    <div class="position-relative">
-      {previewLogo ? (
-        <img
-          class="rounded-circle"
-          src={previewLogo}
-          width="200px"
-          height="200px"
-        />
-      ) : (
-        <img
-          class="rounded-circle"
-          src={company.comp_logo}
-          width="200px"
-          height="200px"
-        />
-      )}
-
-      {isDisabled == "true" ? ( can_edit == 'True' &&
-        <button class="btn btn-primary" onClick={handleEditCompClick}>
-          Edit
-        </button>
-      ) : (
-        <div>
-          <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
-          <input
-            type="file"
-            id="comp_logo"
-            name="comp_logo"
-            enctype="multipart/form-data"
-            onChange={handleLogoPreview}
-          />
-        </div>
-      )}
-
-      <button class="btn btn-primary" onClick={handleFollowClick}>
-        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
-        {company.isFollowedByUser ? "Unfollow" : "follow"}
-      </button>
-
-      <form method="post" onSubmit={handleCompanySubmit}>
-        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
-        <div class="form-group">
-          <label for="comp_name">Company Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="comp_name"
-            name="comp_name"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Name"
-            value={company.comp_name}
-            onChange={handleCompanyChange}
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="comp_name">Company Thai Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="comp_name_th"
-            name="comp_name_th"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Thai Name"
-            value={company.comp_name_th}
-            onChange={handleCompanyChange}
-          />
-        </div>
-        <div class="form-group">
-          <label for="comp_name">Company Desciption</label>
-          <textarea
-            type="text"
-            class="form-control"
-            id="comp_desc"
-            name="comp_desc"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Desciption"
-            value={company.comp_desc}
-            onChange={handleCompanyChange}
-            onKeyUp={textAreaAdjust}
-          ></textarea>
-        </div>
-        <div class="form-group">
-          <label for="comp_name">Company Contact Info</label>
-          <textarea
-            type="text"
-            class="form-control"
-            id="comp_contact_info"
-            name="comp_contact_info"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Contact Info"
-            value={company.comp_contact_info}
-            onChange={handleCompanyChange}
-            onKeyUp={textAreaAdjust}
-            required
-          ></textarea>
-        </div>
-        {isDisabled == "false" && (
-          <div>
-            <input
-              class="btn btn-primary"
-              type="submit"
-              value="Submit"
-              onClick={handleLogoUpload}
-            />
-            <button class="btn btn-primary" onClick={handleCancleCompClick}>
-              Cancle
+    <div class="container mt-3">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="mb-3 bg-light p-4 rounded shadow-sm">
+            {isDisabled == "true" && can_edit == "True" && (
+              <button
+                class="btn btn-outline-dark float-right"
+                onClick={handleEditCompClick}
+              >
+                Edit
+              </button>
+            )}
+            <button
+              class="btn btn-dark float-right mr-2"
+              onClick={handleFollowClick}
+            >
+              <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value={csrftoken}
+              />
+              {company.isFollowedByUser ? "Unfollow" : "follow"}
             </button>
+            <h4>Company Profile</h4>
+            <hr />
+            {previewLogo ? (
+              <img
+                class="rounded-circle"
+                src={previewLogo}
+                width="200px"
+                height="200px"
+              />
+            ) : (
+              <img
+                class="rounded-circle"
+                src={company.comp_logo}
+                width="200px"
+                height="200px"
+              />
+            )}
+
+            {isDisabled == "true" ? (
+              <div></div>
+            ) : (
+              <div>
+                <input
+                  type="hidden"
+                  name="csrfmiddlewaretoken"
+                  value={csrftoken}
+                />
+                <input
+                  type="file"
+                  id="comp_logo"
+                  name="comp_logo"
+                  enctype="multipart/form-data"
+                  onChange={handleLogoPreview}
+                />
+              </div>
+            )}
+
+            <form method="post" onSubmit={handleCompanySubmit}>
+              <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                value={csrftoken}
+              />
+              <div class="form-group">
+                <label for="comp_name">Company Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="comp_name"
+                  name="comp_name"
+                  disabled={isDisabled == "true" ? true : false}
+                  placeholder="Company Name"
+                  value={company.comp_name}
+                  onChange={handleCompanyChange}
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="comp_name">Company Thai Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="comp_name_th"
+                  name="comp_name_th"
+                  disabled={isDisabled == "true" ? true : false}
+                  placeholder="Company Thai Name"
+                  value={company.comp_name_th}
+                  onChange={handleCompanyChange}
+                />
+              </div>
+              <div class="form-group">
+                <label for="comp_name">Company Desciption</label>
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="comp_desc"
+                  name="comp_desc"
+                  disabled={isDisabled == "true" ? true : false}
+                  placeholder="Company Desciption"
+                  value={company.comp_desc}
+                  onChange={handleCompanyChange}
+                  onKeyUp={textAreaAdjust}
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="comp_name">Company Contact Info</label>
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="comp_contact_info"
+                  name="comp_contact_info"
+                  disabled={isDisabled == "true" ? true : false}
+                  placeholder="Company Contact Info"
+                  value={company.comp_contact_info}
+                  onChange={handleCompanyChange}
+                  onKeyUp={textAreaAdjust}
+                  required
+                ></textarea>
+              </div>
+              {isDisabled == "false" && (
+                <div>
+                  <input
+                    class="btn btn-primary"
+                    type="submit"
+                    value="Submit"
+                    onClick={handleLogoUpload}
+                  />
+                  <button
+                    class="btn btn-primary"
+                    onClick={handleCancleCompClick}
+                  >
+                    Cancle
+                  </button>
+                </div>
+              )}
+              <Map
+                lat={Number(company.comp_lat)}
+                long={Number(company.comp_long)}
+                disabled={isDisabled}
+              />
+            </form>
+            {posts.map((post) => {
+              return <PostSection post={post} />;
+            })}
           </div>
-        )}
-        <Map
-          lat={Number(company.comp_lat)}
-          long={Number(company.comp_long)}
-          disabled={isDisabled}
-        />
-      </form>
-      {posts.map((post) => {
-        return <PostSection post={post} />;
-      })}
+        </div>
+      </div>
     </div>
   );
 };
