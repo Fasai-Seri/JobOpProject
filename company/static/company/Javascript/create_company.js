@@ -48,7 +48,10 @@ const CreateCompany = () => {
           e.lngLat.lat,
         ]);
 
-        document.getElementById("comp_address").innerHTML = String(
+        document.getElementById("comp_address_dis").innerHTML = String(
+          results.features[0].place_name_en
+        );
+        document.getElementById("comp_address").value = String(
           results.features[0].place_name_en
         );
         document.getElementById("comp_long").value = e.lngLat.lng;
@@ -69,12 +72,13 @@ const CreateCompany = () => {
           <textarea
             type="text"
             class="form-control"
-            id="comp_address"
-            name="comp_address"
-            placeholder="Company Address"
+            id="comp_address_dis"
+            name="comp_address_dis"
+            disabled
             required
           ></textarea>
         </div>
+        <input type="hidden" id="comp_address" name="comp_address" />
         <input type="hidden" id="comp_long" name="comp_long" />
         <input type="hidden" id="comp_lat" name="comp_lat" />
         <div ref={mapContainer} class="position-absolute w-100 h-50" />

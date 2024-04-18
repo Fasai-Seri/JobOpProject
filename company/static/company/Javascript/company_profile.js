@@ -226,7 +226,7 @@ const CompanyProfile = () => {
             e.lngLat.lat,
           ]);
           document.getElementById("info").innerHTML =
-            "Marked Location: " + String(results.features[0].place_name_en);
+            "Marked Location:" + String(results.features[0].place_name_en);
 
           compAdd.current = {
             comp_long: e.lngLat.lng,
@@ -248,8 +248,7 @@ const CompanyProfile = () => {
             class="form-control"
             id="comp_address"
             name="comp_address"
-            disabled={isDisabled == "true" ? true : false}
-            placeholder="Company Address"
+            disabled
             value={company.comp_address}
             required
           ></textarea>
@@ -401,23 +400,23 @@ const CompanyProfile = () => {
                   disabled={isDisabled}
                 />
               </div>
+              {isDisabled == "false" && (
+                <div>
+                  <input
+                    class="btn btn-dark mr-2"
+                    type="submit"
+                    value="Submit"
+                    onClick={handleLogoUpload}
+                  />
+                  <button
+                    class="btn btn-outline-dark"
+                    onClick={handleCancleCompClick}
+                  >
+                    Cancle
+                  </button>
+                </div>
+              )}
             </form>
-            {isDisabled == "false" && (
-              <div>
-                <input
-                  class="btn btn-dark mr-2"
-                  type="submit"
-                  value="Submit"
-                  onClick={handleLogoUpload}
-                />
-                <button
-                  class="btn btn-outline-dark"
-                  onClick={handleCancleCompClick}
-                >
-                  Cancle
-                </button>
-              </div>
-            )}
             {isDisabled == "true" && (
               <div>
                 <h3 class="mt-3">Posts</h3>
