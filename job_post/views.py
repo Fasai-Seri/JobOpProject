@@ -70,7 +70,7 @@ def index(request):
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
            
     return render(request, 'job_post/index.html', {
-        'all_job_posts': all_job_posts.order_by('job_status'),
+        'job_posts_list': all_job_posts.order_by('job_status'),
         'job_type_choices': JobPost.job_type_choices,
         'all_major': Major.objects.all(),
         'job_status_choices': JobPost.job_status_choices,
@@ -88,16 +88,17 @@ def favourite(request):
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/favourite.html', {
-        'all_job_posts': all_job_posts.order_by('job_status'),
+        'job_posts_list': all_job_posts.order_by('job_status'),
+        'search_term': search_term,
         #---------------------------------------------------------
         'job_type_choices': JobPost.job_type_choices,
         'all_major': Major.objects.all(),
         'job_status_choices': JobPost.job_status_choices,
         #---------------------------------------------------------
-        'search_term': search_term
     })
 
 #-------------------------------------------------------------------------------------------
+@login_required 
 def toggle_favorite(request, job_post_id):
     job_post = JobPost.objects.get(pk=job_post_id)
     user = request.user
@@ -122,7 +123,7 @@ def following(request):
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/following.html', {
-        'all_job_posts': all_job_posts.order_by('job_status'),
+        'job_posts_list': all_job_posts.order_by('job_status'),
         'followed_companies': request.user.followed_company.all(),
         'search_term': search_term,
          #---------------------------------------------------------
@@ -146,7 +147,7 @@ def followed_companies(request):
     else:
         all_companies = request.user.followed_company.all()
     return render(request, 'job_post/followed_companies.html', {
-        'all_companies': all_companies.order_by('comp_name'),
+        'companies_list': all_companies.order_by('comp_name'),
         'search_term': search_term
     })
 
@@ -205,7 +206,7 @@ def create_job_post(request):
         
         return render(request, 'job_post/create_job_post.html', {
             'job_type_choices': JobPost.job_type_choices,
-            'all_companies': Company.objects.all(),
+            'companies_list': Company.objects.all(),
             'all_major': Major.objects.all(),
             'is_employer': is_employer(request.user),
         })
@@ -280,13 +281,13 @@ def posted_job_posts(request):
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/posted_job_posts.html', {
-            'all_job_posts': all_job_posts.order_by('job_status'),
+            'job_posts_list': all_job_posts.order_by('job_status'),
+            'search_term': search_term,
             #---------------------------------------------------------
             'job_type_choices': JobPost.job_type_choices,
             'all_major': Major.objects.all(),
             'job_status_choices': JobPost.job_status_choices,
             #---------------------------------------------------------
-            'search_term': search_term
         })
         
     return render(request, 'job_post/posted_job_posts.html', {
@@ -306,7 +307,7 @@ def applied_job_posts(request):
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/applied_job_posts.html', {
-            'all_job_posts': all_job_posts.order_by('job_status'),
+            'job_posts_list': all_job_posts.order_by('job_status'),
             'search_term': search_term
         })
         

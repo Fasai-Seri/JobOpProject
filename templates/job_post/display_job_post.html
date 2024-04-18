@@ -5,23 +5,47 @@
 
     {{ warning }}
 
+    
+
     <div class="container mt-3">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style="padding-left: 5px; padding-right: 5px;">
+                <!--------------------------------------------------------------------------------->
+                    {% if selected_job_post in request.user.favourite_posts.all %}
+                    <div type="button" class="favorite-button" data-job-post-id="{{ selected_job_post.id }}">
+                        <div class="position-absolute" style="top: 16px; right: 20px">
+                            <img src="https://icons.iconarchive.com/icons/designbolts/free-valentine-heart/256/Heart-icon.png" alt="Favorite" style="width: 32px; height: 32px;">
+                        </div>
+                    </div> <!-- favorite -->
+                    {% else %}
+                    <div type="button" class="favorite-button" data-job-post-id="{{ selected_job_post.id }}">
+                        <div class="position-absolute" style="top: 16px; right: 20px">
+                            <img src="https://cdn-icons-png.freepik.com/256/1077/1077035.png" alt="Unfavorite" style="width: 32px; height: 32px;">
+                        </div>
+                    </div><!-- unfavorite -->
+                    {% endif %}
+                <!--------------------------------------------------------------------------------->
+
                 <div class="mb-4 border rounded-lg shadow-sm p-3">
-                    <div class=""><i class="bi bi-6-square-fill"></i><h3>Create Job Post</h3></div>
-                    <hr>
                     {{ selected_job_post }}
                         
+                                                
+                                 
 
+
+
+                    <!---------------------------------------------------------------------------------->
+                        {% if is_student %}
+                            <hr>
+                            <button class="btn btn-success btn-block">Apply Job</button>
+                            <a href="{% url 'job_post:index'  %}" style="text-decoration: none;"><button class="btn btn-info btn-block">Back Home Page</button></a>
+                        {% endif %}
                     <!---------------------------------------------------------------------------------->
                         {% if is_job_post_owner %}
                             <hr>
-                            <a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}">
-                                <button>Edit</button>
-                            </a>
-                            
-                            <button class="show_delete_dialog">Delete</button>
+                            <a href="{% url 'job_post:edit_job_post' selected_job_post.pk %}" style="text-decoration: none;"><button class="btn btn-info btn-block">Edit</button></a>
+
+                            <div class="show_delete_dialog"><button class="btn btn-danger mt-2 btn-block">Delete</button></div>
                     
                             <dialog style="border-radius: 10px;">
                                 <header>
@@ -44,23 +68,26 @@
         </div>
     </div>
 
+    {% if is_job_post_owner %}
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12">
                 <div class="mb-4 border rounded-lg shadow-sm p-3">
-                    <div class=""><i class="bi bi-6-square-fill"></i><h3>Create Job Post</h3></div>
+                    <div class=""><i class="bi bi-6-square-fill"></i><h3>Applicants List</h3></div>
                     <hr>
-                    {% if is_job_post_owner %}
+                   
                         {{ all_applicants }}
 
                         <hr>
-                        <p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" download>Download Applicants List (PDF)</a></p>
-                    {% endif %}
+                        <p><a href="{% url 'job_post:generate_pdf' selected_job_post.pk %}" style="text-decoration: none;" download>
+                            <button class="btn btn-success btn-block">Download Applicants List (PDF)</button></a></p>
+                    
                         
                 </div>
             </div>
         </div>
     </div>
+    {% endif %}
 
 {% endblock %}
 
@@ -86,4 +113,5 @@
         }
     })
 </script>
+
 {% endblock %}

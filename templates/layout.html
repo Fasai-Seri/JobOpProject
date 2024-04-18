@@ -247,11 +247,19 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const favoriteButtons = document.querySelectorAll(".favorite-button");
+   <!------------- fav / unfav ------------------------------------------------------------------------->
+   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const favoriteButtons = document.querySelectorAll('.favorite-button');
 
         favoriteButtons.forEach((button) => {
           button.addEventListener("click", () => {
             const jobId = button.dataset.jobPostId;
             const isFavorite = button.classList.contains("favorite");
+      favoriteButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              const jobId = button.dataset.jobPostId;
+              const isFavorite = button.classList.contains('favorite');
 
             // request POST to add/delete status "favorite"
             fetch(`/toggle_favorite/${jobId}/`, {
@@ -272,8 +280,27 @@
               });
           });
         });
+              // request POST 
+              fetch(`/toggle_favorite/${jobId}/`, {
+                  method: 'POST',
+                  headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.is_favorite) {
+                      button.innerHTML = '<div class="position-absolute" style="top: 16px; right: 20px"><img src="https://icons.iconarchive.com/icons/designbolts/free-valentine-heart/256/Heart-icon.png" alt="Favorite" style="width: 32px; height: 32px;"></div>';
+                      button.classList.add('favorite');
+                  } else {
+                      button.innerHTML = '<div class="position-absolute" style="top: 16px; right: 20px"><img src="https://cdn-icons-png.freepik.com/256/1077/1077035.png" alt="Unfavorite" style="width: 32px; height: 32px;"></div>';
+                      button.classList.remove('favorite');
+                  }
+              });
+          });
+      });
       });
     </script>
     <!---------------------------------------------------------------------------------------------->
+  </script>
+    
   </body>
 </html>
