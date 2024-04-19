@@ -5,6 +5,7 @@ const ProfilePanel = () => {
   const [previewPhoto, setPreviewPhoto] = React.useState("");
   const [previewResume, setPreviewResume] = React.useState("");
   const [companies, setCompanies] = React.useState([]);
+  const [isNewEmp, setIsNewEmp] = React.useState(false)
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
   const current_user_id = parseInt(data.currentUserId, 10);
@@ -22,7 +23,9 @@ const ProfilePanel = () => {
       .then((response) => response.json())
       .then((user) => {
         setUser(user);
-        console.log(user);
+        if (user.comp == '') {
+          setIsNewEmp(true)
+        }
       });
   }
   console.log(user);
@@ -598,7 +601,7 @@ const ProfilePanel = () => {
                       id="comp"
                       name="comp"
                       disabled={
-                        user.comp ? true : isDisabled == "true" ? true : false
+                        isDisabled == "true" ? true : isNewEmp ? false : true
                       }
                       required
                     >

@@ -78,11 +78,14 @@
 
                         <hr>
                         <h5 class="job_title card-title">Description:</h5>
-                            {{ selected_job_post.job_desc_text }}
+                            <textarea style="width: 100%; height: 200px;" disabled>{{ selected_job_post.job_desc_text }}</textarea>
+                           
+                                
+                            
 
                         <hr>
                         <h5 class="job_title card-title">Requirements:</h5>
-                            {{ selected_job_post.job_requirement_text }}
+                        <textarea style="width: 100%; height: 300px;" disabled>{{ selected_job_post.job_requirement_text }}</textarea>
 
                         
                         {% if selected_job_post.job_info_file %}
@@ -123,6 +126,7 @@
                  
                     <!----------------- apply btn ---------------------------------------------------------------->
                      {% if is_student %}
+                        {% if selected_job_post.get_job_status_display == 'Active' %}
                          <hr>
                          {% if is_student in all_applicants %}
                              <div type="button" class="apply-button" data-job-post-id="{{ selected_job_post.id }}">
@@ -132,6 +136,7 @@
                              <div type="button" class="apply-button" data-job-post-id="{{ selected_job_post.id }}">
                                  <button type="submit" class="btn btn-success btn-block">Apply This Job</button>
                              </div><!-- un apply -->
+                         {% endif %}
                          {% endif %}
                          
                          <a href="{% url 'job_post:index'  %}" style="text-decoration: none;">
