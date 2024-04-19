@@ -120,7 +120,7 @@ def create_company_page(request):
             company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_logo = logo, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat ,comp_contact_info=comp_contact_info)
         else:
             company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat,comp_contact_info=comp_contact_info)
-            url = reverse('company:comp_info', kwargs={'comp_id': company.id})
+        url = reverse('company:comp_info', kwargs={'comp_id': company.id})
         return HttpResponseRedirect(url)
     else:
         return render(request, 'company/create_company.html')
