@@ -1,0 +1,5 @@
+Django==4.2.9
+pypdf==4.2.0
+reportlab==4.1.0
+pytz==2022.7.1
+APScheduler==3.10.4
