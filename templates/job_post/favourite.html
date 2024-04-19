@@ -71,7 +71,7 @@
                                 <!--  company logo. -->
                                 <div class="col-md-2">
                                     <div class="d-flex align-items-center justify-content-center">
-                                        <img src="{{ job_post.company.comp_logo }}" class="com-logo-card"/>
+                                        <img src="{{ job_post.company.comp_logo.url }}" class="com-logo-card"/>
                                     </div>
                                 </div>
                                 <!--  company logo. -->
@@ -79,9 +79,11 @@
                                 <div class="col-md-10">
                                     <div class="card-body">
                                         <h5 class="job_title card-title">{{ job_post.job_title }}</h5>
-                                        <a href="{% url 'company:comp_info' comp_id=job_post.company.id %}">
-                                        <h6 class="company card-subtitle mb-3 text-muted">{{ job_post.company }}</h6>
-                                        </a>
+
+                                        <h6 class="company card-subtitle mb-3 text-muted">
+                                            <a href="{% url 'company:comp_info' comp_id=job_post.company.id %}" style="color: gray;">{{ job_post.company }}</a>
+                                        </h6>
+
                                         <div class="job_type card-text">{{ job_post.get_job_type_display }}</div>
                                         
                                         {% for major in job_post.job_major.all %}

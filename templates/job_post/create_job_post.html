@@ -3,13 +3,13 @@
 
 {% block body %}
 
-    <p>{{ fill_company }}</p>
-
     {% if warning %}
     <div class="p-3 mb-2 bg-danger text-white" style="text-align: center;"><h4>{{ warning }}</h4></div>
     <a class="nav-link ml-3" href="{% url 'job_post:index' %}">
     <div style="text-align: center;"><button class="btn btn-warning mt-3">BACK TO ALL POSTS</button></div>  
     </a>
+
+    <p>{{ fill_company }}</p>
 
     {% else %}
         <div class="container mt-3">
