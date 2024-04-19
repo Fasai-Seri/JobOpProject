@@ -98,14 +98,13 @@
                         <hr>
                         <!-- posted by -->
                         <h6 class="job_title card-title">Posted by 
-                            {% if poster_emp %}
-                                {{ selected_job_post.poster_emp.user.fname }} {{ selected_job_post.poster_emp.user.lname }}
-                                <p style="color: gray;">({{ selected_job_post.poster_emp }})</p>
-                            {% else %}
-                                {{ selected_job_post.poster_prof.user.fname  }} {{ selected_job_post.poster_prof.user.lname  }}
-                                <p style="color: gray;">({{ selected_job_post.poster_prof }})</p>
-                            {% endif %}
+                            
+
                         </h6>
+
+                        <h5>
+                            
+
 
                     </div>
 
@@ -186,7 +185,8 @@
                         
                         {% for applicant in all_applicants %}
                             <div class="card mb-3 bg-light">
-                                <h5 class="card-header bg-dark" style="color: white;">{{ applicant.user.fname }} {{ applicant.user.lname }}</h5>
+                                <h5 class="card-header bg-dark"><a href="{% url 'user_profiles:index' user_id=applicant.user.id %}"  style="color: white;">
+                                    {{ applicant.user.fname }} {{ applicant.user.lname }}</a></h5>
                                 <div class="card-body">
                                   <p class="card-text">Major: {{ applicant.major }}</p>
                                   <p class="card-text">Phone: {{ applicant.user.phone }}</p>
