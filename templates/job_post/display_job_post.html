@@ -98,8 +98,15 @@
                         <hr>
                         <!-- posted by -->
                         <h6 class="job_title card-title">Posted by 
-                            
-
+                            {% if selected_job_post.poster_emp %}
+                                <a href="{% url 'user_profiles:index' user_id=selected_job_post.poster_emp.user.id %}" style="color: black;">
+                                    {{ selected_job_post.poster_emp.user.fname }} {{ selected_job_post.poster_emp.user.lname }}</a>
+                                <p style="color: gray;">({{ selected_job_post.company.comp_name }} - {{ selected_job_post.poster_emp.emp_position }})</p>
+                            {% else %}
+                                <a href="{% url 'user_profiles:index' user_id=selected_job_post.poster_prof.user.id %}" style="color: black;">
+                                    {{ selected_job_post.poster_prof.user.fname  }} {{ selected_job_post.poster_prof.user.lname  }}</a>
+                                <p style="color: gray;">(Professor) </p>
+                            {% endif %}
                         </h6>
 
                         <h5>
