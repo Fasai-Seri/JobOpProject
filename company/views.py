@@ -115,11 +115,11 @@ def create_company_page(request):
         comp_lat = request.POST.get('comp_lat')
         comp_contact_info = request.POST.get('comp_contact_info')
         print(comp_address, comp_long, comp_lat)
+        company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat,comp_contact_info=comp_contact_info)
         if logo :
             logo.name = comp_name.replace(' ', '_') + '.png'
-            company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_logo = logo, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat ,comp_contact_info=comp_contact_info)
-        else:
-            company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat,comp_contact_info=comp_contact_info)
+            company.comp_logo = logo
+            company.save()
         url = reverse('company:comp_info', kwargs={'comp_id': company.id})
         return HttpResponseRedirect(url)
     else:
