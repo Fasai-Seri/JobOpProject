@@ -112,7 +112,7 @@ const CreateCompany = () => {
             ) : (
               <img
                 class="rounded-circle"
-                src="media\company\Images\default.jpg"
+                src="media\company\Images\default.png"
                 width="200"
                 height="200"
               />

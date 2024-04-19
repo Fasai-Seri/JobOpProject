@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('comp_name', models.CharField(max_length=100, null=True)),
                 ('comp_desc', models.CharField(max_length=1000, null=True)),
-                ('comp_logo', models.ImageField(default='ompany/Images/default.jpg', null=True, upload_to='company/Images')),
+                ('comp_logo', models.ImageField(default='ompany/Images/default.png', null=True, upload_to='company/Images')),
                 ('comp_long', models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True)),
                 ('comp_lat', models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True)),
             ],
