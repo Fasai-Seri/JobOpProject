@@ -46,7 +46,10 @@ const CompanyList = () => {
             </div>
             <div class="card-body">
               <h5 class="job_title card-title">
-                <a href={comp_href + "/" + props.comp.comp_id}>
+                <a
+                  href={comp_href + "/" + props.comp.comp_id}
+                  class="text-dark"
+                >
                   {props.comp.comp_name}
                 </a>
               </h5>

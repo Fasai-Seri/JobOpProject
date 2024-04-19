@@ -208,7 +208,7 @@ const ProfilePanel = () => {
                 <div>
                   <input
                     type="button"
-                    class="btn btn-dark mr-2 mt-2"
+                    class="btn btn-dark mr-2 mt-2 mb-2"
                     onClick={() => handleButtonClick(file.student_portfolio)}
                     value={file_name}
                   />
@@ -242,7 +242,7 @@ const ProfilePanel = () => {
               return (
                 <input
                   type="button"
-                  class="btn btn-dark mr-2"
+                  class="btn btn-dark mr-2 mt-2 mb-2"
                   onClick={() => handleButtonClick(file.student_portfolio)}
                   value={file_name}
                 />
@@ -378,7 +378,7 @@ const ProfilePanel = () => {
                   />
                   <label
                     class="custom-file-label photo"
-                    for="portfolio"
+                    for="profile_photo"
                     id="file_label"
                   >
                     Choose Profile Image

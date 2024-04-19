@@ -290,6 +290,13 @@ const CompanyProfile = () => {
     e.target.style.height = e.target.scrollHeight + "px";
   }
 
+  $(".custom-file-input, .logo").on("change", function () {
+    console.log("triggered");
+    const file = $(this).val();
+    const fileName = file.split("\\")[file.split("\\").length - 1];
+    $(this).next(".custom-file-label, .logo").html(fileName);
+  });
+
   return (
     <div class="container mt-3">
       <div class="row justify-content-center">
@@ -344,13 +351,22 @@ const CompanyProfile = () => {
                   name="csrfmiddlewaretoken"
                   value={csrftoken}
                 />
-                <input
-                  type="file"
-                  id="comp_logo"
-                  name="comp_logo"
-                  enctype="multipart/form-data"
-                  onChange={handleLogoPreview}
-                />
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input logo"
+                    id="comp_logo"
+                    name="comp_logo"
+                    onChange={handleLogoPreview}
+                  />
+                  <label
+                    class="custom-file-label logo"
+                    for="comp_logo"
+                    id="file_label"
+                  >
+                    Choose file
+                  </label>
+                </div>
               </div>
             )}
 
@@ -422,7 +438,7 @@ const CompanyProfile = () => {
               </div>
 
               <div
-                style={{ height: isDisabled == "true" ? "1600px" : "1100px" }}
+                style={{ height: isDisabled == "true" ? "1600px" : "1400px" }}
               >
                 <Map
                   lat={Number(company.comp_lat)}

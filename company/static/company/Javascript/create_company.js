@@ -88,6 +88,13 @@ const CreateCompany = () => {
     );
   }
 
+  $(".custom-file-input, .logo").on("change", function () {
+    console.log("triggered");
+    const file = $(this).val();
+    const fileName = file.split("\\")[file.split("\\").length - 1];
+    $(this).next(".custom-file-label, .logo").html(fileName);
+  });
+
   return (
     <div class="container mt-3">
       <div class="row justify-content-center">
@@ -116,15 +123,23 @@ const CreateCompany = () => {
                 name="csrfmiddlewaretoken"
                 value={csrftoken}
               />
-              <div>
+              <div class="custom-file">
                 <input
                   type="file"
-                  class="form-control-file"
+                  class="custom-file-input logo"
                   id="comp_logo"
                   name="comp_logo"
                   onChange={handlePreviewLogo}
                 />
+                <label
+                  class="custom-file-label logo"
+                  for="comp_logo"
+                  id="file_label"
+                >
+                  Choose file
+                </label>
               </div>
+
               <div class="form-group">
                 <b>Company Name: </b>
                 <input class="form-control" name="comp_name" required />
