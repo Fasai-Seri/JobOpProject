@@ -13,7 +13,10 @@ from io import BytesIO
 import datetime
 import json
 
+from django.contrib import messages
+
 from .models import *
+
 # Create your views here.
 
 def is_student(user):
@@ -98,7 +101,7 @@ def favourite(request):
     })
 
 #-------------------------------------------------------------------------------------------
-@login_required 
+@login_required
 def toggle_favorite(request, job_post_id):
     job_post = JobPost.objects.get(pk=job_post_id)
     user = request.user
@@ -110,7 +113,24 @@ def toggle_favorite(request, job_post_id):
         is_favorite = True
     return JsonResponse({'is_favorite': is_favorite})
 #-------------------------------------------------------------------------------------------
+@login_required
+def apply_job(request, job_post_id):
+    if is_student(request.user):
+        selected_job_post = JobPost.objects.get(pk=job_post_id)
+        student = request.user.student_user_id.get()
+        if selected_job_post not in student.applied_job_posts.all():
+            student.applied_job_posts.add(selected_job_post)
+            is_apply = True
+            messages.success(request, "Successfully applied for the job.")
+        else:
+            student.applied_job_posts.remove(selected_job_post)
+            is_apply = False
+            messages.warning(request, "You have already applied for this job.")
+    else:
+        messages.error(request, "Only students can apply for jobs.")
+    return JsonResponse({'is_apply': is_apply})
 
+#-------------------------------------------------------------------------------------------
 
 @login_required      
 def following(request):
@@ -126,7 +146,7 @@ def following(request):
         'job_posts_list': all_job_posts.order_by('job_status'),
         'followed_companies': request.user.followed_company.all(),
         'search_term': search_term,
-         #---------------------------------------------------------
+        #---------------------------------------------------------
         'job_type_choices': JobPost.job_type_choices,
         'all_major': Major.objects.all(),
         'job_status_choices': JobPost.job_status_choices,
@@ -290,7 +310,12 @@ def applied_job_posts(request):
             
         return render(request, 'job_post/applied_job_posts.html', {
             'job_posts_list': all_job_posts.order_by('job_status'),
-            'search_term': search_term
+            'search_term': search_term,
+            #---------------------------------------------------------
+            'job_type_choices': JobPost.job_type_choices,
+            'all_major': Major.objects.all(),
+            'job_status_choices': JobPost.job_status_choices,
+            #---------------------------------------------------------
         })
         
     return render(request, 'job_post/applied_job_posts.html', {

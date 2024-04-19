@@ -40,8 +40,29 @@
 }
 /* ------------------------------------------------------------------------- */
 /* upload file create post */
-
 .maplibregl-canvas {
   width: 400px;
 }
 /* ------------------------------------------------------------------------- */
+/* warnning page */
+.btn-warning.mt-3 {
+  color: black;
+  font-size: 25px; 
+  padding: 10px 20px;
+  width: 20%;
+} 
+/* ------------------------------------------------------------------------- */
+/* Company logo in card */
+.com-logo-card {
+  height: 50px;
+}
+
+/* Company logo in display page */
+.com-logo-display {
+  height: 80px;
+}
+
+/* Show Apply */
+.show_applied {
+  border-radius: 5px; 
+}

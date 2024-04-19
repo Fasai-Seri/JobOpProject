@@ -4,7 +4,12 @@
 {% block body %}
 
     {% if warning %}
-    {{ warning }}
+    <div class="p-3 mb-2 bg-danger text-white" style="text-align: center;"><h4>{{ warning }}</h4></div>
+    <a class="nav-link ml-3" href="{% url 'job_post:index' %}">
+    <div style="text-align: center;"><button class="btn btn-warning mt-3">BACK TO ALL POSTS</button></div>  
+    </a>
+
+    <p>{{ fill_company }}</p>
 
     {% else %}
         <div class="container mt-3">
@@ -37,7 +42,7 @@
                                     <input type="text" id="company" class="form-control" name="company_name" value="{{ request.user.emp_user_id.get.comp.comp_name }}" readonly required>
                                     <input type="hidden" name="company" value="{{ request.user.emp_user_id.get.comp.pk }}">
                                 {% else %}
-                                    <select id="company" name="company" class="form-control form-control dropdown_with_search" required>
+                                    <select id="company" name="company" class="form-control dropdown_with_search" required>
                                         <option value=""></option>
                                         {% for company in all_companies %}
                                         <option value="{{ company.pk }}">{{ company.comp_name }}</option>
