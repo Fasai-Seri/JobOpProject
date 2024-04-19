@@ -14,10 +14,10 @@
 }
 
 .navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
 }
 /* ------------------------------------------------------------------------- */
 /* show active */
@@ -47,22 +47,22 @@
 /* warnning page */
 .btn-warning.mt-3 {
   color: black;
-  font-size: 25px; 
+  font-size: 25px;
   padding: 10px 20px;
   width: 20%;
-} 
+}
 /* ------------------------------------------------------------------------- */
 /* Company logo in card */
 .com-logo-card {
-  height: 50px;
+  height: 100px;
 }
 
 /* Company logo in display page */
 .com-logo-display {
-  height: 80px;
+  height: 100px;
 }
 
 /* Show Apply */
 .show_applied {
-  border-radius: 5px; 
+  border-radius: 5px;
 }
