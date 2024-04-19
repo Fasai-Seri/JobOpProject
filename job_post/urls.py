@@ -8,7 +8,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("favourite", views.favourite, name="favourite"),
     path("following", views.following, name="following"),
-    path("followed_companies", views.followed_companies, name="followed_companies"),
     path("posted_job_posts", views.posted_job_posts, name="posted_job_posts"),
     path("applied_job_posts", views.applied_job_posts, name="applied_job_posts"),
     path("job_post/create", views.create_job_post, name="create_job_post"),
