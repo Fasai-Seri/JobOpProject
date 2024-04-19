@@ -1,5 +1,4 @@
 import json
-import time
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -10,7 +9,7 @@ from company.models import *
 from user_profiles.models import *
 from job_post.models import *
 from django.db.models import Q
-from datetime import datetime
+from job_post.views import toggle_favorite
 
 # Create your views here.
 @login_required(login_url='/user_profiles/')
@@ -59,7 +58,12 @@ def get_company(request, comp_id):
 
 @login_required(login_url='/user_profiles/')
 def get_company_job_posts(request, comp_id):
-    return JsonResponse([post.serialize() for post in JobPost.objects.filter(company__id = comp_id)], safe=False)
+    jobpost_list = []
+    for post in JobPost.objects.filter(company__id = comp_id):
+        jobpost = post.serialize()
+        jobpost.update({'isFavorite': post in request.user.favourite_posts.all()})
+        jobpost_list.append(jobpost)
+    return JsonResponse(jobpost_list, safe=False)
 
 @login_required(login_url='/user_profiles/')
 def get_all_company(request):
@@ -111,12 +115,12 @@ def create_company_page(request):
         comp_lat = request.POST.get('comp_lat')
         comp_contact_info = request.POST.get('comp_contact_info')
         print(comp_address, comp_long, comp_lat)
+        company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat,comp_contact_info=comp_contact_info)
         if logo :
             logo.name = comp_name.replace(' ', '_') + '.png'
-            company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_logo = logo, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat ,comp_contact_info=comp_contact_info)
-        else:
-            company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat,comp_contact_info=comp_contact_info)
-            url = reverse('company:comp_info', kwargs={'comp_id': company.id})
+            company.comp_logo = logo
+            company.save()
+        url = reverse('company:comp_info', kwargs={'comp_id': company.id})
         return HttpResponseRedirect(url)
     else:
         return render(request, 'company/create_company.html')
@@ -131,3 +135,8 @@ def follow_company(request, comp_id):
     else:
         user.followed_company.add(comp)
     return HttpResponseRedirect(url)
+
+@login_required(login_url='/user_profiles/')
+def favorite(request, post_id):
+    toggle_favorite(request, post_id)
+    return HttpResponse('Fav Triggered')

@@ -68,7 +68,9 @@ const CreateCompany = () => {
     return (
       <div>
         <div class="form-group">
-          <label for="comp_name">Company Address</label>
+          <label for="comp_name">
+            <b>Company Address</b>
+          </label>
           <textarea
             type="text"
             class="form-control"
@@ -85,6 +87,13 @@ const CreateCompany = () => {
       </div>
     );
   }
+
+  $(".custom-file-input, .logo").on("change", function () {
+    console.log("triggered");
+    const file = $(this).val();
+    const fileName = file.split("\\")[file.split("\\").length - 1];
+    $(this).next(".custom-file-label, .logo").html(fileName);
+  });
 
   return (
     <div class="container mt-3">
@@ -114,30 +123,38 @@ const CreateCompany = () => {
                 name="csrfmiddlewaretoken"
                 value={csrftoken}
               />
-              <div>
+              <div class="custom-file">
                 <input
                   type="file"
-                  class="form-control-file"
+                  class="custom-file-input logo"
                   id="comp_logo"
                   name="comp_logo"
                   onChange={handlePreviewLogo}
                 />
+                <label
+                  class="custom-file-label logo"
+                  for="comp_logo"
+                  id="file_label"
+                >
+                  Choose file
+                </label>
               </div>
+
               <div class="form-group">
-                Company Name:{" "}
+                <b>Company Name: </b>
                 <input class="form-control" name="comp_name" required />
               </div>
               <div class="form-group">
-                Company Thai Name:{" "}
+                <b>Company Thai Name: </b>
                 <input class="form-control" name="comp_name_th" />
               </div>
               <div class="form-group">
-                Company Description:{" "}
+                <b>Company Description: </b>
                 <textarea class="form-control" name="comp_desc"></textarea>
               </div>
 
               <div class="form-group">
-                Company Contact Info:{" "}
+                <b>Company Contact Info: </b>
                 <textarea
                   class="form-control"
                   name="comp_contact_info"

@@ -1,16 +1,26 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator
 from django.core.validators import RegexValidator
+from .storage import OverwriteStorage
+from django.utils.deconstruct import deconstructible
 from django.db import models
 from company.models import Company
+import os
 
 # Create your models here.
-
+@deconstructible
+class PathRename(object):
+    def __init__(self, sub_path):
+        self.path = sub_path
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        filename = f'{instance.id}_{instance}.{ext}'
+        return os.path.join(self.path, filename)
 class User(AbstractUser):
     fname = models.CharField(max_length=100, null=True, validators=[RegexValidator(regex=r'[\w]{3,}',message="First name must be more than 3 characters",code="invalid_firstname")])
     lname = models.CharField(max_length=100, null=True, validators=[RegexValidator(regex=r'[\w]{3,}',message="Last name must be more than 3 characters",code="invalid_lastname")])
     phone = models.CharField(validators=[MinLengthValidator(10, message='Invalid Phone Number')], max_length=10, null=True)
-    user_photo = models.ImageField(upload_to='user_profiles/Images', null=True, blank=True)
+    user_photo = models.ImageField(upload_to=PathRename('user_profiles/Images'), storage=OverwriteStorage(), null=True, blank=True)
     followed_company = models.ManyToManyField(Company, related_name="following_user", blank=True)
     
     def serialize(self):
@@ -87,7 +97,7 @@ class Employer(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='student_user_id', null=True)
     major = models.ForeignKey(Major, on_delete=models.PROTECT, related_name='student_major_id', null=True)
-    student_resume = models.FileField(upload_to='user_profiles/Files', null=True, blank=True)
+    student_resume = models.FileField(upload_to=PathRename('user_profiles/Files'), storage=OverwriteStorage(), null=True, blank=True)
     
     def serialize(self):
         if self.student_resume:

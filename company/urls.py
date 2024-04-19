@@ -16,6 +16,7 @@ urlpatterns = [
     path('update_company/<int:comp_id>', views.update_company, name='update_company'),
     path('update_comp_logo/<int:comp_id>', views.update_comp_logo, name='update_comp_logo'),
     path('follow_company/<int:comp_id>', views.follow_company, name='follow_company'),
+    path('favorite/<int:post_id>', views.favorite, name='favorite'),
 
 ]
 

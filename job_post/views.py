@@ -153,24 +153,6 @@ def following(request):
         #---------------------------------------------------------
     })
 
-@login_required      
-def followed_companies(request):
-    
-    search_term = ''
-    
-    if request.GET.get('search_term'):
-        search_term = request.GET.get('search_term')
-        all_companies = request.user.followed_company.all().filter(
-            Q(comp_name__icontains=search_term) |
-            Q(comp_desc__icontains=search_term) 
-            )
-    else:
-        all_companies = request.user.followed_company.all()
-    return render(request, 'job_post/followed_companies.html', {
-        'companies_list': all_companies.order_by('comp_name'),
-        'search_term': search_term
-    })
-
 @login_required  
 def create_job_post(request):
     

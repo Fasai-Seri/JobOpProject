@@ -1,11 +1,24 @@
 from django.db import models
+from .storage import OverwriteStorage
+from django.utils.deconstruct import deconstructible
+import os
 
 # Create your models here.
+
+@deconstructible
+class PathRename(object):
+    def __init__(self, sub_path):
+        self.path = sub_path
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        filename = f'{instance.id}_{instance}.{ext}'
+        return os.path.join(self.path, filename)
+    
 class Company(models.Model):
     comp_name = models.CharField(max_length=100, null=True)
     comp_name_th = models.CharField(max_length=100, null=True, blank=True)
     comp_desc = models.CharField(max_length=1000, null=True)
-    comp_logo = models.ImageField(upload_to='company/Images', default='company/Images/default.jpg', null=True)
+    comp_logo = models.ImageField(upload_to=PathRename('company/Images'), storage=OverwriteStorage(), default='company/Images/default.jpg', null=True)
     comp_address = models.CharField(max_length=1000, null=True)
     comp_long = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     comp_lat  = models.DecimalField(max_digits=9, decimal_places=6, null=True)
