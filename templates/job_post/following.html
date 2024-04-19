@@ -68,19 +68,14 @@
                         {% for job_post in job_posts_list %}
                             <div class="job_post_div card mb-3">
                                 <div class="row no-gutters align-items-center">
-                                    <!-- Need to change, link with company photo. Hard code for now -->
+                                    
+                                    <!--  company logo. -->
                                     <div class="col-md-2">
                                         <div class="d-flex align-items-center justify-content-center">
-                                            {% if job_post.company|slugify == 'agoda' %}
-                                            <img src="{% static 'job_post/media/agoda.jpeg' %}" height="50px" />
-                                            {% elif job_post.company|slugify == 'ey' %}
-                                            <img src="{% static 'job_post/media/ey.png' %}" height="50px" />
-                                            {% elif job_post.company|slugify == 'facebook' %}
-                                            <img src="{% static 'job_post/media/facebook.jpg' %}" height="50px" />
-                                            {% endif %}
+                                            <img src="{{ job_post.company.comp_logo }}" class="com-logo-card"/>
                                         </div>
                                     </div>
-                                    <!-- Need to change, link with company photo. Hard code for now -->
+                                    <!--  company logo. -->
 
                                     <div class="col-md-10">
                                         <div class="card-body">

@@ -5,9 +5,14 @@
 
     <div class="container mt-3">
         <div class="row">
-            <div class="col-md-12" style="padding-left: 5px; padding-right: 5px;">
+            <div class="col-md-12" style="padding-left: 5px; padding-right: 5px; padding-top: 5px;">
                 <div class="mb-4 border rounded-lg shadow-sm p-3">
-                    {{ selected_job_post }}
+                    {% for applicant in all_applicants %}
+                        {{ applicant.user.fname }}
+                        {{ applicant.user.lname }}
+                        {{ applicant.major }}
+                    {% endfor %}
+                        
                     
                     <!-------------- fav / unfav ------------------------------------------------------------------->
                         {% if selected_job_post in request.user.favourite_posts.all %}

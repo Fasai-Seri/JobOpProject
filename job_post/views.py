@@ -16,6 +16,7 @@ import json
 from django.contrib import messages
 
 from .models import *
+
 # Create your views here.
 
 def is_student(user):
@@ -130,19 +131,6 @@ def apply_job(request, job_post_id):
     return JsonResponse({'is_apply': is_apply})
 
 #-------------------------------------------------------------------------------------------
-@login_required
-def apply_job3(request, job_post_id):
-    if is_student(request.user):
-        selected_job_post = JobPost.objects.get(pk=job_post_id)
-        student = request.user.student_user_id.get()
-        if selected_job_post not in student.applied_job_posts.all():
-            student.applied_job_posts.add(selected_job_post)
-            messages.success(request, "Successfully applied for the job.")
-        else:
-            messages.warning(request, "You have already applied for this job.")
-    else:
-        messages.error(request, "Only students can apply for jobs.")
-    return HttpResponseRedirect(reverse('job_post:display_job_post', args=(job_post_id,)))
 
 @login_required      
 def following(request):
@@ -238,7 +226,7 @@ def create_job_post(request):
         
         return render(request, 'job_post/create_job_post.html', {
             'job_type_choices': JobPost.job_type_choices,
-            'companies_list': Company.objects.all(),
+            'all_companies': Company.objects.all(),
             'all_major': Major.objects.all(),
             'is_employer': is_employer(request.user),
         })
