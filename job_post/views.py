@@ -73,7 +73,7 @@ def index(request):
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
            
     return render(request, 'job_post/index.html', {
-        'job_posts_list': all_job_posts.order_by('job_status'),
+        'job_posts_list': all_job_posts.order_by('job_status', '-pk'),
         'job_type_choices': JobPost.job_type_choices,
         'all_major': Major.objects.all(),
         'job_status_choices': JobPost.job_status_choices,
@@ -91,7 +91,7 @@ def favourite(request):
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/favourite.html', {
-        'job_posts_list': all_job_posts.order_by('job_status'),
+        'job_posts_list': all_job_posts.order_by('job_status', '-pk'),
         'search_term': search_term,
         #---------------------------------------------------------
         'job_type_choices': JobPost.job_type_choices,
@@ -143,7 +143,7 @@ def following(request):
         all_job_posts = job_post_with_search_term(all_job_posts, search_term)
         
     return render(request, 'job_post/following.html', {
-        'job_posts_list': all_job_posts.order_by('job_status'),
+        'job_posts_list': all_job_posts.order_by('job_status', '-pk'),
         'followed_companies': request.user.followed_company.all(),
         'search_term': search_term,
         #---------------------------------------------------------
@@ -283,7 +283,7 @@ def posted_job_posts(request):
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/posted_job_posts.html', {
-            'job_posts_list': all_job_posts.order_by('job_status'),
+            'job_posts_list': all_job_posts.order_by('job_status', '-pk'),
             'search_term': search_term,
             #---------------------------------------------------------
             'job_type_choices': JobPost.job_type_choices,
@@ -309,7 +309,7 @@ def applied_job_posts(request):
             all_job_posts = job_post_with_search_term(all_job_posts, search_term)
             
         return render(request, 'job_post/applied_job_posts.html', {
-            'job_posts_list': all_job_posts.order_by('job_status'),
+            'job_posts_list': all_job_posts.order_by('job_status', '-pk'),
             'search_term': search_term,
             #---------------------------------------------------------
             'job_type_choices': JobPost.job_type_choices,
@@ -395,10 +395,6 @@ def update_job_post(request, job_post_id):
             data = json.loads(request.body)
             if data.get("delete") is not None:
                 selected_job_post.delete()
-            # if data.get("archived") is not None:
-            #     selected_job_post.archived = data["archived"]
-            # selected_job_post.save()
-                pass
             return HttpResponse(status=204)
         return JsonResponse({
             "error": "You don't have permission to edit the job post"
