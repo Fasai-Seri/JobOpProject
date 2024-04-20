@@ -130,8 +130,6 @@ def get_user(request, user_id):
     if Student.objects.filter(user__id = user_id).exists():
         student = Student.objects.get(user__id = user_id).serialize()
         user.update(student)
-        # print(Student.objects.get(user__id = user_id).id)
-        # print(Portfolio.objects.filter(student_id = Student.objects.get(user__id = user_id).id))
         if Portfolio.objects.filter(student = Student.objects.get(user__id = user_id)).exists():
             file_list = []
             for file in Portfolio.objects.filter(student = Student.objects.get(user__id = user_id)):
@@ -157,39 +155,27 @@ def get_major(request):
 def update_user(request):
     url = reverse("user_profiles:index", kwargs={'user_id': request.user.id})
     if request.method == 'POST':
-        data = json.loads(request.body)
-        user = UserForm(data, instance=User.objects.get(pk=request.user.id))
-
+        user = UserForm(request.POST, request.FILES, instance=User.objects.get(pk=request.user.id))
+        
         if Student.objects.filter(user__id = request.user.id).exists():
             Student.objects.filter(user__id = request.user.id).update(
-                major = data.get('major', '')
+                major = request.POST.get('major', '')
             )
         elif Professor.objects.filter(user__id = request.user.id).exists():
             Professor.objects.filter(user__id = request.user.id).update(
-                major = data.get('major', '')
+                major = request.POST.get('major', '')
             )
 
         elif Employer.objects.filter(user__id = request.user.id).exists():
             Employer.objects.filter(user__id = request.user.id).update(
-                comp= data.get('comp', ''),
-                emp_position= data.get('emp_position', '')
+                comp= request.POST.get('comp', ''),
+                emp_position= request.POST.get('emp_position', '')
             )
-
         if user.is_valid():
             user.save()
         return HttpResponseRedirect(url)
     else:
         return HttpResponseRedirect(url) 
-
-@csrf_exempt
-@login_required(login_url='/user_profiles/')
-def update_user_photo(request):
-    if request.method == 'POST':
-        photo = request.FILES.get('user_photo')
-        user=request.user
-        user.user_photo = photo
-        user.save()
-        return HttpResponse('Upload Photo Succesful')
     
 @csrf_exempt
 @login_required(login_url='/user_profiles/')
@@ -197,7 +183,6 @@ def update_user_photo(request):
 def update_student_resume(request):
     if request.method == 'POST':
         resume = request.FILES.get('student_resume')
-        # print(resume)
         student = Student.objects.get(user__id = request.user.id)
         student.student_resume = resume
         student.save()

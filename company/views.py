@@ -10,6 +10,7 @@ from user_profiles.models import *
 from job_post.models import *
 from django.db.models import Q
 from job_post.views import toggle_favorite
+from company.forms import CompanyForm
 
 # Create your views here.
 @login_required(login_url='/user_profiles/')
@@ -76,31 +77,13 @@ def get_all_company(request):
 def update_company(request, comp_id):
     url = reverse('company:comp_info', kwargs={'comp_id': comp_id})
     if request.method == 'POST':
-        data = json.loads(request.body)
-        Company.objects.filter(pk=comp_id).update(
-            comp_name = data.get('comp_name', ''),
-            comp_name_th = data.get('comp_name_th', ''),
-            comp_desc = data.get('comp_desc', ''),
-            comp_address = data.get('comp_address', ''),
-            comp_long = data.get('comp_long', ''),
-            comp_lat = data.get('comp_lat', ''),
-            comp_contact_info = data.get('comp_contact_info', ''),
-        )
-
+        company = CompanyForm(request.POST, request.FILES, instance=Company.objects.get(pk=comp_id))
+        print(company)
+        if company.is_valid():
+            company.save()
         return HttpResponseRedirect(url)
     else:
         return HttpResponseRedirect(url)
-
-@csrf_exempt
-@login_required(login_url='/user_profiles/')
-@permission_required('user_profiles.is_employer', raise_exception=True)
-def update_comp_logo(request, comp_id):
-    if request.method == 'POST':
-        logo = request.FILES.get('comp_logo')
-        company = Company.objects.get(pk=comp_id)
-        company.comp_logo = logo
-        company.save()
-        return HttpResponse('Upload Logo Successful')
 
 @login_required(login_url='/user_profiles/')
 @permission_required('user_profiles.is_employer', raise_exception=True)

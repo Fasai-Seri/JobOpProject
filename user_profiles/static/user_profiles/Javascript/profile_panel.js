@@ -77,19 +77,6 @@ const ProfilePanel = () => {
     setPreviewResume(URL.createObjectURL(resume));
   }
 
-  function handleUploadProfile() {
-    const photo = document.querySelector("#profile_photo").files[0];
-    if (photo) {
-      const formData = new FormData();
-      formData.append("user_photo", photo);
-      console.log(photo);
-      fetch("update_user_photo", {
-        method: "POST",
-        body: formData,
-      });
-    }
-  }
-
   function handleUploadResume() {
     if (user.type == "student") {
       const resume = document.querySelector("#resume").files[0];
@@ -128,31 +115,25 @@ const ProfilePanel = () => {
   }
 
   async function handleProfileSubmit() {
+    const formData = new FormData();
+    const photo = document.querySelector("#profile_photo").files[0];
+    formData.append("fname", user.fname);
+    formData.append("lname", user.lname);
+    formData.append("phone", user.phone);
+    formData.append("user_photo", photo ? photo : user.user_photo);
     if (user.type == "employer") {
-      await fetch(`update_user`, {
+      formData.append("comp", user.comp);
+      formData.append("emp_position", user.emp_position);
+      fetch(`update_user`, {
         method: "POST",
-        body: JSON.stringify({
-          fname: user.fname,
-          lname: user.lname,
-          phone: user.phone,
-          user_photo: user.user_photo,
-          comp: user.comp,
-          emp_position: user.emp_position,
-        }),
+        body: formData,
       });
-      handleUploadProfile();
     } else {
-      await fetch(`update_user`, {
+      formData.append("major", user.major);
+      fetch(`update_user`, {
         method: "POST",
-        body: JSON.stringify({
-          fname: user.fname,
-          lname: user.lname,
-          phone: user.phone,
-          major: user.major,
-          user_photo: user.user_photo,
-        }),
+        body: formData,
       });
-      handleUploadProfile();
     }
   }
 
