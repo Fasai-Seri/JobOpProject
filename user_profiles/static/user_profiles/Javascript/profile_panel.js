@@ -5,7 +5,7 @@ const ProfilePanel = () => {
   const [previewPhoto, setPreviewPhoto] = React.useState("");
   const [previewResume, setPreviewResume] = React.useState("");
   const [companies, setCompanies] = React.useState([]);
-  const [isNewEmp, setIsNewEmp] = React.useState(false)
+  const [isNewEmp, setIsNewEmp] = React.useState(false);
   const data = document.getElementById("profile_script").dataset;
   const user_id = parseInt(data.userId, 10);
   const current_user_id = parseInt(data.currentUserId, 10);
@@ -23,8 +23,8 @@ const ProfilePanel = () => {
       .then((response) => response.json())
       .then((user) => {
         setUser(user);
-        if (user.comp == '') {
-          setIsNewEmp(true)
+        if (user.comp == "") {
+          setIsNewEmp(true);
         }
       });
   }
@@ -127,9 +127,9 @@ const ProfilePanel = () => {
     fetchUser();
   }
 
-  function handleProfileSubmit() {
+  async function handleProfileSubmit() {
     if (user.type == "employer") {
-      fetch(`update_user`, {
+      await fetch(`update_user`, {
         method: "POST",
         body: JSON.stringify({
           fname: user.fname,
@@ -140,8 +140,9 @@ const ProfilePanel = () => {
           emp_position: user.emp_position,
         }),
       });
+      handleUploadProfile();
     } else {
-      fetch(`update_user`, {
+      await fetch(`update_user`, {
         method: "POST",
         body: JSON.stringify({
           fname: user.fname,
@@ -151,6 +152,7 @@ const ProfilePanel = () => {
           user_photo: user.user_photo,
         }),
       });
+      handleUploadProfile();
     }
   }
 
@@ -644,7 +646,6 @@ const ProfilePanel = () => {
                   <input
                     class="btn btn-dark mr-2"
                     onClick={() => {
-                      handleUploadProfile();
                       handleUploadResume();
                       handleUploadPortfolio();
                     }}

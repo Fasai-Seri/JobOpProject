@@ -59,7 +59,7 @@ def get_company(request, comp_id):
 @login_required(login_url='/user_profiles/')
 def get_company_job_posts(request, comp_id):
     jobpost_list = []
-    for post in JobPost.objects.filter(company__id = comp_id):
+    for post in JobPost.objects.filter(company__id = comp_id).order_by('job_status', '-job_post_date'):
         jobpost = post.serialize()
         jobpost.update({'isFavorite': post in request.user.favourite_posts.all()})
         jobpost_list.append(jobpost)
