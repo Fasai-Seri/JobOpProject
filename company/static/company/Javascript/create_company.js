@@ -154,7 +154,11 @@ const CreateCompany = () => {
               </div>
               <div class="form-group">
                 <b>Company Description: </b>
-                <textarea class="form-control" name="comp_desc"></textarea>
+                <textarea
+                  class="form-control"
+                  id="comp_desc"
+                  name="comp_desc"
+                ></textarea>
               </div>
 
               <div class="form-group">
@@ -162,6 +166,7 @@ const CreateCompany = () => {
                 <textarea
                   class="form-control"
                   name="comp_contact_info"
+                  id="comp_contact_info"
                   required
                 ></textarea>
               </div>

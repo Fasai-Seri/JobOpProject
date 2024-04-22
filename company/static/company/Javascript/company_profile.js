@@ -218,7 +218,14 @@ const CompanyProfile = () => {
                   {props.post.job_type.charAt(0).toUpperCase() +
                     props.post.job_type.slice(1)}
                 </div>
-                <div class="job_type card-text">{props.post.job_location}</div>
+                {props.post.majors.map((major) => {
+                  return (
+                    <span class="job_major badge badge-secondary mr-2">
+                      {major}
+                    </span>
+                  );
+                })}
+                {/* <div class="job_type card-text">{props.post.job_location}</div> */}
                 <div class="d-flex align-items-center mt-3">
                   <div
                     class="status-badge mr-2 rounded-circle"

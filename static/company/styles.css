@@ -3,6 +3,7 @@
   height: 20vh;
 }
 
-#comp_address {
+#comp_address,
+#comp_address_dis {
   height: 15vh;
 }

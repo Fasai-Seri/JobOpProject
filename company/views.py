@@ -63,6 +63,7 @@ def get_company_job_posts(request, comp_id):
     for post in JobPost.objects.filter(company__id = comp_id).order_by('job_status', '-job_post_date'):
         jobpost = post.serialize()
         jobpost.update({'isFavorite': post in request.user.favourite_posts.all()})
+        jobpost.update({'majors': [major for major in post.job_major.values_list('major_id', flat=True)]})
         jobpost_list.append(jobpost)
     return JsonResponse(jobpost_list, safe=False)
 
