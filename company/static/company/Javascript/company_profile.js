@@ -122,6 +122,9 @@ const CompanyProfile = () => {
         zoom: 14,
       });
 
+      document.querySelector(".maplibregl-canvas").style.width = "600px";
+      document.querySelector(".maplibregl-canvas").style.height = "600px";
+
       marker.current = new maptilersdk.Marker({ color: "#FF0000" })
         .setLngLat(center)
         .addTo(map.current);
@@ -157,7 +160,7 @@ const CompanyProfile = () => {
     }, [center]);
 
     return (
-      <div style={{ height: props.disabled == "true" ? "1600px" : "1400px" }}>
+      <div style={{ height: "800px" }}>
         <div class="form-group">
           <label for="comp_name">
             <b>Company Address</b>
@@ -173,7 +176,13 @@ const CompanyProfile = () => {
           ></textarea>
         </div>
         <div id="info" class="position-relative d-block p-2 mt-2 rounded"></div>
-        <div ref={mapContainer} class="position-absolute w-100 h-50" />
+        <div class="d-flex justify-content-center">
+          <div
+            ref={mapContainer}
+            class="position-absolute"
+            style={{ height: "600px", width: "600px" }}
+          />
+        </div>
       </div>
     );
   }
