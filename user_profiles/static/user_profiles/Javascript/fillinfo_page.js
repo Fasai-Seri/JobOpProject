@@ -8,13 +8,11 @@ const FillInfo = () => {
     fetch(`get_major`)
       .then((response) => response.json())
       .then((majors) => {
-        console.log(majors);
         setMajors(majors);
       });
   }
 
   function handleMajorChange(e) {
-    console.log(e.target.value);
   }
 
   function MajorSelect() {

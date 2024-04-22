@@ -19,7 +19,6 @@ urlpatterns = [
     path('get_user/<int:user_id>', views.get_user, name='get_user'),
     path('get_major', views.get_major, name='get_major'),
     path('update_user', views.update_user, name='update_user'),
-    path('update_user_photo', views.update_user_photo, name='update_user_photo'),
     path('update_student_resume', views.update_student_resume, name='update_student_resume'),
     path('update_student_portfolio', views.update_student_portfolio, name='update_student_portfolio'),
     path('remove_student_portfolio/<str:file_name>', views.remove_student_portfolio, name='remove_student_portfolio'),

@@ -5,7 +5,6 @@ const CompanyList = () => {
   const isEmployer = data.isEmployer;
   const create_comp_link = data.createComp;
   const comp_href = data.compHref.slice(0, -1);
-  console.log(comp_href);
 
   function SearchBar() {
     return (

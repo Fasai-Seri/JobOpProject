@@ -12,6 +12,8 @@ const ProfilePanel = () => {
   const csrftoken = data.csrfToken;
   const create_comp = data.createComp;
 
+
+
   React.useEffect(() => {
     fetchUser();
     fetchMajors();
@@ -28,13 +30,11 @@ const ProfilePanel = () => {
         }
       });
   }
-  console.log(user);
 
   function fetchMajors() {
     fetch(`get_major`)
       .then((response) => response.json())
       .then((majors) => {
-        console.log(majors);
         setMajors(majors);
       });
   }
@@ -43,7 +43,6 @@ const ProfilePanel = () => {
     fetch("get_company")
       .then((response) => response.json())
       .then((companies) => {
-        console.log(companies);
         setCompanies(companies);
       });
   }
@@ -65,7 +64,6 @@ const ProfilePanel = () => {
       ...prevUser,
       [name]: value,
     }));
-    console.log(name, value);
   }
 
   function handlePreviewProfile() {
@@ -77,26 +75,13 @@ const ProfilePanel = () => {
     setPreviewResume(URL.createObjectURL(resume));
   }
 
-  function handleUploadProfile() {
-    const photo = document.querySelector("#profile_photo").files[0];
-    if (photo) {
-      const formData = new FormData();
-      formData.append("user_photo", photo);
-      console.log(photo);
-      fetch("update_user_photo", {
-        method: "POST",
-        body: formData,
-      });
-    }
-  }
-
   function handleUploadResume() {
     if (user.type == "student") {
       const resume = document.querySelector("#resume").files[0];
       if (resume) {
         const formData = new FormData();
         formData.append("student_resume", resume);
-        console.log(resume);
+
         fetch("update_student_resume", {
           method: "POST",
           body: formData,
@@ -108,7 +93,6 @@ const ProfilePanel = () => {
   function handleUploadPortfolio() {
     if (user.type == "student") {
       const portfolio = document.querySelector("#portfolio").files;
-      console.log(portfolio);
       if (portfolio) {
         const formData = new FormData();
         for (let i = 0; i < portfolio.length; i++) {
@@ -128,31 +112,25 @@ const ProfilePanel = () => {
   }
 
   async function handleProfileSubmit() {
+    const formData = new FormData();
+    const photo = document.querySelector("#profile_photo").files[0];
+    formData.append("fname", user.fname);
+    formData.append("lname", user.lname);
+    formData.append("phone", user.phone);
+    formData.append("user_photo", photo ? photo : user.user_photo);
     if (user.type == "employer") {
-      await fetch(`update_user`, {
+      formData.append("comp", user.comp);
+      formData.append("emp_position", user.emp_position == null ? '' : user.emp_position);
+      fetch(`update_user`, {
         method: "POST",
-        body: JSON.stringify({
-          fname: user.fname,
-          lname: user.lname,
-          phone: user.phone,
-          user_photo: user.user_photo,
-          comp: user.comp,
-          emp_position: user.emp_position,
-        }),
+        body: formData,
       });
-      handleUploadProfile();
     } else {
-      await fetch(`update_user`, {
+      formData.append("major", user.major);
+      fetch(`update_user`, {
         method: "POST",
-        body: JSON.stringify({
-          fname: user.fname,
-          lname: user.lname,
-          phone: user.phone,
-          major: user.major,
-          user_photo: user.user_photo,
-        }),
+        body: formData,
       });
-      handleUploadProfile();
     }
   }
 
@@ -305,13 +283,11 @@ const ProfilePanel = () => {
   });
 
   $(".custom-file-input, .photo").on("change", function () {
-    console.log("triggered");
     const file = $(this).val();
     const fileName = file.split("\\")[file.split("\\").length - 1];
     $(this).next(".custom-file-label, .photo").html(fileName);
   });
   $(".custom-file-input, .resume").on("change", function () {
-    console.log("triggered");
     const file = $(this).val();
     const fileName = file.split("\\")[file.split("\\").length - 1];
     $(this).next(".custom-file-label, .resume").html(fileName);

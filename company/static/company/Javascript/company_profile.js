@@ -9,6 +9,18 @@ const CompanyProfile = () => {
   const csrftoken = data.csrfToken;
   const post_href = data.postHref.slice(0, -1);
   const can_edit = data.canEdit;
+  const map = React.useMemo(
+    () => (
+      <Map
+        forwardedRef={compAdd}
+        lat={company.comp_lat}
+        long={company.comp_long}
+        address={company.comp_address}
+        disabled={isDisabled}
+      />
+    ),
+    [isDisabled, company.comp_address]
+  );
 
   React.useEffect(() => {
     fetch_company();
@@ -53,45 +65,30 @@ const CompanyProfile = () => {
   }
 
   function handleCompanySubmit() {
-    if (compAdd.current) {
-      fetch(`update_company/${comp_id}`, {
-        method: "POST",
-        body: JSON.stringify({
-          comp_name: company.comp_name,
-          comp_name_th: company.comp_name_th,
-          comp_desc: company.comp_desc,
-          comp_address: compAdd.current.comp_address,
-          comp_long: compAdd.current.comp_long,
-          comp_lat: compAdd.current.comp_lat,
-          comp_contact_info: company.comp_contact_info,
-        }),
-      });
-    } else {
-      fetch(`update_company/${comp_id}`, {
-        method: "POST",
-        body: JSON.stringify({
-          comp_name: company.comp_name,
-          comp_name_th: company.comp_name_th,
-          comp_desc: company.comp_desc,
-          comp_address: company.comp_address,
-          comp_long: company.comp_long,
-          comp_lat: company.comp_lat,
-          comp_contact_info: company.comp_contact_info,
-        }),
-      });
-    }
-  }
-
-  function handleLogoUpload() {
+    const formData = new FormData();
     const logo = document.querySelector("#comp_logo").files[0];
-    if (logo) {
-      const formData = new FormData();
-      formData.append("comp_logo", logo);
-      fetch(`update_comp_logo/${comp_id}`, {
-        method: "POST",
-        body: formData,
-      });
+    formData.append("comp_name", company.comp_name);
+    formData.append("comp_name_th", company.comp_name_th);
+    formData.append("comp_desc", company.comp_desc);
+    formData.append("comp_contact_info", company.comp_contact_info);
+    if (Object.keys(compAdd.current).length != 0) {
+      formData.append("comp_address", compAdd.current.comp_address);
+      formData.append("comp_long", compAdd.current.comp_long.toFixed(6));
+      formData.append("comp_lat", compAdd.current.comp_lat.toFixed(6));
+    } else {
+      formData.append("comp_address", company.comp_address);
+      formData.append("comp_long", company.comp_long);
+      formData.append("comp_lat", company.comp_lat);
     }
+    if (logo) {
+      formData.append("comp_logo", logo);
+    } else {
+      formData.append("comp_logo", company.comp_logo);
+    }
+    fetch(`update_company/${comp_id}`, {
+      method: "POST",
+      body: formData,
+    });
   }
 
   function handleEditCompClick() {
@@ -107,9 +104,90 @@ const CompanyProfile = () => {
     await fetch(`follow_company/${comp_id}`);
     fetch_company();
   }
+  function Map(props) {
+    const mapContainer = React.useRef();
+    const map = React.useRef();
+    const marker = React.useRef();
+    const center = [Number(props.long), Number(props.lat)];
+    maptilersdk.config.apiKey = "GofhIpWUfkKFYIIo84aL";
+
+    React.useEffect(() => {
+      if (!props.lat | !props.long) return <div></div>;
+      if (map.current) return;
+      if (!mapContainer.current) return;
+      map.current = new maptilersdk.Map({
+        container: mapContainer.current,
+        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${"GofhIpWUfkKFYIIo84aL"}`,
+        center: center,
+        zoom: 14,
+      });
+
+      document.querySelector(".maplibregl-canvas").style.width = "600px";
+      document.querySelector(".maplibregl-canvas").style.height = "600px";
+
+      marker.current = new maptilersdk.Marker({ color: "#FF0000" })
+        .setLngLat(center)
+        .addTo(map.current);
+
+      const gc = new maptilersdkMaptilerGeocoder.GeocodingControl();
+      if (props.disabled == "false") {
+        map.current.addControl(gc, "top-left");
+      }
+
+      map.current.on("click", async function (e) {
+        if (props.disabled == "false") {
+          if (marker.current) {
+            marker.current.remove();
+          }
+
+          marker.current = new maplibregl.Marker({ color: "#FF0000" })
+            .setLngLat([e.lngLat.lng, e.lngLat.lat])
+            .addTo(map.current);
+          const results = await maptilersdk.geocoding.reverse([
+            e.lngLat.lng,
+            e.lngLat.lat,
+          ]);
+          document.getElementById("info").innerHTML =
+            "Marked Location:" + String(results.features[0].place_name_en);
+
+          props.forwardedRef.current = {
+            comp_long: e.lngLat.lng,
+            comp_lat: e.lngLat.lat,
+            comp_address: results.features[0].place_name_en,
+          };
+        }
+      });
+    }, [center]);
+
+    return (
+      <div style={{ height: "800px" }}>
+        <div class="form-group">
+          <label for="comp_name">
+            <b>Company Address</b>
+          </label>
+          <textarea
+            type="text"
+            class="form-control"
+            id="comp_address"
+            name="comp_address"
+            disabled
+            value={props.address}
+            required
+          ></textarea>
+        </div>
+        <div id="info" class="position-relative d-block p-2 mt-2 rounded"></div>
+        <div class="d-flex justify-content-center">
+          <div
+            ref={mapContainer}
+            class="position-absolute"
+            style={{ height: "600px", width: "600px" }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   function PostSection(props) {
-    console.log(props);
     return (
       <div class="mt-3">
         <div class="card mb-3">
@@ -204,94 +282,8 @@ const CompanyProfile = () => {
       </div>
     );
   }
-  console.log(company);
-  console.log(compAdd);
-
-  function Map(props) {
-    const mapContainer = React.useRef();
-    const map = React.useRef();
-    const marker = React.useRef();
-    const [center] = React.useState([props.long, props.lat]);
-    const [zoom] = React.useState(14);
-    const [API_KEY] = React.useState("GofhIpWUfkKFYIIo84aL");
-    maptilersdk.config.apiKey = "GofhIpWUfkKFYIIo84aL";
-
-    if (!props.lat | !props.long) return <div></div>;
-    React.useEffect(() => {
-      if (map.current) return;
-      if (!mapContainer.current) return;
-      map.current = new maptilersdk.Map({
-        container: mapContainer.current,
-        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
-        center: center,
-        zoom: zoom,
-      });
-
-      marker.current = new maptilersdk.Marker({ color: "#FF0000" })
-        .setLngLat(center)
-        .addTo(map.current);
-
-      const gc = new maptilersdkMaptilerGeocoder.GeocodingControl();
-      if (props.disabled == "false") {
-        map.current.addControl(gc, "top-left");
-      }
-
-      map.current.on("click", async function (e) {
-        if (props.disabled == "false") {
-          if (marker.current) {
-            marker.current.remove();
-          }
-
-          marker.current = new maplibregl.Marker({ color: "#FF0000" })
-            .setLngLat([e.lngLat.lng, e.lngLat.lat])
-            .addTo(map.current);
-          const results = await maptilersdk.geocoding.reverse([
-            e.lngLat.lng,
-            e.lngLat.lat,
-          ]);
-          document.getElementById("info").innerHTML =
-            "Marked Location:" + String(results.features[0].place_name_en);
-
-          compAdd.current = {
-            comp_long: e.lngLat.lng,
-            comp_lat: e.lngLat.lat,
-            comp_address: results.features[0].place_name_en,
-          };
-          console.log(company);
-          console.log(compAdd);
-        }
-      });
-    }, [API_KEY, center, zoom]);
-
-    return (
-      <div>
-        <div class="form-group">
-          <label for="comp_name">
-            <b>Company Address</b>
-          </label>
-          <textarea
-            type="text"
-            class="form-control"
-            id="comp_address"
-            name="comp_address"
-            disabled
-            value={company.comp_address}
-            required
-          ></textarea>
-        </div>
-        <div id="info" class="position-relative d-block p-2 mt-2 rounded"></div>
-        <div ref={mapContainer} class="position-absolute w-100 h-50" />
-      </div>
-    );
-  }
-
-  function textAreaAdjust(e) {
-    e.target.style.height = "1px";
-    e.target.style.height = e.target.scrollHeight + "px";
-  }
 
   $(".custom-file-input, .logo").on("change", function () {
-    console.log("triggered");
     const file = $(this).val();
     const fileName = file.split("\\")[file.split("\\").length - 1];
     $(this).next(".custom-file-label, .logo").html(fileName);
@@ -301,7 +293,7 @@ const CompanyProfile = () => {
     <div class="container mt-3">
       <div class="row justify-content-center">
         <div class="col-md-12">
-          <div class="mb-3 bg-light p-4 rounded shadow-sm">
+          <div class="mb-3 p-4 ">
             {isDisabled == "true" && can_edit == "True" && (
               <button
                 class="btn btn-outline-dark float-right"
@@ -417,7 +409,6 @@ const CompanyProfile = () => {
                   disabled={isDisabled == "true" ? true : false}
                   value={company.comp_desc}
                   onChange={handleCompanyChange}
-                  onKeyUp={textAreaAdjust}
                 ></textarea>
               </div>
               <div class="form-group">
@@ -432,27 +423,18 @@ const CompanyProfile = () => {
                   disabled={isDisabled == "true" ? true : false}
                   value={company.comp_contact_info}
                   onChange={handleCompanyChange}
-                  onKeyUp={textAreaAdjust}
                   required
                 ></textarea>
               </div>
 
-              <div
-                style={{ height: isDisabled == "true" ? "1600px" : "1400px" }}
-              >
-                <Map
-                  lat={Number(company.comp_lat)}
-                  long={Number(company.comp_long)}
-                  disabled={isDisabled}
-                />
-              </div>
+              {map}
+
               {isDisabled == "false" && (
                 <div>
                   <input
                     class="btn btn-dark mr-2"
                     type="submit"
                     value="Submit"
-                    onClick={handleLogoUpload}
                   />
                   <button
                     class="btn btn-outline-dark"
@@ -470,7 +452,6 @@ const CompanyProfile = () => {
                 {posts.length > 0 ? (
                   <div>
                     {posts.map((post) => {
-                      console.log(post);
                       return <PostSection post={post} />;
                     })}
                   </div>

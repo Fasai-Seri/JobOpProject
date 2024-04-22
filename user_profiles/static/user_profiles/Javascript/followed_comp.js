@@ -3,7 +3,6 @@ const FollowedCompList = () => {
   const companies = JSON.parse(data.companies);
   const csrftoken = data.csrfToken;
   const comp_href = data.compHref.slice(0, -1);
-  console.log(comp_href);
 
   function SearchBar() {
     return (

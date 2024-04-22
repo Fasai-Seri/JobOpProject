@@ -61,12 +61,11 @@ const CreateCompany = () => {
           comp_lat: e.lngLat.lat,
           comp_address: results.features[0].place_name_en,
         };
-        console.log(compAdd);
       });
     }, [API_KEY, center, zoom]);
 
     return (
-      <div>
+      <div style={{ height: "800px" }}>
         <div class="form-group">
           <label for="comp_name">
             <b>Company Address</b>
@@ -83,13 +82,18 @@ const CreateCompany = () => {
         <input type="hidden" id="comp_address" name="comp_address" />
         <input type="hidden" id="comp_long" name="comp_long" />
         <input type="hidden" id="comp_lat" name="comp_lat" />
-        <div ref={mapContainer} class="position-absolute w-100 h-50" />
+        <div class="d-flex justify-content-center">
+          <div
+            ref={mapContainer}
+            class="position-absolute"
+            style={{ height: "600px", width: "600px" }}
+          />
+        </div>
       </div>
     );
   }
 
   $(".custom-file-input, .logo").on("change", function () {
-    console.log("triggered");
     const file = $(this).val();
     const fileName = file.split("\\")[file.split("\\").length - 1];
     $(this).next(".custom-file-label, .logo").html(fileName);
@@ -161,9 +165,7 @@ const CreateCompany = () => {
                   required
                 ></textarea>
               </div>
-              <div style={{ height: "1000px" }}>
-                <Map />
-              </div>
+              <Map />
               <input type="submit" class="btn btn-dark" value="Create" />
             </form>
           </div>
