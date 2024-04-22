@@ -218,7 +218,6 @@
                     document.querySelector('dialog').close()
                 }
                 document.querySelector('#dialog-footer--confirm-btn').onclick = () => {
-                    <!-- console.log(`/update_job_post/{{ selected_job_post.pk }}`) -->
                     fetch(`/update_job_post/{{ selected_job_post.pk }}`, {
                         method: 'PUT',
                         body: JSON.stringify({

@@ -156,8 +156,6 @@
                     let selected_job_status = []
                     var no_result_found = true
                     
-                    console.log(selected_job_major)
-
                     document.getElementsByName('job_type').forEach((checkbox) => {
                         if(checkbox.checked) {
                             selected_job_type.push(checkbox.value)
@@ -180,7 +178,6 @@
                         const job_type = job_post.querySelector('.job_type').innerHTML
                         const job_status = job_post.querySelector('.job_status').innerHTML
                         let job_major = []
-                        console.log(job_post.getElementsByClassName('job_major'))
                         if(job_post.getElementsByClassName('job_major') != null) {
                             job_major_list = job_post.getElementsByClassName('job_major')
                             for(let major of job_major_list) {
@@ -236,7 +233,6 @@
                             job_post.style.display = 'none'
                         }                        
                     })
-                    console.log((no_result_found && !document.querySelector('.no-result-found-for-js')))
 
                     if(no_result_found) {
                         document.querySelector('.no-result-found-for-js').style.display = 'block'
