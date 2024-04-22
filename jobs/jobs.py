@@ -16,4 +16,3 @@ def update_job_post_status():
                 job_post.job_close_date = None
                 job_post.job_status = 'inactive'
                 job_post.save()
-                print(f'Update JobPost {job_post.pk} Successfully')
