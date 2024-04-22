@@ -132,7 +132,6 @@ const CompanyProfile = () => {
       }
 
       map.current.on("click", async function (e) {
-        console.log("Map clicked");
         if (props.disabled == "false") {
           if (marker.current) {
             marker.current.remove();
@@ -180,7 +179,6 @@ const CompanyProfile = () => {
   }
 
   function PostSection(props) {
-    console.log(props);
     return (
       <div class="mt-3">
         <div class="card mb-3">
@@ -277,7 +275,6 @@ const CompanyProfile = () => {
   }
 
   $(".custom-file-input, .logo").on("change", function () {
-    console.log("triggered");
     const file = $(this).val();
     const fileName = file.split("\\")[file.split("\\").length - 1];
     $(this).next(".custom-file-label, .logo").html(fileName);
@@ -446,7 +443,6 @@ const CompanyProfile = () => {
                 {posts.length > 0 ? (
                   <div>
                     {posts.map((post) => {
-                      console.log(post);
                       return <PostSection post={post} />;
                     })}
                   </div>

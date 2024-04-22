@@ -33,13 +33,10 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             auth.login(request, user)
-            print(request.user.has_perm('user_profiles.is_professor'))
-            print('login')
             if request.user.fname == None:
-                print('fname blank')
                 return HttpResponseRedirect(reverse("user_profiles:index", kwargs={'user_id': request.user.id}))
             else :
-                print('fname not blank')
+
                 return HttpResponseRedirect(reverse("job_post:index"))
             
         else:

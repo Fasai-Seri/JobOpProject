@@ -61,7 +61,6 @@ const CreateCompany = () => {
           comp_lat: e.lngLat.lat,
           comp_address: results.features[0].place_name_en,
         };
-        console.log(compAdd);
       });
     }, [API_KEY, center, zoom]);
 
@@ -89,7 +88,6 @@ const CreateCompany = () => {
   }
 
   $(".custom-file-input, .logo").on("change", function () {
-    console.log("triggered");
     const file = $(this).val();
     const fileName = file.split("\\")[file.split("\\").length - 1];
     $(this).next(".custom-file-label, .logo").html(fileName);

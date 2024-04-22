@@ -78,7 +78,6 @@ def update_company(request, comp_id):
     url = reverse('company:comp_info', kwargs={'comp_id': comp_id})
     if request.method == 'POST':
         company = CompanyForm(request.POST, request.FILES, instance=Company.objects.get(pk=comp_id))
-        print(company)
         if company.is_valid():
             company.save()
         return HttpResponseRedirect(url)
@@ -97,7 +96,6 @@ def create_company_page(request):
         comp_long = request.POST.get('comp_long')
         comp_lat = request.POST.get('comp_lat')
         comp_contact_info = request.POST.get('comp_contact_info')
-        print(comp_address, comp_long, comp_lat)
         company = Company.objects.create(comp_name = comp_name, comp_name_th=comp_name_th, comp_desc = comp_desc, comp_address=comp_address,comp_long = comp_long, comp_lat = comp_lat,comp_contact_info=comp_contact_info)
         if logo :
             logo.name = comp_name.replace(' ', '_') + '.png'
