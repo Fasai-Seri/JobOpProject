@@ -218,6 +218,7 @@ const ProfilePanel = () => {
           <div>
             <h5 class="mt-3">Portfolio</h5>
             <hr />
+            <div>
             {user.student_portfolio.map((file) => {
               const file_name = String(file.student_portfolio).split("/")[
                 String(file.student_portfolio).split("/").length - 1
@@ -231,6 +232,7 @@ const ProfilePanel = () => {
                 />
               );
             })}
+            </div>  
             <embed
               id="portfolio_display"
               src={user.student_portfolio[0].student_portfolio}
@@ -244,7 +246,7 @@ const ProfilePanel = () => {
       if (isDisabled == "true") {
         return (
           <div>
-            <p>Portfolio</p>
+            <h5>Portfolio</h5>
             <hr />
             <div class="mb-3">
               <p class="text-muted">No Portfolio</p>
@@ -254,7 +256,7 @@ const ProfilePanel = () => {
       } else {
         return (
           <div>
-            <p>Portfolio</p>
+            <h5>Portfolio</h5>
             <hr />
             <div class="mb-3">
               <input
