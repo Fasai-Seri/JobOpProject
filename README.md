@@ -1,11 +1,11 @@
 # Job Opportunity Project
 ## Members
-6441126126 Nipasri Wongsiridech (Yok)
-6441133526 Pathompong Sriamorn (Smart)
-6441178826 Fasai Serikijcharoen (Fasai)
+6441126126 Nipasri Wongsiridech (Yok)  
+6441133526 Pathompong Sriamorn (Smart)  
+6441178826 Fasai Serikijcharoen (Fasai)  
 
 ## Contributions
-Fasai
+### Fasai
 - Job Post Application Backend:
     - Develop models and implement file renaming functionality upon upload
     - Implement full functionality for the job post app, including creation, display, and editing features
@@ -18,14 +18,14 @@ Fasai
 
 ## Features
 ### Core functionalities
-- Create, display, and edit job posts (employers and professors)
-- Apply for job posts (students)
+- Create, display, and edit job posts 
+- Apply for job posts
 - Favorite job posts
 - Follow companies
 ### Additional functionalities
-- Upload pictures and files to the database and rename to a consistent format 
-- Export applicants list as pdf files attached with uploaded resume
-- Utilize APScheduler to run job updating job status by close date
+- Implement functionality to upload pictures and files to the database, ensuring consistent renaming to a predefined format
+- Export applicants list as PDF files, with resumes attached
+- Utilize APScheduler to automate the process of updating job statuses based on their close dates
   
 ## Setup
 
