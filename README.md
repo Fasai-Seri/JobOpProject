@@ -57,7 +57,7 @@
 ```Shell
 # clone repository
 git clone https://github.com/Fasai-Seri/JobOpProject.git
-cd sample-django-app
+cd JobOpProject
 
 # create a virtual environment and activate
 python -m venv .venv
