@@ -34,6 +34,20 @@
   - Integrate map api to identify the exact location of the company
   - Design company page and prefill with existing information
 
+### Smart
+
+- Job Post Application Frontend:
+  - Design and layout all pages related to job posts (HTML / CSS files), such as the All Posts page, the Following page, the Favorite page, the Create/Edit Post page, and the Warning page.
+  - Design the display of each post as a card layout that presents a summary of the job information, including a displays page that show all the details of the job.
+  - Integrate the various pages by creating buttons and links, and display certain features differently for specific user groups.
+  - Create the "Favorite" and "Apply" features for each job post (involving backend work in this part).
+  - Modify the layout.html file in the navbar section to enhance the display features.
+- Javascript:
+  - Change the favorite/unfavorite icon immediately when clicked, and ensure that posts without a favorite status do not appear on the Favorite page.
+  - Change the applied/unapplied status immediately when clicked, and include a status label for posts that the student has applied.
+  - Display the names of uploaded PDF files when creating a post, and allow the deletion of incorrectly uploaded files, as well as prevent the user from selecting past dates as Inactive dates.
+
+  
 ## Features
 
 ### Core functionalities
