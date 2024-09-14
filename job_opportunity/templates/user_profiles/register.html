@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <script
+      src="https://unpkg.com/react@17/umd/react.production.min.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <title>Job Opportunities</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="h-100 d-flex align-items-center">
+    <div class="container mt-3 w-50">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="mb-3 bg-light p-4 rounded shadow-sm">
+            <h2>Register</h2>
+            <hr />
+            {% if message %}
+            <div>{{ message }}</div>
+            {% endif %}
+
+            <form action="{% url 'user_profiles:register' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  type="password"
+                  name="confirmation"
+                  placeholder="Confirm Password"
+                />
+              </div>
+              <input class="btn btn-dark" type="submit" value="Register" />
+            </form>
+
+            Already have an account?
+            <a href="{% url 'user_profiles:login' %}">Log In here.</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

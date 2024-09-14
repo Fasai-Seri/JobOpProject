@@ -1,0 +1,16 @@
+{% extends "layout.html" %} {% block body %}
+<div id="company"></div>
+{% endblock %} {% block script %}
+
+<script
+  id="company_script"
+  type="text/babel"
+  src="../static/company/Javascript/company_profile.js"
+  data-comp-id="{{ comp_id }}"
+  data-can-edit="{{ canEdit }}"
+  data-post-href="{% url 'job_post:display_job_post' %}"
+  data-comp-href="{% url 'company:comp_info' %}"
+  data-csrf-token="{{ csrf_token }}"
+></script>
+
+{% endblock %}

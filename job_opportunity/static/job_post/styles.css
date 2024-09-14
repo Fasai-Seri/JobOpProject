@@ -1,0 +1,68 @@
+/* layout navbar */
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.nav-link:not(:hover) {
+  background-color: transparent;
+}
+
+.nav-link {
+  opacity: 0.8;
+  padding: 10px 10px;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+/* ------------------------------------------------------------------------- */
+/* show active */
+#show_active {
+  width: 20px;
+  height: 20px;
+  background-color: green;
+}
+
+#show_inactive {
+  width: 20px;
+  height: 20px;
+  background-color: gray;
+}
+/* ------------------------------------------------------------------------- */
+/* upload file */
+.custom-file-label::after {
+  background-color: rgba(25, 24, 24, 0.79);
+  color: white;
+}
+/* ------------------------------------------------------------------------- */
+/* upload file create post */
+.maplibregl-canvas {
+  width: 400px;
+}
+/* ------------------------------------------------------------------------- */
+/* warnning page */
+.btn-warning.mt-3 {
+  color: black;
+  font-size: 25px;
+  padding: 10px 20px;
+  width: 20%;
+}
+/* ------------------------------------------------------------------------- */
+/* Company logo in card */
+.com-logo-card {
+  height: 100px;
+}
+
+/* Company logo in display page */
+.com-logo-display {
+  height: 100px;
+}
+
+/* Show Apply */
+.show_applied {
+  border-radius: 5px;
+}
