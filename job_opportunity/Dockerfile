@@ -15,4 +15,4 @@ COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
 RUN echo "copy whole folder"
 COPY . /usr/src/app/
 
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/usr/src/app/entrypoint.sh"]
