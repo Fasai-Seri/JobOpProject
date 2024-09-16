@@ -62,7 +62,7 @@ def register(request):
 
         if any(domain in email for domain in ['student.chula.ac.th', 'cbs.chula.ac.th']) == False:
             return render(request, "user_profiles/register.html", {
-                "message": "Please enter student/cbs email"
+                "message": "Please enter student/cbs email (@student.chula.ac.th or @cbs.chula.ac.th)"
             })
 
         # Ensure password matches confirmation
