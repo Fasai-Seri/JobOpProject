@@ -73,16 +73,9 @@
 git clone https://github.com/Fasai-Seri/JobOpProject.git
 cd JobOpProject
 
-# create a virtual environment and activate
-python -m venv .venv
-./.venv/scripts/activate
+# Build and start the application using Docker Compose
+docker-compose up --build
 
-# install packages
-pip install -r requirements.txt
-npm i
-
-# runserver
-python manage.py runserver
 ```
 
 ## Frameworks
